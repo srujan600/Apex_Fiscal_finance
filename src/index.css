@@ -1,0 +1,164 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-canvas: #090D16;
+    --surface-tier-1: #0D1526;
+    --surface-tier-2: #131E36;
+    --surface-glow: #1A2847;
+    --border-structural: #1E2D4A;
+    --border-hover: #2A3E66;
+
+    /* Primary Cobalt */
+    --primary-ray: #3B82F6;
+    --primary-core: #2563EB;
+    --secondary-accent: #6366F1;
+
+    /* Semantic Triage */
+    --status-healthy: #10B981;
+    --status-warning: #F59E0B;
+    --status-risk: #EF4444;
+    --status-breach: #E11D48;
+    --status-approved: #14B8A6;
+    --status-committed: #818CF8;
+  }
+
+  body {
+    background-color: #090D16;
+    color: #dfe2ef;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  /* JetBrains Mono for all numeric tabular data */
+  .font-mono, [data-mono], .tabular-nums {
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-feature-settings: "tnum" 1;
+  }
+}
+
+/* Custom 3D & Specular Sub-Surface Edge Effects directly from Stitch Design */
+.tactile-tier-1 {
+  background-color: #0D1526;
+  border: 1px solid #1E2D4A;
+  box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.05), 0 4px 16px -2px rgba(0, 0, 0, 0.45);
+}
+
+.tactile-tier-2 {
+  background-color: #131E36;
+  border: 1px solid #2A3E66;
+  box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.08), 0 12px 32px -4px rgba(0, 0, 0, 0.65);
+}
+
+/* Double-Bezel (Doppelrand) Architecture from high-end-visual-design */
+.double-bezel-outer {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid #1E2D4A;
+  padding: 3px;
+  border-radius: 12px;
+  box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.05), 0 8px 24px -4px rgba(0, 0, 0, 0.5);
+  transition: all 0.25s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.double-bezel-outer:hover {
+  border-color: #2A3E66;
+  box-shadow: inset 0px 1px 0px 0px rgba(255, 255, 255, 0.1), 0 12px 32px -4px rgba(0, 0, 0, 0.7), 0 0 16px rgba(59, 130, 246, 0.15);
+}
+
+.double-bezel-inner {
+  background-color: #0D1526;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  box-shadow: inset 0px 1px 1px 0px rgba(255, 255, 255, 0.06);
+}
+
+/* 3D Tactile Interactive Buttons from Stitch */
+.btn-tactile-primary {
+  background: linear-gradient(180deg, #2563EB 0%, #1D4ED8 100%);
+  border: 1px solid #3B82F6;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.28), 0 2px 6px rgba(0, 0, 0, 0.5);
+  transition: all 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.btn-tactile-primary:hover {
+  background: linear-gradient(180deg, #3B82F6 0%, #2563EB 100%);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.4), 0 0 14px rgba(59, 130, 246, 0.55);
+  transform: translateY(-1px);
+}
+
+.btn-tactile-primary:active {
+  transform: translateY(1px) scale(0.98);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.btn-tactile-destructive {
+  background: linear-gradient(180deg, rgba(225, 29, 72, 0.22) 0%, rgba(225, 29, 72, 0.12) 100%);
+  border: 1px solid #E11D48;
+  color: #ff8093;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.15), 0 2px 8px rgba(225, 29, 72, 0.25);
+  transition: all 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.btn-tactile-destructive:hover {
+  background: #E11D48;
+  color: #ffffff;
+  box-shadow: 0 0 16px rgba(225, 29, 72, 0.6);
+  transform: translateY(-1px);
+}
+
+.btn-tactile-destructive:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.btn-tactile-surface {
+  background: #131E36;
+  border: 1px solid #1E2D4A;
+  color: #dfe2ef;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.07), 0 2px 4px rgba(0, 0, 0, 0.4);
+  transition: all 0.2s cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.btn-tactile-surface:hover {
+  background: #1A2847;
+  border-color: #2A3E66;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.btn-tactile-surface:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+/* Sub-Surface Grid Pattern from Stitch */
+.bg-grid-subtle {
+  background-size: 24px 24px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+}
+
+/* Pulsing Live Sentinel Indicator */
+@keyframes pulse-ring {
+  0% { transform: scale(0.95); opacity: 0.85; }
+  50% { transform: scale(1.15); opacity: 0.4; }
+  100% { transform: scale(0.95); opacity: 0.85; }
+}
+
+.status-pulse {
+  animation: pulse-ring 2s infinite ease-in-out;
+}
+
+/* Custom Scrollbar for Ledger Grids */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #090D16;
+}
+::-webkit-scrollbar-thumb {
+  background: #1E2D4A;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2A3E66;
+}
