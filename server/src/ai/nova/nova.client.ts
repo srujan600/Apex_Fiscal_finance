@@ -9,7 +9,7 @@ export class NovaClient {
 
   constructor(customBaseUrl?: string, customApiKey?: string, timeoutMs = 12000) {
     this.baseUrl = (customBaseUrl || env.NOVA_BASE_URL).replace(/\/+$/, '');
-    this.apiKey = customApiKey || env.NOVA_API_KEY || '';
+    this.apiKey = customApiKey !== undefined ? customApiKey : (env.NOVA_API_KEY || '');
     this.timeoutMs = timeoutMs;
   }
 

@@ -163,4 +163,90 @@ test('Phase 5 Policy Engine & Deterministic Rule Evaluator Tests', async (t) => 
     assert.strictEqual(evalRestored.verdict, 'FLAGGED');
     assert.strictEqual(evalRestored.actionRequired, 'REQUIRE_CFO_OVERRIDE');
   });
+
+  // 6. HTTP API Endpoints Integration Test
+  await t.test('Policy API: verifies REST endpoints for listing, creating, toggling, and evaluating policies', async () => {
+    const { createApp } = await import('../src/app');
+    const app = createApp();
+
+    let server: any;
+    let baseUrl = '';
+
+    await new Promise<void>((resolve) => {
+      server = app.listen(0, '127.0.0.1', () => {
+        const address = server.address() as any;
+        baseUrl = `http://127.0.0.1:${address.port}`;
+        resolve();
+      });
+    });
+
+    try {
+      // 1. GET /api/policies
+      const listRes = await fetch(`${baseUrl}/api/policies`);
+      assert.strictEqual(listRes.status, 200);
+      const listData: any = await listRes.json();
+      assert.strictEqual(listData.success, true);
+      assert.ok(Array.isArray(listData.data));
+      assert.ok(listData.data.length >= 3);
+
+      // 2. GET /api/policies/:id
+      const getOneRes = await fetch(`${baseUrl}/api/policies/pol-1`);
+      assert.strictEqual(getOneRes.status, 200);
+      const getOneData: any = await getOneRes.json();
+      assert.strictEqual(getOneData.data.id, 'pol-1');
+      assert.strictEqual(getOneData.data.code, 'RULE-ENG-08');
+
+      // 3. POST /api/policies (Create new policy)
+      const createRes = await fetch(`${baseUrl}/api/policies`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-User-Role': 'CFO',
+        },
+        body: JSON.stringify({
+          code: 'RULE-API-TEST-01',
+          name: 'API Enforcement Policy Test',
+          conditionExpression: 'AMOUNT > $250,000',
+          thresholdValue: 250000,
+          actionRequired: 'REQUIRE_CFO_OVERRIDE',
+          targetEntity: 'Executive',
+          status: 'ACTIVE',
+        }),
+      });
+      assert.strictEqual(createRes.status, 201);
+      const createData: any = await createRes.json();
+      assert.strictEqual(createData.data.code, 'RULE-API-TEST-01');
+
+      // 4. PATCH /api/policies/:id/toggle
+      const toggleRes = await fetch(`${baseUrl}/api/policies/${createData.data.id}/toggle`, {
+        method: 'PATCH',
+        headers: { 'X-User-Role': 'CFO' },
+      });
+      assert.strictEqual(toggleRes.status, 200);
+      const toggleData: any = await toggleRes.json();
+      assert.strictEqual(toggleData.data.status, 'PAUSED');
+
+      // 5. POST /api/policies/evaluate
+      const evalRes = await fetch(`${baseUrl}/api/policies/evaluate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: 75000,
+          departmentId: 'dept-eng',
+          departmentName: 'Engineering',
+          vendor: 'NVIDIA Corp',
+        }),
+      });
+      assert.strictEqual(evalRes.status, 200);
+      const evalData: any = await evalRes.json();
+      assert.strictEqual(evalData.success, true);
+      assert.ok(evalData.data.ruleTriggered);
+    } finally {
+      if (server) {
+        server.close();
+      }
+    }
+  });
+
+  closeDb();
 });

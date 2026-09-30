@@ -141,5 +141,93 @@ test('Phase 3 Deterministic Budget Engine Tests', async (t) => {
     }, /Insufficient available headroom/);
   });
 
+  // 6. HTTP API Endpoints & RBAC Security Gate
+  await t.test('Budgets API: verifies REST endpoints and RBAC permission enforcement', async () => {
+    const { createApp } = await import('../src/app');
+    const app = createApp();
+
+    let server: any;
+    let baseUrl = '';
+
+    await new Promise<void>((resolve) => {
+      server = app.listen(0, '127.0.0.1', () => {
+        const address = server.address() as any;
+        baseUrl = `http://127.0.0.1:${address.port}`;
+        resolve();
+      });
+    });
+
+    try {
+      // 1. GET /api/budgets
+      const listRes = await fetch(`${baseUrl}/api/budgets`);
+      assert.strictEqual(listRes.status, 200);
+      const listData: any = await listRes.json();
+      assert.strictEqual(listData.success, true);
+      assert.ok(Array.isArray(listData.data));
+      assert.ok(listData.data.length >= 4);
+
+      // 2. GET /api/budgets/:id
+      const detailRes = await fetch(`${baseUrl}/api/budgets/bgt-eng`);
+      assert.strictEqual(detailRes.status, 200);
+      const detailData: any = await detailRes.json();
+      assert.strictEqual(detailData.data.id, 'bgt-eng');
+      assert.strictEqual(detailData.data.code, 'BGT-2025-ENG');
+
+      // 3. RBAC Gate: EMPLOYEE cannot modify budget allocation (403)
+      const empPatchRes = await fetch(`${baseUrl}/api/budgets/bgt-eng`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-User-Role': 'EMPLOYEE',
+        },
+        body: JSON.stringify({
+          allocated: 20000000,
+          justification: 'Unauthorized budget expansion',
+        }),
+      });
+      assert.strictEqual(empPatchRes.status, 403, 'EMPLOYEE must be blocked from modifying budgets');
+
+      // 4. RBAC Gate: FINANCE_ADMIN can update budget allocation (200)
+      const adminPatchRes = await fetch(`${baseUrl}/api/budgets/bgt-eng`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-User-Role': 'FINANCE_ADMIN',
+        },
+        body: JSON.stringify({
+          allocated: 19000000,
+          justification: 'Quarterly supplemental capital release',
+        }),
+      });
+      assert.strictEqual(adminPatchRes.status, 200);
+      const adminPatchData: any = await adminPatchRes.json();
+      assert.strictEqual(adminPatchData.data.allocated, 19000000);
+
+      // 5. POST /api/budgets/rebalance (Alias endpoint test)
+      const rebalanceRes = await fetch(`${baseUrl}/api/budgets/rebalance`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-User-Role': 'FINANCE_ADMIN',
+        },
+        body: JSON.stringify({
+          sourceId: 'bgt-sls',
+          targetId: 'bgt-mkt',
+          amount: 500000,
+          reason: 'Inter-department marketing sprint fund transfer',
+        }),
+      });
+      assert.strictEqual(rebalanceRes.status, 200);
+      const rebalanceData: any = await rebalanceRes.json();
+      assert.strictEqual(rebalanceData.success, true);
+      assert.ok(rebalanceData.data.source);
+      assert.ok(rebalanceData.data.target);
+    } finally {
+      if (server) {
+        server.close();
+      }
+    }
+  });
+
   closeDb();
 });

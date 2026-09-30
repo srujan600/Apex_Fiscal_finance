@@ -139,5 +139,83 @@ test('Phase 4 Spending & Transactions Tests', async (t) => {
     assert.ok(searchResults[0].vendor.includes('Amazon'));
   });
 
+  // 5. HTTP Endpoints & Simulation Integration
+  await t.test('Spending API: verifies REST endpoints and simulation latency', async () => {
+    const { createApp } = await import('../src/app');
+    const app = createApp();
+
+    let server: any;
+    let baseUrl = '';
+
+    await new Promise<void>((resolve) => {
+      server = app.listen(0, '127.0.0.1', () => {
+        const address = server.address() as any;
+        baseUrl = `http://127.0.0.1:${address.port}`;
+        resolve();
+      });
+    });
+
+    try {
+      // 1. GET /api/spending
+      const listRes = await fetch(`${baseUrl}/api/spending`);
+      assert.strictEqual(listRes.status, 200);
+      const listData: any = await listRes.json();
+      assert.strictEqual(listData.success, true);
+      assert.ok(Array.isArray(listData.data));
+
+      // 2. POST /api/spending/simulate (sub-15ms pre-clearance)
+      const startSim = Date.now();
+      const simRes = await fetch(`${baseUrl}/api/spending/simulate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          departmentId: 'dept-eng',
+          amount: 25000,
+        }),
+      });
+      const simDuration = Date.now() - startSim;
+      assert.strictEqual(simRes.status, 200);
+      const simData: any = await simRes.json();
+      assert.strictEqual(simData.success, true);
+      assert.ok(simData.data.postCommitmentUtil > 0);
+      assert.ok(simDuration < 250, `Simulation took ${simDuration}ms`);
+
+      // 3. POST /api/spending (Submit new requisition)
+      const submitRes = await fetch(`${baseUrl}/api/spending`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-User-Role': 'EMPLOYEE',
+        },
+        body: JSON.stringify({
+          category: 'Cloud Infrastructure & Compute',
+          categoryId: 'cat-cld',
+          departmentId: 'dept-eng',
+          departmentName: 'Engineering',
+          amount: 12500,
+          vendor: 'Cloudflare Enterprise DDoS',
+          businessPurpose: 'DNS edge routing and bot mitigation expansion',
+          hasAttachment: true,
+        }),
+      });
+      assert.strictEqual(submitRes.status, 201);
+      const submitData: any = await submitRes.json();
+      assert.strictEqual(submitData.success, true);
+      assert.strictEqual(submitData.data.vendor, 'Cloudflare Enterprise DDoS');
+      assert.strictEqual(submitData.data.amount, 12500);
+
+      // 4. GET /api/spending/:id
+      const getOneRes = await fetch(`${baseUrl}/api/spending/${submitData.data.id}`);
+      assert.strictEqual(getOneRes.status, 200);
+      const getOneData: any = await getOneRes.json();
+      assert.strictEqual(getOneData.data.id, submitData.data.id);
+      assert.strictEqual(getOneData.data.trackingNumber, submitData.data.trackingNumber);
+    } finally {
+      if (server) {
+        server.close();
+      }
+    }
+  });
+
   closeDb();
 });

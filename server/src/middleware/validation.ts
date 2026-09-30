@@ -18,7 +18,15 @@ export function validateQuery<T>(schema: ZodSchema<T>) {
     if (!result.success) {
       return next(result.error);
     }
-    req.query = result.data as any;
+    try {
+      Object.defineProperty(req, 'query', {
+        value: result.data,
+        writable: true,
+        configurable: true,
+      });
+    } catch {
+      Object.assign(req.query, result.data as any);
+    }
     next();
   };
 }
@@ -29,7 +37,15 @@ export function validateParams<T>(schema: ZodSchema<T>) {
     if (!result.success) {
       return next(result.error);
     }
-    req.params = result.data as any;
+    try {
+      Object.defineProperty(req, 'params', {
+        value: result.data,
+        writable: true,
+        configurable: true,
+      });
+    } catch {
+      Object.assign(req.params, result.data as any);
+    }
     next();
   };
 }

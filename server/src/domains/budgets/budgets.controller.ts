@@ -126,3 +126,26 @@ budgetsRouter.post(
     }
   }
 );
+
+// POST /api/budgets/rebalance (Alias for frontend compatibility)
+budgetsRouter.post(
+  '/rebalance',
+  requirePermission('REALLOCATE_BUDGET'),
+  validateBody(reallocateBudgetSchema),
+  (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const actorName = req.user?.name || 'Administrator';
+      const actorRole = req.user?.role || 'FINANCE_ADMIN';
+
+      const result = budgetsService.reallocateBudget(req.body, actorName, actorRole);
+      const response: ApiResponse = {
+        success: true,
+        data: result,
+        meta: { timestamp: new Date().toISOString() },
+      };
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+);

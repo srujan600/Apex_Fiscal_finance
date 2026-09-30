@@ -102,4 +102,64 @@ test('Phase 7 Forecasting & Sensitivity Engine Tests', async (t) => {
     assert.ok(engBreakdown);
     assert.ok(engBreakdown.stressedProjected > 0);
   });
+
+  // 7. REST API Endpoints Verification
+  await t.test('Forecasts API: verifies REST endpoints for summary, risks, mitigations, and sensitivity', async () => {
+    const { createApp } = await import('../src/app');
+    const app = createApp();
+
+    const server = await new Promise<any>((resolve) => {
+      const s = app.listen(0, () => resolve(s));
+    });
+    const port = server.address().port;
+    const baseUrl = `http://127.0.0.1:${port}`;
+
+    try {
+      // GET /api/forecasts/summary
+      const summaryRes = await fetch(`${baseUrl}/api/forecasts/summary?scenario=ai_spike&stressFactor=15`);
+      assert.strictEqual(summaryRes.status, 200);
+      const summaryData: any = await summaryRes.json();
+      assert.strictEqual(summaryData.success, true);
+      assert.strictEqual(summaryData.data.scenario, 'ai_spike');
+      assert.strictEqual(summaryData.data.stressFactor, 15);
+      assert.ok(summaryData.data.chartData.length === 12);
+
+      // GET /api/forecasts/risks
+      const risksRes = await fetch(`${baseUrl}/api/forecasts/risks`);
+      assert.strictEqual(risksRes.status, 200);
+      const risksData: any = await risksRes.json();
+      assert.strictEqual(risksData.success, true);
+      assert.ok(risksData.data.length >= 1);
+
+      // GET /api/forecasts/mitigations
+      const mitigationsRes = await fetch(`${baseUrl}/api/forecasts/mitigations`);
+      assert.strictEqual(mitigationsRes.status, 200);
+      const mitigationsData: any = await mitigationsRes.json();
+      assert.strictEqual(mitigationsData.success, true);
+      assert.strictEqual(mitigationsData.data.length, 3);
+
+      // POST /api/forecasts/simulate-sensitivity
+      const simRes = await fetch(`${baseUrl}/api/forecasts/simulate-sensitivity`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          scenario: 'inflation',
+          stressFactor: 10,
+          emergencyContingency: 250000,
+        }),
+      });
+      assert.strictEqual(simRes.status, 200);
+      const simData: any = await simRes.json();
+      assert.strictEqual(simData.success, true);
+      assert.strictEqual(simData.data.scenario, 'inflation');
+      assert.strictEqual(simData.data.emergencyContingency, 250000);
+      assert.ok(simData.data.confidenceLower95 < simData.data.stressedYearEnd);
+    } finally {
+      if (server) {
+        server.close();
+      }
+    }
+  });
+
+  closeDb();
 });

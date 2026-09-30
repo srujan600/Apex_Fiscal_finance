@@ -91,5 +91,107 @@ test('Phase 2 Data Domains Tests', async (t) => {
     assert.ok(latestAudit.new_value.includes('$3,500,000'));
   });
 
+  // 4. Lookups & Error Handling
+  await t.test('Lookups: throws AppError(404) on non-existent records', () => {
+    assert.throws(
+      () => usersService.getUserById('non-existent-user'),
+      (err: any) => err.code === 'USER_NOT_FOUND' && err.statusCode === 404
+    );
+    assert.throws(
+      () => departmentsService.getDepartmentById('non-existent-dept'),
+      (err: any) => err.code === 'DEPARTMENT_NOT_FOUND' && err.statusCode === 404
+    );
+    assert.throws(
+      () => categoriesService.getCategoryById('non-existent-cat'),
+      (err: any) => err.code === 'CATEGORY_NOT_FOUND' && err.statusCode === 404
+    );
+  });
+
+  // 5. Auth & RBAC Endpoints Integration Test
+  await t.test('Auth & RBAC: verifies login, logout, me, and RBAC permission gating', async () => {
+    const { createApp } = await import('../src/app');
+    const app = createApp();
+
+    let server: any;
+    let baseUrl = '';
+
+    await new Promise<void>((resolve) => {
+      server = app.listen(0, '127.0.0.1', () => {
+        const address = server.address() as any;
+        baseUrl = `http://127.0.0.1:${address.port}`;
+        resolve();
+      });
+    });
+
+    try {
+      // Test login
+      const loginRes = await fetch(`${baseUrl}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role: 'FINANCE_ADMIN' }),
+      });
+      const loginData: any = await loginRes.json();
+      assert.strictEqual(loginRes.status, 200);
+      assert.strictEqual(loginData.data.user.role, 'FINANCE_ADMIN');
+      assert.ok(loginData.data.token.startsWith('jwt-session-'));
+
+      // Test logout
+      const logoutRes = await fetch(`${baseUrl}/api/auth/logout`, { method: 'POST' });
+      assert.strictEqual(logoutRes.status, 200);
+
+      // Test me with role header
+      const meRes = await fetch(`${baseUrl}/api/auth/me`, {
+        headers: { 'X-User-Role': 'DEPT_MANAGER' },
+      });
+      const meData: any = await meRes.json();
+      assert.strictEqual(meRes.status, 200);
+      assert.strictEqual(meData.data.role, 'DEPT_MANAGER');
+
+      // Test switch-role
+      const switchRes = await fetch(`${baseUrl}/api/auth/switch-role`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role: 'CFO' }),
+      });
+      const switchData: any = await switchRes.json();
+      assert.strictEqual(switchRes.status, 200);
+      assert.strictEqual(switchData.data.activeRole, 'CFO');
+
+      // Test RBAC on Category Creation: EMPLOYEE must be FORBIDDEN (403)
+      const employeeForbiddenRes = await fetch(`${baseUrl}/api/categories`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-User-Role': 'EMPLOYEE',
+        },
+        body: JSON.stringify({
+          name: 'Unauthorized Sub-Cap',
+          allocated: 100000,
+        }),
+      });
+      assert.strictEqual(employeeForbiddenRes.status, 403, 'EMPLOYEE must be blocked from managing categories');
+      const employeeErr: any = await employeeForbiddenRes.json();
+      assert.strictEqual(employeeErr.error.code, 'FORBIDDEN_PERMISSION');
+
+      // Test RBAC on Category Creation: CFO must be PERMITTED (201)
+      const cfoPermittedRes = await fetch(`${baseUrl}/api/categories`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-User-Role': 'CFO',
+        },
+        body: JSON.stringify({
+          name: 'Executive Special Reserve',
+          allocated: 5000000,
+        }),
+      });
+      assert.strictEqual(cfoPermittedRes.status, 201, 'CFO must be permitted to create categories');
+    } finally {
+      if (server) {
+        server.close();
+      }
+    }
+  });
+
   closeDb();
 });

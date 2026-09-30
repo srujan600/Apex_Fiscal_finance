@@ -1,4 +1,4 @@
-import { test, describe, before } from 'node:test';
+import { test, describe, before, after } from 'node:test';
 import assert from 'node:assert';
 import http from 'node:http';
 import { createApp } from '../src/app';
@@ -27,6 +27,13 @@ describe('Phase 11 End-to-End Production Verification & Deployment Readiness', (
     });
   });
 
+  after(() => {
+    if (server) {
+      server.close();
+    }
+    closeDb();
+  });
+
   const request = async (path: string, options: RequestInit = {}) => {
     const res = await fetch(`${baseUrl}${path}`, {
       ...options,
@@ -36,7 +43,7 @@ describe('Phase 11 End-to-End Production Verification & Deployment Readiness', (
         ...(options.headers || {}),
       },
     });
-    const body = await res.json().catch(() => null);
+    const body: any = await res.json().catch(() => null);
     return { status: res.status, headers: res.headers, body };
   };
 

@@ -53,6 +53,61 @@ usersRouter.get('/:id', (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
+const loginSchema = z.object({
+  email: z.string().email().optional(),
+  role: z.enum(['CFO', 'FINANCE_ADMIN', 'DEPT_MANAGER', 'EMPLOYEE', 'SYSTEM_ADMIN']).optional(),
+});
+
+// POST /api/auth/login
+authRouter.post(
+  '/login',
+  validateBody(loginSchema),
+  (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { email, role } = req.body;
+      const targetRole = role || (email ? 'EMPLOYEE' : 'CFO');
+      const user = usersService.getUserByRole(targetRole as UserRole);
+
+      const response: ApiResponse = {
+        success: true,
+        data: {
+          token: `jwt-session-${user.id}-${Date.now().toString(36)}`,
+          user,
+        },
+        meta: { timestamp: new Date().toISOString() },
+      };
+      res.json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// POST /api/auth/logout
+authRouter.post('/logout', (_req: Request, res: Response) => {
+  res.json({
+    success: true,
+    data: { message: 'Session terminated successfully' },
+    meta: { timestamp: new Date().toISOString() },
+  });
+});
+
+// GET /api/auth/me
+authRouter.get('/me', (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const role = (req.user?.role || 'CFO') as UserRole;
+    const user = usersService.getUserByRole(role);
+    const response: ApiResponse = {
+      success: true,
+      data: user,
+      meta: { timestamp: new Date().toISOString() },
+    };
+    res.json(response);
+  } catch (error) {
+    next(error);
+  }
+});
+
 const switchRoleSchema = z.object({
   role: z.enum(['CFO', 'FINANCE_ADMIN', 'DEPT_MANAGER', 'EMPLOYEE', 'SYSTEM_ADMIN']),
 });

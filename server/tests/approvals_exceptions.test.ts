@@ -188,4 +188,81 @@ test('Phase 6 Approvals & Exceptions Management Tests', async (t) => {
       'Department managers cannot perform sovereign overrides'
     );
   });
+
+  // 9. HTTP REST Endpoints Integration Test
+  await t.test('Approvals & Exceptions API: verifies REST endpoints and RBAC gates', async () => {
+    const { createApp } = await import('../src/app');
+    const app = createApp();
+
+    let server: any;
+    let baseUrl = '';
+
+    await new Promise<void>((resolve) => {
+      server = app.listen(0, '127.0.0.1', () => {
+        const address = server.address() as any;
+        baseUrl = `http://127.0.0.1:${address.port}`;
+        resolve();
+      });
+    });
+
+    try {
+      // 1. GET /api/approvals
+      const appRes = await fetch(`${baseUrl}/api/approvals`);
+      assert.strictEqual(appRes.status, 200);
+      const appData: any = await appRes.json();
+      assert.strictEqual(appData.success, true);
+      assert.ok(Array.isArray(appData.data));
+
+      // 2. GET /api/exceptions
+      const exRes = await fetch(`${baseUrl}/api/exceptions`);
+      assert.strictEqual(exRes.status, 200);
+      const exData: any = await exRes.json();
+      assert.strictEqual(exData.success, true);
+      assert.ok(Array.isArray(exData.data));
+      assert.ok(exData.data.length >= 4);
+
+      // 3. GET /api/exceptions/:id
+      const exDetailRes = await fetch(`${baseUrl}/api/exceptions/ex-9031`);
+      assert.strictEqual(exDetailRes.status, 200);
+      const exDetailData: any = await exDetailRes.json();
+      assert.strictEqual(exDetailData.data.id, 'ex-9031');
+
+      // 4. POST /api/exceptions/:id/override (CFO)
+      const overrideRes = await fetch(`${baseUrl}/api/exceptions/ex-9031/override`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-User-Role': 'CFO',
+        },
+        body: JSON.stringify({
+          justification: 'Executive override approved for critical software deployment.',
+          offsetSource: 'Contingency Pool Alpha',
+        }),
+      });
+      assert.strictEqual(overrideRes.status, 200);
+      const overrideData: any = await overrideRes.json();
+      assert.strictEqual(overrideData.data.status, 'OVERRIDDEN');
+
+      // 5. POST /api/exceptions/:id/enforce-reject
+      const enforceRes = await fetch(`${baseUrl}/api/exceptions/ex-9042/enforce-reject`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-User-Role': 'CFO',
+        },
+        body: JSON.stringify({
+          reason: 'Excessive overrun rejected by finance committee.',
+        }),
+      });
+      assert.strictEqual(enforceRes.status, 200);
+      const enforceData: any = await enforceRes.json();
+      assert.strictEqual(enforceData.data.status, 'ENFORCED_REJECTED');
+    } finally {
+      if (server) {
+        server.close();
+      }
+    }
+  });
+
+  closeDb();
 });
