@@ -93,8 +93,8 @@ export const CreateBudgetModal: React.FC<CreateBudgetModalProps> = ({
           />
         </div>
 
-        <div className="p-3.5 rounded bg-[#090D16] border border-[#1E2D4A] space-y-3">
-          <span className="text-[10px] font-mono text-[#8c909f] uppercase tracking-wider block">
+        <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 space-y-3">
+          <span className="text-[10px] font-mono text-slate-400 uppercase tracking-wider block font-semibold">
             Automated Enforcement Guardrails
           </span>
 

@@ -36,18 +36,18 @@ export const CategoriesView: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-[#1E2D4A]/50">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-3 border-b border-slate-200/80">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold uppercase bg-[#3B82F6]/20 text-[#adc6ff] border border-[#3B82F6]/30">
+            <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-semibold uppercase bg-blue-50 text-blue-700 border border-blue-200/80">
               Taxonomy & Sub-Caps
             </span>
-            <span className="text-[11px] font-mono text-[#8c909f]">EXPENSE CATEGORIES</span>
+            <span className="text-[11px] font-mono text-slate-400 font-medium">EXPENSE CATEGORIES</span>
           </div>
-          <h1 className="text-xl md:text-2xl text-white font-semibold tracking-tight mt-1">
+          <h1 className="text-xl md:text-2xl text-slate-900 font-bold tracking-tight mt-1">
             Spend Category Budgets & Policy Thresholds
           </h1>
-          <p className="text-xs text-[#8c909f] mt-0.5">
+          <p className="text-xs text-slate-500 mt-0.5">
             Category-level capital limits, vendor concentration sub-caps, and escalation triggers.
           </p>
         </div>
@@ -61,43 +61,43 @@ export const CategoriesView: React.FC = () => {
 
       {/* Aggregate Overview Quad */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
-        <div className="tactile-tier-1 p-3.5 rounded-lg border border-[#1E2D4A]">
-          <span className="text-[10px] font-mono text-[#8c909f] uppercase block">ACTIVE CATEGORIES</span>
-          <span className="text-xl font-mono font-bold text-white block mt-1">
+        <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+          <span className="text-[10px] font-mono text-slate-400 uppercase block font-semibold">ACTIVE CATEGORIES</span>
+          <span className="text-xl font-mono font-bold text-slate-900 block mt-1">
             {categories.length} Taxonomy Classes
           </span>
-          <span className="text-[10px] font-mono text-[#8c909f] block mt-0.5">100% Monitored</span>
+          <span className="text-[10px] font-mono text-slate-400 block mt-0.5">100% Monitored</span>
         </div>
 
-        <div className="tactile-tier-1 p-3.5 rounded-lg border border-[#1E2D4A]">
-          <span className="text-[10px] font-mono text-[#8c909f] uppercase block">TOTAL CATEGORY POOL</span>
-          <span className="text-xl font-mono font-bold text-white block mt-1">
+        <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+          <span className="text-[10px] font-mono text-slate-400 uppercase block font-semibold">TOTAL CATEGORY POOL</span>
+          <span className="text-xl font-mono font-bold text-slate-900 block mt-1">
             {formatCurrency(totalAllocated, currency, 'compact')}
           </span>
-          <span className="text-[10px] font-mono text-[#8c909f] block mt-0.5">Approved Ceilings</span>
+          <span className="text-[10px] font-mono text-slate-400 block mt-0.5">Approved Ceilings</span>
         </div>
 
-        <div className="tactile-tier-1 p-3.5 rounded-lg border border-[#1E2D4A]">
-          <span className="text-[10px] font-mono text-[#8c909f] uppercase block">TOTAL IN-FLIGHT</span>
-          <span className="text-xl font-mono font-bold text-[#3B82F6] block mt-1">
+        <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+          <span className="text-[10px] font-mono text-slate-400 uppercase block font-semibold">TOTAL IN-FLIGHT</span>
+          <span className="text-xl font-mono font-bold text-blue-600 block mt-1">
             {formatCurrency(totalSpent + totalCommitted, currency, 'compact')}
           </span>
-          <span className="text-[10px] font-mono text-[#8c909f] block mt-0.5">Settled + Committed</span>
+          <span className="text-[10px] font-mono text-slate-400 block mt-0.5">Settled + Committed</span>
         </div>
 
-        <div className="tactile-tier-1 p-3.5 rounded-lg border border-[#1E2D4A]">
-          <span className="text-[10px] font-mono text-[#8c909f] uppercase block">HIGHEST CONCENTRATION</span>
-          <span className="text-xl font-mono font-bold text-[#ff8093] block mt-1">Cloud Infrastructure</span>
-          <span className="text-[10px] font-mono text-[#ff8093] block mt-0.5">92.4% Sub-cap hit</span>
+        <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+          <span className="text-[10px] font-mono text-slate-400 uppercase block font-semibold">HIGHEST CONCENTRATION</span>
+          <span className="text-xl font-mono font-bold text-rose-600 block mt-1">Cloud Infrastructure</span>
+          <span className="text-[10px] font-mono text-rose-600 block mt-0.5 font-medium">92.4% Sub-cap hit</span>
         </div>
       </div>
 
       {/* Category List Ledger Table */}
-      <div className="tactile-tier-1 rounded-xl overflow-hidden border border-[#1E2D4A]">
+      <div className="bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-[#090D16] text-[#64748B] text-[11px] font-mono uppercase border-b border-[#1E2D4A] h-9 select-none">
+              <tr className="bg-slate-50 text-slate-500 text-[11px] font-mono uppercase border-b border-slate-200/80 h-10 select-none">
                 <th className="px-4 font-semibold">Category Code</th>
                 <th className="px-3 font-semibold">Category Name</th>
                 <th className="px-3 font-semibold text-right">Allocated Sub-Cap</th>
@@ -110,7 +110,7 @@ export const CategoriesView: React.FC = () => {
                 <th className="px-4 font-semibold text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#131E36] text-xs">
+            <tbody className="divide-y divide-slate-100 text-xs font-sans">
               {categories.map((cat) => {
                 const inFlight = cat.spent + cat.committed;
                 const utilPercent = (inFlight / cat.allocated) * 100;
@@ -118,63 +118,63 @@ export const CategoriesView: React.FC = () => {
                 const isOverThreshold = utilPercent >= cat.thresholdPercent;
 
                 return (
-                  <tr key={cat.id} className="hover:bg-[#131E36]/60 transition-colors group">
-                    <td className="px-4 py-3 font-mono font-bold text-white">
+                  <tr key={cat.id} className="hover:bg-slate-50/70 transition-colors group">
+                    <td className="px-4 py-3.5 font-mono font-bold text-slate-900">
                       {cat.code}
                     </td>
 
-                    <td className="px-3 py-3">
-                      <span className="font-semibold text-white block">{cat.name}</span>
-                      <span className="text-[10px] text-[#8c909f] block">
+                    <td className="px-3 py-3.5">
+                      <span className="font-semibold text-slate-900 block">{cat.name}</span>
+                      <span className="text-[10px] text-slate-400 block font-medium">
                         Approval Gate: Single-item &gt; $50k requires CFO signoff
                       </span>
                     </td>
 
-                    <td className="px-3 py-3 text-right font-mono font-semibold text-white">
+                    <td className="px-3 py-3.5 text-right font-mono font-semibold text-slate-900">
                       {formatCurrency(cat.allocated, currency, 'compact')}
                     </td>
 
-                    <td className="px-3 py-3 text-right font-mono text-[#3B82F6]">
+                    <td className="px-3 py-3.5 text-right font-mono font-semibold text-blue-600">
                       {formatCurrency(cat.spent, currency, 'compact')}
                     </td>
 
-                    <td className="px-3 py-3 text-right font-mono text-[#818CF8]">
+                    <td className="px-3 py-3.5 text-right font-mono font-semibold text-indigo-600">
                       {formatCurrency(cat.committed, currency, 'compact')}
                     </td>
 
-                    <td className="px-3 py-3 text-right font-mono font-bold text-[#10B981]">
+                    <td className="px-3 py-3.5 text-right font-mono font-bold text-emerald-600">
                       {formatCurrency(available, currency, 'compact')}
                     </td>
 
                     {/* Utilization Meter */}
-                    <td className="px-4 py-3 w-44">
+                    <td className="px-4 py-3.5 w-44">
                       <div className="space-y-1">
                         <div className="flex justify-between text-[10px] font-mono">
-                          <span className="text-white font-medium">{utilPercent.toFixed(1)}%</span>
-                          <span className={isOverThreshold ? 'text-[#ff8093] font-bold' : 'text-[#8c909f]'}>
+                          <span className="text-slate-900 font-semibold">{utilPercent.toFixed(1)}%</span>
+                          <span className={isOverThreshold ? 'text-rose-600 font-semibold' : 'text-slate-400'}>
                             Cap: {cat.thresholdPercent}%
                           </span>
                         </div>
-                        <div className="w-full h-1.5 rounded-full bg-[#181B25] overflow-hidden flex border border-[#1E2D4A]/50">
+                        <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden flex border border-slate-200/60">
                           <div
-                            className={isOverThreshold ? 'bg-[#E11D48]' : 'bg-[#3B82F6]'}
+                            className={isOverThreshold ? 'bg-rose-500' : 'bg-blue-600'}
                             style={{ width: `${Math.min(100, utilPercent)}%` }}
                           />
                         </div>
                       </div>
                     </td>
 
-                    <td className="px-3 py-3 text-right font-mono text-[11px]">
-                      <span className={isOverThreshold ? 'text-[#ff8093] font-semibold' : 'text-[#8c909f]'}>
+                    <td className="px-3 py-3.5 text-right font-mono text-[11px]">
+                      <span className={isOverThreshold ? 'text-rose-600 font-semibold' : 'text-slate-500'}>
                         {isOverThreshold ? 'Auto-Block Triggered' : 'Standard Pre-Clearance'}
                       </span>
                     </td>
 
-                    <td className="px-3 py-3">
+                    <td className="px-3 py-3.5">
                       <StatusBadge status={cat.riskLevel} size="sm" />
                     </td>
 
-                    <td className="px-4 py-3 text-right">
+                    <td className="px-4 py-3.5 text-right">
                       <TactileButton variant="surface" size="sm" onClick={() => setSelectedCategory(cat)}>
                         Config
                       </TactileButton>
@@ -203,27 +203,27 @@ export const CategoriesView: React.FC = () => {
           }
         >
           <div className="space-y-4 text-xs">
-            <div className="p-3.5 rounded bg-[#090D16] border border-[#1E2D4A] space-y-2">
-              <span className="text-[10px] font-mono text-[#8c909f] uppercase block">
+            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 space-y-2">
+              <span className="text-[10px] font-mono text-slate-400 uppercase block font-semibold">
                 Deterministic Policy & Approval Gate
               </span>
-              <p className="text-white text-xs leading-relaxed">
+              <p className="text-slate-700 text-xs leading-relaxed">
                 Requisitions categorized under <strong>{selectedCategory.name}</strong> trigger automated
                 multi-sig review if single disbursement exceeds $50,000 USD or if cumulative run-rate breaches{' '}
                 {selectedCategory.thresholdPercent}%.
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 p-3 rounded bg-[#131E36]/40 border border-[#2A3E66]">
+            <div className="grid grid-cols-2 gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
               <div>
-                <span className="text-[10px] font-mono text-[#8c909f] block">CURRENT BURN RATE</span>
-                <span className="font-mono font-bold text-white text-sm">
+                <span className="text-[10px] font-mono text-slate-400 block font-semibold">CURRENT BURN RATE</span>
+                <span className="font-mono font-bold text-slate-900 text-sm">
                   {formatCurrency(selectedCategory.spent + selectedCategory.committed, currency)}
                 </span>
               </div>
               <div>
-                <span className="text-[10px] font-mono text-[#8c909f] block">REMAINING HEADROOM</span>
-                <span className="font-mono font-bold text-[#10B981] text-sm">
+                <span className="text-[10px] font-mono text-slate-400 block font-semibold">REMAINING HEADROOM</span>
+                <span className="font-mono font-bold text-emerald-600 text-sm">
                   {formatCurrency(selectedCategory.allocated - (selectedCategory.spent + selectedCategory.committed), currency)}
                 </span>
               </div>

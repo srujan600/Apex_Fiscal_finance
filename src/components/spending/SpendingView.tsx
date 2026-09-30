@@ -32,18 +32,18 @@ export const SpendingView: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-[#1E2D4A]/50">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-3 border-b border-slate-200/80">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold uppercase bg-[#3B82F6]/20 text-[#adc6ff] border border-[#3B82F6]/30">
+            <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-semibold uppercase bg-blue-50 text-blue-700 border border-blue-200/80">
               Procurement Pre-Clearance
             </span>
-            <span className="text-[11px] font-mono text-[#8c909f]">REQUISITIONS PIPELINE</span>
+            <span className="text-[11px] font-mono text-slate-400 font-medium">REQUISITIONS PIPELINE</span>
           </div>
-          <h1 className="text-xl md:text-2xl text-white font-semibold tracking-tight mt-1">
+          <h1 className="text-xl md:text-2xl text-slate-900 font-bold tracking-tight mt-1">
             Corporate Spending Requests & Pre-Commitment Verification
           </h1>
-          <p className="text-xs text-[#8c909f] mt-0.5">
+          <p className="text-xs text-slate-500 mt-0.5">
             Every expenditure is dynamically evaluated against cost center envelopes prior to binding vendor execution.
           </p>
         </div>
@@ -57,43 +57,43 @@ export const SpendingView: React.FC = () => {
 
       {/* Requisitions Overview Quad */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
-        <div className="tactile-tier-1 p-3.5 rounded-lg border border-[#1E2D4A]">
-          <span className="text-[10px] font-mono text-[#8c909f] uppercase block">TOTAL REQUISITIONS</span>
-          <span className="text-xl font-mono font-bold text-white block mt-1">
+        <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+          <span className="text-[10px] font-mono text-slate-400 uppercase block font-semibold">TOTAL REQUISITIONS</span>
+          <span className="text-xl font-mono font-bold text-slate-900 block mt-1">
             {requests.length} Requests
           </span>
-          <span className="text-[10px] font-mono text-[#8c909f] block mt-0.5">Current Quarter</span>
+          <span className="text-[10px] font-mono text-slate-400 block mt-0.5">Current Quarter</span>
         </div>
 
-        <div className="tactile-tier-1 p-3.5 rounded-lg border border-[#1E2D4A]">
-          <span className="text-[10px] font-mono text-[#8c909f] uppercase block">TOTAL PIPELINE VALUE</span>
-          <span className="text-xl font-mono font-bold text-[#3B82F6] block mt-1">
+        <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+          <span className="text-[10px] font-mono text-slate-400 uppercase block font-semibold">TOTAL PIPELINE VALUE</span>
+          <span className="text-xl font-mono font-bold text-blue-600 block mt-1">
             {formatCurrency(totalCommittedValue, currency, 'compact')}
           </span>
-          <span className="text-[10px] font-mono text-[#8c909f] block mt-0.5">Gross commitment</span>
+          <span className="text-[10px] font-mono text-slate-400 block mt-0.5">Gross commitment</span>
         </div>
 
-        <div className="tactile-tier-1 p-3.5 rounded-lg border border-[#1E2D4A]">
-          <span className="text-[10px] font-mono text-[#8c909f] uppercase block">BLOCKED AT GUARDRAIL</span>
-          <span className="text-xl font-mono font-bold text-[#ff8093] block mt-1">
+        <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+          <span className="text-[10px] font-mono text-slate-400 uppercase block font-semibold">BLOCKED AT GUARDRAIL</span>
+          <span className="text-xl font-mono font-bold text-rose-600 block mt-1">
             {blockedRequests.length} Requests
           </span>
-          <span className="text-[10px] font-mono text-[#ff8093] block mt-0.5">Budget breach prevented</span>
+          <span className="text-[10px] font-mono text-rose-600 block mt-0.5 font-medium">Budget breach prevented</span>
         </div>
 
-        <div className="tactile-tier-1 p-3.5 rounded-lg border border-[#1E2D4A]">
-          <span className="text-[10px] font-mono text-[#8c909f] uppercase block">AWAITING SUPERVISOR</span>
-          <span className="text-xl font-mono font-bold text-[#c0c1ff] block mt-1">
+        <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+          <span className="text-[10px] font-mono text-slate-400 uppercase block font-semibold">AWAITING SUPERVISOR</span>
+          <span className="text-xl font-mono font-bold text-indigo-600 block mt-1">
             {pendingRequests.length} In Review
           </span>
-          <span className="text-[10px] font-mono text-[#8c909f] block mt-0.5">Pre-cleared pipeline</span>
+          <span className="text-[10px] font-mono text-slate-400 block mt-0.5">Pre-cleared pipeline</span>
         </div>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 rounded-lg bg-[#0D1526] border border-[#1E2D4A]">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-sm">
         <div className="relative w-full sm:w-80">
-          <span className="material-symbols-outlined absolute left-2.5 top-2 text-[#8c909f] text-base" data-icon="search">
+          <span className="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-base" data-icon="search">
             search
           </span>
           <input
@@ -101,7 +101,7 @@ export const SpendingView: React.FC = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by vendor, ID, or department..."
-            className="w-full h-8 pl-8 pr-3 text-xs font-mono bg-[#090D16] text-[#dfe2ef] border border-[#1E2D4A] rounded focus:border-[#3B82F6] focus:outline-none placeholder-[#424754]"
+            className="w-full h-9 pl-9 pr-3 text-xs font-mono bg-white text-slate-900 border border-slate-200 rounded-xl placeholder:text-slate-400 focus:outline-none focus:border-slate-400 focus:ring-4 focus:ring-slate-100 transition-all shadow-sm"
           />
         </div>
 
@@ -110,10 +110,10 @@ export const SpendingView: React.FC = () => {
             <button
               key={filter}
               onClick={() => setStatusFilter(filter)}
-              className={`px-2.5 py-1 rounded text-[11px] font-mono transition-colors cursor-pointer whitespace-nowrap ${
+              className={`px-3 py-1.5 rounded-xl text-[11px] font-mono transition-all cursor-pointer whitespace-nowrap ${
                 statusFilter === filter
-                  ? 'bg-[#3B82F6]/20 text-[#adc6ff] border border-[#3B82F6]/40 font-bold'
-                  : 'text-[#8c909f] hover:text-white bg-[#090D16] border border-[#1E2D4A]'
+                  ? 'bg-slate-900 text-white font-semibold shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900 bg-slate-50 hover:bg-slate-100 border border-slate-200'
               }`}
             >
               {filter === 'ALL'
@@ -129,11 +129,11 @@ export const SpendingView: React.FC = () => {
       </div>
 
       {/* Requisitions Ledger Table */}
-      <div className="tactile-tier-1 rounded-xl overflow-hidden border border-[#1E2D4A]">
+      <div className="bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-[#090D16] text-[#64748B] text-[11px] font-mono uppercase border-b border-[#1E2D4A] h-9 select-none">
+              <tr className="bg-slate-50 text-slate-500 text-[11px] font-mono uppercase border-b border-slate-200/80 h-10 select-none">
                 <th className="px-4 font-semibold">Tracking # / Submitted</th>
                 <th className="px-3 font-semibold">Department & Requisitioner</th>
                 <th className="px-3 font-semibold">Vendor & Purpose</th>
@@ -143,56 +143,56 @@ export const SpendingView: React.FC = () => {
                 <th className="px-4 font-semibold text-right">Actions Rail</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#131E36] text-xs">
+            <tbody className="divide-y divide-slate-100 text-xs font-sans">
               {filteredRequests.map((req) => (
-                <tr key={req.id} className="hover:bg-[#131E36]/60 transition-colors group">
-                  <td className="px-4 py-3">
-                    <span className="font-mono font-bold text-white block">
+                <tr key={req.id} className="hover:bg-slate-50/70 transition-colors group">
+                  <td className="px-4 py-3.5">
+                    <span className="font-mono font-bold text-slate-900 block">
                       {req.trackingNumber}
                     </span>
-                    <span className="text-[10px] text-[#8c909f] font-mono block">
+                    <span className="text-[10px] text-slate-400 font-mono block">
                       {req.submittedAt}
                     </span>
                   </td>
 
-                  <td className="px-3 py-3">
-                    <span className="text-white font-medium block">{req.departmentName}</span>
-                    <span className="text-[10px] text-[#8c909f] block">
+                  <td className="px-3 py-3.5">
+                    <span className="text-slate-900 font-semibold block">{req.departmentName}</span>
+                    <span className="text-[10px] text-slate-500 block">
                       {req.requestedBy} ({req.requestorRole})
                     </span>
                   </td>
 
-                  <td className="px-3 py-3 max-w-xs">
-                    <span className="text-white font-semibold block truncate">{req.vendor}</span>
-                    <span className="text-[10px] text-[#8c909f] block truncate">
+                  <td className="px-3 py-3.5 max-w-xs">
+                    <span className="text-slate-900 font-semibold block truncate">{req.vendor}</span>
+                    <span className="text-[10px] text-slate-500 block truncate leading-tight">
                       {req.businessPurpose}
                     </span>
                   </td>
 
-                  <td className="px-3 py-3 text-right">
-                    <span className="font-mono font-bold text-white text-sm block">
+                  <td className="px-3 py-3.5 text-right">
+                    <span className="font-mono font-bold text-slate-900 text-sm block">
                       {formatCurrency(req.amount, currency)}
                     </span>
-                    <span className="text-[10px] text-[#8c909f] block font-mono">
+                    <span className="text-[10px] text-slate-400 block font-mono">
                       Post-util: {req.postCommitmentUtil.toFixed(1)}%
                     </span>
                   </td>
 
-                  <td className="px-3 py-3">
+                  <td className="px-3 py-3.5">
                     <StatusBadge status={req.status} pulse={req.status === 'BLOCKED'} />
                   </td>
 
-                  <td className="px-3 py-3 text-center">
+                  <td className="px-3 py-3.5 text-center">
                     {req.hasAttachment ? (
-                      <span className="material-symbols-outlined text-[#3B82F6] text-base" title="Signed SOW Attached" data-icon="attachment">
+                      <span className="material-symbols-outlined text-blue-600 text-base" title="Signed SOW Attached" data-icon="attachment">
                         attachment
                       </span>
                     ) : (
-                      <span className="text-[10px] font-mono text-[#8c909f]">—</span>
+                      <span className="text-[10px] font-mono text-slate-400">—</span>
                     )}
                   </td>
 
-                  <td className="px-4 py-3 text-right">
+                  <td className="px-4 py-3.5 text-right">
                     <div className="flex items-center justify-end gap-1.5">
                       <TactileButton
                         variant="surface"

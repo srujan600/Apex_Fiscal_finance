@@ -14,79 +14,77 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
   size = 'md',
   className = '',
 }) => {
-  const sizeClass = size === 'sm' ? 'px-1.5 py-0.5 text-[10px]' : 'px-2 py-0.5 text-[11px]';
+  const sizeClass = size === 'sm' ? 'px-2 py-0.5 text-[10px]' : 'px-2.5 py-0.5 text-[11px]';
 
-  // Config mapping based on Stitch semantic token matrix
   const getBadgeConfig = () => {
     switch (status) {
-      // Risk & Breach States
       case 'HEALTHY':
         return {
-          bg: 'bg-[#10B981]/10',
-          border: 'border-[#10B981]/30',
-          text: 'text-[#10B981]',
-          dot: 'bg-[#10B981]',
+          bg: 'bg-emerald-50',
+          border: 'border-emerald-200',
+          text: 'text-emerald-700',
+          dot: 'bg-emerald-500',
           label: 'HEALTHY',
         };
       case 'ATTENTION':
       case 'WARNING_AUDIT':
         return {
-          bg: 'bg-[#F59E0B]/15',
-          border: 'border-[#F59E0B]/40',
-          text: 'text-[#F59E0B]',
-          dot: 'bg-[#F59E0B]',
+          bg: 'bg-amber-50',
+          border: 'border-amber-200',
+          text: 'text-amber-700',
+          dot: 'bg-amber-500',
           label: status === 'WARNING_AUDIT' ? 'WARNING AUDIT' : 'ATTENTION (80%+)',
         };
       case 'HIGH_RISK':
         return {
-          bg: 'bg-[#EF4444]/15',
-          border: 'border-[#EF4444]/40',
-          text: 'text-[#ffb4ab]',
-          dot: 'bg-[#EF4444]',
+          bg: 'bg-orange-50',
+          border: 'border-orange-200',
+          text: 'text-orange-700',
+          dot: 'bg-orange-500',
           label: 'HIGH RISK (95%+)',
         };
       case 'CRITICAL_BREACH':
       case 'CRITICAL_EXCEPTION':
       case 'BLOCKED':
         return {
-          bg: 'bg-[#E11D48]/20',
-          border: 'border-[#E11D48]/50',
-          text: 'text-[#ff8093]',
-          dot: 'bg-[#E11D48]',
+          bg: 'bg-rose-50',
+          border: 'border-rose-200',
+          text: 'text-rose-700',
+          dot: 'bg-rose-500',
           label: status === 'BLOCKED' ? 'BLOCKED' : 'CRITICAL EXCEPTION',
         };
       case 'POLICY_OVERRIDE':
       case 'APPROVED_OVERRIDE':
         return {
-          bg: 'bg-[#3B82F6]/20',
-          border: 'border-[#3B82F6]/40',
-          text: 'text-[#adc6ff]',
-          dot: 'bg-[#3B82F6]',
+          bg: 'bg-blue-50',
+          border: 'border-blue-200',
+          text: 'text-blue-700',
+          dot: 'bg-blue-500',
           label: 'POLICY OVERRIDE',
         };
       case 'APPROVED':
       case 'PRE_CLEARED':
         return {
-          bg: 'bg-[#14B8A6]/15',
-          border: 'border-[#14B8A6]/30',
-          text: 'text-[#14B8A6]',
-          dot: 'bg-[#14B8A6]',
+          bg: 'bg-teal-50',
+          border: 'border-teal-200',
+          text: 'text-teal-700',
+          dot: 'bg-teal-500',
           label: status === 'PRE_CLEARED' ? 'PRE-CLEARED' : 'APPROVED',
         };
       case 'PENDING_APPROVAL':
         return {
-          bg: 'bg-[#6366F1]/15',
-          border: 'border-[#6366F1]/30',
-          text: 'text-[#c0c1ff]',
-          dot: 'bg-[#6366F1]',
+          bg: 'bg-indigo-50',
+          border: 'border-indigo-200',
+          text: 'text-indigo-700',
+          dot: 'bg-indigo-500',
           label: 'PENDING ACTION',
         };
       default:
         return {
-          bg: 'bg-[#1E2D4A]/40',
-          border: 'border-[#1E2D4A]',
-          text: 'text-[#c2c6d6]',
-          dot: 'bg-[#8c909f]',
+          bg: 'bg-slate-100',
+          border: 'border-slate-200',
+          text: 'text-slate-700',
+          dot: 'bg-slate-400',
           label: String(status).replace(/_/g, ' '),
         };
     }
@@ -96,7 +94,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 font-mono font-medium rounded ${sizeClass} ${config.bg} ${config.border} ${config.text} border tracking-wide uppercase select-none ${className}`}
+      className={`inline-flex items-center gap-1.5 font-mono font-medium rounded-full ${sizeClass} ${config.bg} ${config.border} ${config.text} border tracking-wide uppercase select-none transition-colors ${className}`}
     >
       <span
         className={`w-1.5 h-1.5 rounded-full ${config.dot} ${pulse ? 'animate-ping' : ''}`}

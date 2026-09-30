@@ -121,17 +121,17 @@ export const PolicyEngineView: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* View Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#1E293B] pb-5">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200/80 pb-5">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold tracking-tight text-white font-sans">
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900 font-sans">
               Policy Enforcement Engine & Rule Graph
             </h1>
-            <span className="px-2.5 py-0.5 rounded text-[11px] font-mono font-bold bg-[#10B981]/15 text-[#10B981] border border-[#10B981]/30">
+            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
               REAL-TIME ENFORCEMENT
             </span>
           </div>
-          <p className="text-xs text-[#8c909f] mt-1 font-mono">
+          <p className="text-xs text-slate-500 mt-1 font-mono">
             Deterministic Decision DAG · Sub-20ms Evaluation · Immutable Statutory Policy Registry
           </p>
         </div>
@@ -151,13 +151,13 @@ export const PolicyEngineView: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <DoubleBezelCard>
           <div>
-            <span className="text-[10px] uppercase font-mono tracking-wider text-[#8c909f]">
+            <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 font-medium">
               Active Enforcement Rules
             </span>
-            <div className="mt-1 text-2xl font-bold font-mono text-white tracking-tight">
-              {activeCount} <span className="text-sm font-normal text-[#8c909f]">/ {policies.length}</span>
+            <div className="mt-1 text-2xl font-bold font-mono text-slate-900 tracking-tight">
+              {activeCount} <span className="text-sm font-normal text-slate-400">/ {policies.length}</span>
             </div>
-            <div className="mt-2 flex items-center gap-1.5 text-xs text-[#10B981]">
+            <div className="mt-2 flex items-center gap-1.5 text-xs text-emerald-600 font-medium">
               <span className="material-symbols-outlined text-[14px]">verified</span>
               <span>100% Graph Integrity Verified</span>
             </div>
@@ -166,13 +166,13 @@ export const PolicyEngineView: React.FC = () => {
 
         <DoubleBezelCard>
           <div>
-            <span className="text-[10px] uppercase font-mono tracking-wider text-[#8c909f]">
+            <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 font-medium">
               Strict Auto-Block Gates
             </span>
-            <div className="mt-1 text-2xl font-bold font-mono text-[#EF4444] tracking-tight">
+            <div className="mt-1 text-2xl font-bold font-mono text-rose-600 tracking-tight">
               {autoBlockCount} Rules
             </div>
-            <div className="mt-2 flex items-center gap-1.5 text-xs text-[#8c909f]">
+            <div className="mt-2 flex items-center gap-1.5 text-xs text-slate-500">
               <span>Zero-tolerance budget ceilings</span>
             </div>
           </div>
@@ -180,13 +180,13 @@ export const PolicyEngineView: React.FC = () => {
 
         <DoubleBezelCard>
           <div>
-            <span className="text-[10px] uppercase font-mono tracking-wider text-[#8c909f]">
+            <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 font-medium">
               Mean Execution Latency
             </span>
-            <div className="mt-1 text-2xl font-bold font-mono text-[#3B82F6] tracking-tight">
+            <div className="mt-1 text-2xl font-bold font-mono text-blue-600 tracking-tight">
               ~{avgLatency} ms
             </div>
-            <div className="mt-2 flex items-center gap-1.5 text-xs text-[#8c909f]">
+            <div className="mt-2 flex items-center gap-1.5 text-xs text-slate-500">
               <span>Sub-second requisition clearance</span>
             </div>
           </div>
@@ -194,13 +194,13 @@ export const PolicyEngineView: React.FC = () => {
 
         <DoubleBezelCard>
           <div>
-            <span className="text-[10px] uppercase font-mono tracking-wider text-[#8c909f]">
+            <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 font-medium">
               SOX Governance Grade
             </span>
-            <div className="mt-1 text-2xl font-bold font-mono text-emerald-400 tracking-tight">
+            <div className="mt-1 text-2xl font-bold font-mono text-emerald-600 tracking-tight">
               AAA+ Validated
             </div>
-            <div className="mt-2 flex items-center gap-1.5 text-xs text-[#8c909f]">
+            <div className="mt-2 flex items-center gap-1.5 text-xs text-slate-500">
               <span>Complete cryptographic trace</span>
             </div>
           </div>
@@ -210,16 +210,16 @@ export const PolicyEngineView: React.FC = () => {
       {/* Live Policy Simulation Sandbox */}
       <DoubleBezelCard>
         <div className="space-y-4">
-          <div className="flex items-center justify-between pb-3 border-b border-[#1E293B]">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <div className="flex items-center gap-2">
-              <span className="material-symbols-outlined text-[18px] text-[#3B82F6]">
+              <span className="material-symbols-outlined text-[18px] text-blue-600">
                 terminal
               </span>
-              <h2 className="text-sm font-bold uppercase tracking-wider text-white font-mono">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900 font-mono">
                 Interactive Policy Evaluation Sandbox
               </h2>
             </div>
-            <span className="text-[10px] font-mono text-[#8c909f]">
+            <span className="text-[10px] font-mono text-slate-500">
               Live Engine Test Harness
             </span>
           </div>
@@ -271,30 +271,30 @@ export const PolicyEngineView: React.FC = () => {
           {/* Simulation Output Card */}
           {simResult && (
             <div
-              className={`p-4 rounded border font-mono text-xs mt-3 ${
+              className={`p-4 rounded-xl border font-mono text-xs mt-3 shadow-sm ${
                 simResult.verdict === 'BLOCKED'
-                  ? 'bg-[#EF4444]/10 border-[#EF4444]/30 text-rose-300'
+                  ? 'bg-rose-50 border-rose-200 text-rose-800'
                   : simResult.verdict === 'FLAGGED'
-                  ? 'bg-[#F59E0B]/10 border-[#F59E0B]/30 text-amber-300'
-                  : 'bg-[#10B981]/10 border-[#10B981]/30 text-emerald-300'
+                  ? 'bg-amber-50 border-amber-200 text-amber-800'
+                  : 'bg-emerald-50 border-emerald-200 text-emerald-800'
               }`}
             >
-              <div className="flex items-center justify-between pb-2 border-b border-white/10">
+              <div className="flex items-center justify-between pb-2 border-b border-black/5">
                 <div className="flex items-center gap-2">
                   <span className="font-bold text-sm">
                     VERDICT: {simResult.verdict}
                   </span>
                   {simResult.triggeredRule && (
-                    <span className="px-1.5 py-0.5 rounded text-[10px] bg-black/40 font-bold">
+                    <span className="px-2 py-0.5 rounded-md bg-white/80 border border-slate-200 text-slate-800 font-bold text-[10px]">
                       {simResult.triggeredRule.code}
                     </span>
                   )}
                 </div>
-                <div className="text-[11px] opacity-80">
+                <div className="text-[11px] text-slate-500">
                   Latency: {simResult.latencyMs}ms · Evaluated Against {activeCount} Active Rules
                 </div>
               </div>
-              <p className="mt-2 text-xs leading-relaxed text-slate-200">
+              <p className="mt-2 text-xs leading-relaxed text-slate-700">
                 {simResult.explanation}
               </p>
             </div>
@@ -305,12 +305,12 @@ export const PolicyEngineView: React.FC = () => {
       {/* Policy Rules Registry */}
       <DoubleBezelCard>
         <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-[#1E293B]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-slate-100">
             <div>
-              <h2 className="text-sm font-bold uppercase tracking-wider text-white font-mono">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900 font-mono">
                 Statutory Rule Registry ({filteredPolicies.length})
               </h2>
-              <p className="text-xs text-[#8c909f] mt-0.5">
+              <p className="text-xs text-slate-500 mt-0.5">
                 Deterministic IF-THEN triggers evaluated on every purchase order pre-flight
               </p>
             </div>
@@ -321,10 +321,10 @@ export const PolicyEngineView: React.FC = () => {
                 <button
                   key={tab}
                   onClick={() => setActiveFilter(tab)}
-                  className={`px-3 py-1.5 rounded text-xs font-mono font-medium transition-colors cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-xl text-xs font-mono font-medium transition-all duration-200 cursor-pointer ${
                     activeFilter === tab
-                      ? 'bg-[#3B82F6] text-white font-bold'
-                      : 'bg-[#0D1526] text-[#8c909f] hover:text-white border border-[#1E293B]'
+                      ? 'bg-slate-900 text-white font-bold shadow-sm'
+                      : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200/80 hover:bg-slate-50'
                   }`}
                 >
                   {tab}
@@ -337,7 +337,7 @@ export const PolicyEngineView: React.FC = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs font-mono">
               <thead>
-                <tr className="border-b border-[#1E293B] text-[#8c909f] bg-[#090D16]">
+                <tr className="border-b border-slate-200/80 text-slate-500 bg-slate-50/70">
                   <th className="py-2.5 px-3 font-semibold">Rule Code</th>
                   <th className="py-2.5 px-3 font-semibold">Policy Name & Scope</th>
                   <th className="py-2.5 px-3 font-semibold">Condition Expression</th>
@@ -347,54 +347,54 @@ export const PolicyEngineView: React.FC = () => {
                   <th className="py-2.5 px-3 font-semibold text-center">Status / Toggle</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#1E293B]">
+              <tbody className="divide-y divide-slate-100">
                 {filteredPolicies.map((rule) => {
                   const isActive = rule.status === 'ACTIVE';
                   return (
                     <tr
                       key={rule.id}
-                      className="hover:bg-[#131E36]/40 transition-colors"
+                      className="hover:bg-slate-50/80 transition-colors"
                     >
-                      <td className="py-3 px-3 font-bold text-white">
+                      <td className="py-3 px-3 font-bold text-slate-900">
                         {rule.code}
                       </td>
                       <td className="py-3 px-3">
-                        <div className="font-bold text-white">{rule.name}</div>
-                        <div className="text-[10px] text-[#8c909f]">
+                        <div className="font-bold text-slate-900">{rule.name}</div>
+                        <div className="text-[10px] text-slate-500">
                           Entity: {rule.targetEntity}
                         </div>
                       </td>
                       <td className="py-3 px-3">
-                        <span className="px-2 py-0.5 rounded bg-[#090D16] border border-[#1E293B] text-[#00E5FF] text-[11px]">
+                        <span className="px-2 py-0.5 rounded-md bg-slate-100 border border-slate-200 text-slate-800 text-[11px]">
                           {rule.conditionExpression}
                         </span>
                       </td>
-                      <td className="py-3 px-3 text-right font-bold text-white">
+                      <td className="py-3 px-3 text-right font-bold text-slate-900">
                         {formatCurrency(rule.thresholdValue, currency)}
                       </td>
                       <td className="py-3 px-3 text-center">
                         <span
-                          className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase border ${
+                          className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase border ${
                             rule.actionRequired === 'AUTO_BLOCK'
-                              ? 'bg-[#EF4444]/15 text-[#EF4444] border-[#EF4444]/30'
+                              ? 'bg-rose-50 text-rose-700 border-rose-200'
                               : rule.actionRequired === 'REQUIRE_CFO_OVERRIDE'
-                              ? 'bg-[#F59E0B]/15 text-[#F59E0B] border-[#F59E0B]/30'
-                              : 'bg-[#3B82F6]/15 text-[#3B82F6] border-[#3B82F6]/30'
+                              ? 'bg-amber-50 text-amber-700 border-amber-200'
+                              : 'bg-blue-50 text-blue-700 border-blue-200'
                           }`}
                         >
                           {rule.actionRequired.replace(/_/g, ' ')}
                         </span>
                       </td>
-                      <td className="py-3 px-3 text-right text-[#8c909f]">
+                      <td className="py-3 px-3 text-right text-slate-500">
                         {rule.latencyMs}ms
                       </td>
                       <td className="py-3 px-3 text-center">
                         <button
                           onClick={() => togglePolicyStatus(rule.id)}
-                          className={`px-2.5 py-1 rounded text-[10px] font-bold font-mono transition-all cursor-pointer border ${
+                          className={`px-2.5 py-1 rounded-lg text-[10px] font-bold font-mono transition-all cursor-pointer border ${
                             isActive
-                              ? 'bg-[#10B981]/15 text-[#10B981] border-[#10B981]/40 hover:bg-[#10B981]/25'
-                              : 'bg-slate-800 text-slate-400 border-slate-700 hover:text-white'
+                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                              : 'bg-slate-100 text-slate-500 border-slate-200 hover:text-slate-800 hover:bg-slate-200'
                           }`}
                         >
                           {isActive ? 'ACTIVE' : 'PAUSED'}
@@ -483,11 +483,11 @@ export const PolicyEngineView: React.FC = () => {
             />
           </div>
 
-          <div className="p-3 bg-[#090D16] border border-[#1E293B] rounded text-[11px] text-[#8c909f]">
+          <div className="p-3 bg-slate-50 border border-slate-200/80 rounded-xl text-[11px] text-slate-500">
             Note: Deploying this rule immediately registers it on the pre-clearance decision graph and appends an immutable block to the corporate audit ledger.
           </div>
 
-          <div className="flex justify-end gap-3 pt-3 border-t border-[#1E293B]">
+          <div className="flex justify-end gap-3 pt-3 border-t border-slate-200">
             <TactileButton variant="surface" onClick={() => setCreateModalOpen(false)}>
               Cancel
             </TactileButton>

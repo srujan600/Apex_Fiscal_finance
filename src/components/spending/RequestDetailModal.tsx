@@ -80,41 +80,41 @@ export const RequestDetailModal: React.FC<RequestDetailModalProps> = ({
       <div className="space-y-4 text-xs">
         {/* Core Attributes Quad */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="p-3 rounded bg-[#090D16] border border-[#1E2D4A]">
-            <span className="text-[10px] font-mono text-[#8c909f] uppercase block">REQUESTED VALUE</span>
-            <span className="text-base font-mono font-bold text-white block mt-0.5">
+          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
+            <span className="text-[10px] font-mono text-slate-400 uppercase block font-semibold">REQUESTED VALUE</span>
+            <span className="text-base font-mono font-bold text-slate-900 block mt-0.5">
               {formatCurrency(request.amount, currency)}
             </span>
           </div>
 
-          <div className="p-3 rounded bg-[#090D16] border border-[#1E2D4A]">
-            <span className="text-[10px] font-mono text-[#8c909f] uppercase block">TARGET DEPARTMENT</span>
-            <span className="font-semibold text-white block mt-0.5 truncate">{request.departmentName}</span>
+          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
+            <span className="text-[10px] font-mono text-slate-400 uppercase block font-semibold">TARGET DEPARTMENT</span>
+            <span className="font-semibold text-slate-900 block mt-0.5 truncate">{request.departmentName}</span>
           </div>
 
-          <div className="p-3 rounded bg-[#090D16] border border-[#1E2D4A]">
-            <span className="text-[10px] font-mono text-[#8c909f] uppercase block">EXPENSE CATEGORY</span>
-            <span className="font-semibold text-white block mt-0.5 truncate">{request.category}</span>
+          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
+            <span className="text-[10px] font-mono text-slate-400 uppercase block font-semibold">EXPENSE CATEGORY</span>
+            <span className="font-semibold text-slate-900 block mt-0.5 truncate">{request.category}</span>
           </div>
 
-          <div className="p-3 rounded bg-[#090D16] border border-[#1E2D4A]">
-            <span className="text-[10px] font-mono text-[#8c909f] uppercase block">DESIGNATED VENDOR</span>
-            <span className="font-semibold text-white block mt-0.5 truncate">{request.vendor}</span>
+          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
+            <span className="text-[10px] font-mono text-slate-400 uppercase block font-semibold">DESIGNATED VENDOR</span>
+            <span className="font-semibold text-slate-900 block mt-0.5 truncate">{request.vendor}</span>
           </div>
         </div>
 
         {/* Live Policy Evaluation Verdict Box */}
         <div
-          className={`p-3.5 rounded-lg border space-y-2 ${
+          className={`p-4 rounded-xl border space-y-2.5 shadow-sm ${
             isBlocked
-              ? 'bg-[#E11D48]/10 border-[#E11D48]/40 text-[#ffb4ab]'
-              : 'bg-[#10B981]/10 border-[#10B981]/30 text-[#10B981]'
+              ? 'bg-rose-50/70 border-rose-200 text-rose-800'
+              : 'bg-emerald-50/70 border-emerald-200 text-emerald-800'
           }`}
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span
-                className={`material-symbols-outlined text-base ${isBlocked ? 'text-[#E11D48]' : 'text-[#10B981]'}`}
+                className={`material-symbols-outlined text-base ${isBlocked ? 'text-rose-600' : 'text-emerald-600'}`}
                 data-icon={isBlocked ? 'block' : 'verified'}
               >
                 {isBlocked ? 'block' : 'verified'}
@@ -123,21 +123,21 @@ export const RequestDetailModal: React.FC<RequestDetailModalProps> = ({
                 {isBlocked ? 'POLICY DECISION: BLOCKED' : 'POLICY DECISION: PRE-CLEARED'}
               </span>
             </div>
-            <span className="text-[10px] font-mono">{request.ruleTriggered || 'RULE-EVAL'}</span>
+            <span className="text-[10px] font-mono text-slate-400 font-medium">{request.ruleTriggered || 'RULE-EVAL'}</span>
           </div>
 
-          <p className="text-xs leading-relaxed text-[#dfe2ef]">
+          <p className="text-xs leading-relaxed text-slate-700">
             {request.policyReason || (isBlocked ? 'This request would exceed available budget headroom.' : 'Request is within allocated spend limits.')}
           </p>
 
-          <div className="grid grid-cols-2 gap-3 pt-2 border-t border-[#1E2D4A]/50 text-[11px] font-mono">
+          <div className="grid grid-cols-2 gap-3 pt-2.5 border-t border-slate-200/60 text-[11px] font-mono">
             <div>
-              <span className="text-[#8c909f] block">Pre-Commitment Utilization:</span>
-              <span className="text-white font-semibold">{request.preCommitmentUtil.toFixed(1)}%</span>
+              <span className="text-slate-400 block font-medium">Pre-Commitment Utilization:</span>
+              <span className="text-slate-900 font-semibold">{request.preCommitmentUtil.toFixed(1)}%</span>
             </div>
             <div>
-              <span className="text-[#8c909f] block">Projected Post-Commitment:</span>
-              <span className={`font-bold ${request.postCommitmentUtil > 100 ? 'text-[#ff8093]' : 'text-[#10B981]'}`}>
+              <span className="text-slate-400 block font-medium">Projected Post-Commitment:</span>
+              <span className={`font-bold ${request.postCommitmentUtil > 100 ? 'text-rose-600' : 'text-emerald-700'}`}>
                 {request.postCommitmentUtil.toFixed(1)}%
               </span>
             </div>
@@ -145,29 +145,29 @@ export const RequestDetailModal: React.FC<RequestDetailModalProps> = ({
         </div>
 
         {/* Business Purpose & Justification */}
-        <div className="p-3 bg-[#090D16] border border-[#1E2D4A] rounded space-y-1">
-          <span className="text-[10px] font-mono text-[#8c909f] uppercase block">
+        <div className="p-3.5 bg-slate-50 border border-slate-200/80 rounded-xl space-y-1">
+          <span className="text-[10px] font-mono text-slate-400 uppercase block font-semibold">
             Business Purpose & Procurement Scope
           </span>
-          <p className="text-white text-xs leading-relaxed">{request.businessPurpose}</p>
+          <p className="text-slate-700 text-xs leading-relaxed">{request.businessPurpose}</p>
         </div>
 
         {/* Verified Attachments Preview */}
         {request.hasAttachment && (
-          <div className="p-3 bg-[#090D16] border border-[#1E2D4A] rounded space-y-2">
-            <span className="text-[10px] font-mono text-[#8c909f] uppercase block">
+          <div className="p-3.5 bg-slate-50 border border-slate-200/80 rounded-xl space-y-2">
+            <span className="text-[10px] font-mono text-slate-400 uppercase block font-semibold">
               Associated Procurement Attachments
             </span>
-            <div className="flex items-center justify-between p-2 rounded bg-[#0D1526] border border-[#1E2D4A]">
+            <div className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-slate-200/80 shadow-sm">
               <div className="flex items-center gap-2.5">
-                <span className="material-symbols-outlined text-[#3B82F6] text-lg" data-icon="description">
+                <span className="material-symbols-outlined text-blue-600 text-lg" data-icon="description">
                   description
                 </span>
                 <div>
-                  <span className="font-mono text-white text-xs font-medium block">
+                  <span className="font-mono text-slate-900 text-xs font-semibold block">
                     Vendor_Quote_{request.vendor.replace(/\s+/g, '_')}_Q3_Signed.pdf
                   </span>
-                  <span className="text-[10px] font-mono text-[#8c909f]">2.4 MB · SHA-256 Verified</span>
+                  <span className="text-[10px] font-mono text-slate-400">2.4 MB · SHA-256 Verified</span>
                 </div>
               </div>
               <TactileButton variant="ghost" size="sm" icon="file_download">

@@ -1,6 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 import { novaService } from '../../ai/nova/nova.service';
+import { novaAgentService } from '../../ai/nova/nova.agent';
 import { forecastsService } from '../forecasts/forecasts.service';
 import { getDb } from '../../db/connection';
 import { AppError } from '../../middleware/errorHandler';
@@ -8,6 +9,16 @@ import { validateBody } from '../../middleware/validation';
 import { BudgetExplanationDTO, ApprovalExplanationDTO, AnomalyExplanationDTO } from '../../ai/nova/nova.types';
 
 export const aiRouter = Router();
+
+const agentChatSchema = z.object({
+  message: z.string().min(1, 'Message cannot be empty'),
+  conversationHistory: z.array(z.object({
+    role: z.enum(['user', 'assistant', 'system']),
+    content: z.string(),
+    timestamp: z.string().optional(),
+  })).optional(),
+  context: z.record(z.string(), z.any()).optional(),
+});
 
 const explainBudgetSchema = z.object({
   budgetId: z.string().optional(),
@@ -37,16 +48,74 @@ const explainAnomalySchema = z.object({
 });
 
 // GET /api/ai/status
-aiRouter.get('/status', (_req: Request, res: Response) => {
+aiRouter.get('/status', async (_req: Request, res: Response) => {
+  let liveAnalysis: any = null;
+  try {
+    liveAnalysis = await novaService.getLiveAnalysis();
+  } catch (_e) {}
+
   res.json({
     success: true,
     data: {
       available: novaService.isAvailable(),
       provider: 'Aczen Nova API (v1)',
-      architecture: 'Asynchronous explanation & advisory layer',
-      rule: 'NOVA EXPLAINS. BACKEND DECIDES. DATABASE STORES THE TRUTH.',
+      endpoint: 'https://www.aczen.in/nova-api/v1',
+      live_books_connected: Boolean(liveAnalysis),
+      live_books_summary: liveAnalysis ? {
+        total_envelopes: liveAnalysis.company_books_height.total_budget_envelopes,
+        total_expenses: liveAnalysis.company_books_height.total_historical_expenses,
+        departments_monitored: liveAnalysis.company_books_height.departments_monitored,
+        over_committed_categories: liveAnalysis.live_overruns_detected.count,
+        total_deficit: liveAnalysis.live_overruns_detected.total_deficit_amount,
+      } : null,
+      architecture: 'Live enterprise financial ledger intelligence & pre-clearance enforcement',
+      rule: 'NOVA ANALYZES BOOKS. BACKEND ENFORCES POLICY. DATABASE STORES THE TRUTH.',
     },
   });
+});
+
+// GET /api/ai/nova/live-summary
+aiRouter.get('/nova/live-summary', async (_req: Request, res: Response, next: NextFunction) => {
+  try {
+    const analysis = await novaService.getLiveAnalysis();
+    res.json({ success: true, data: analysis });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// GET /api/ai/nova/budgets
+aiRouter.get('/nova/budgets', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const limit = req.query.limit ? parseInt(String(req.query.limit), 10) : 25;
+    const offset = req.query.offset ? parseInt(String(req.query.offset), 10) : 0;
+    const budgets = await novaService.getLiveBudgets({ limit, offset });
+    res.json({ success: true, data: budgets });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// GET /api/ai/nova/expenses
+aiRouter.get('/nova/expenses', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const limit = req.query.limit ? parseInt(String(req.query.limit), 10) : 25;
+    const offset = req.query.offset ? parseInt(String(req.query.offset), 10) : 0;
+    const expenses = await novaService.getLiveExpenses({ limit, offset });
+    res.json({ success: true, data: expenses });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// GET /api/ai/nova/health
+aiRouter.get('/nova/health', async (_req: Request, res: Response, next: NextFunction) => {
+  try {
+    const health = await novaService.getLiveHealth();
+    res.json({ success: true, data: health });
+  } catch (error) {
+    next(error);
+  }
 });
 
 // POST /api/ai/explain-budget & /api/ai/explain/budget
@@ -273,6 +342,64 @@ const handleManagementInsights = async (_req: Request, res: Response, next: Next
 };
 aiRouter.get('/management-insights', handleManagementInsights);
 aiRouter.get('/insights', handleManagementInsights);
+
+// ==========================================
+// ACZEN NOVA AI AGENT / COPILOT ENDPOINTS
+// ==========================================
+
+// GET /api/ai/agent/capabilities
+aiRouter.get('/agent/capabilities', async (_req: Request, res: Response, next: NextFunction) => {
+  try {
+    const capabilities = await novaAgentService.getCapabilities();
+    res.json({ success: true, data: capabilities });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// POST /api/ai/agent/chat
+aiRouter.post(
+  '/agent/chat',
+  validateBody(agentChatSchema),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const chatResponse = await novaAgentService.chat(req.body);
+      res.json({ success: true, data: chatResponse });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// POST /api/ai/agent/stream
+aiRouter.post(
+  '/agent/stream',
+  validateBody(agentChatSchema),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
+      res.setHeader('Cache-Control', 'no-cache, no-transform');
+      res.setHeader('Connection', 'keep-alive');
+      res.setHeader('X-Accel-Buffering', 'no');
+      res.flushHeaders?.();
+
+      const finalResponse = await novaAgentService.streamChat(req.body, (chunk: string) => {
+        res.write(`data: ${JSON.stringify({ type: 'token', chunk })}\n\n`);
+      });
+
+      res.write(`data: ${JSON.stringify({ type: 'complete', response: finalResponse })}\n\n`);
+      res.write('data: [DONE]\n\n');
+      res.end();
+    } catch (error: any) {
+      if (!res.headersSent) {
+        next(error);
+      } else {
+        res.write(`data: ${JSON.stringify({ type: 'error', error: error.message || 'Stream processing error' })}\n\n`);
+        res.end();
+      }
+    }
+  }
+);
 
 
 

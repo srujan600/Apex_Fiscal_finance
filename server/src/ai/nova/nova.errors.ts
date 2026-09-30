@@ -31,3 +31,10 @@ export class NovaValidationError extends NovaError {
     this.name = 'NovaValidationError';
   }
 }
+
+export class NovaConfigurationError extends NovaError {
+  constructor(message = 'Missing required environment variable: NOVA_API_KEY. Please verify your .env configuration.') {
+    super(message, 500, false);
+    this.name = 'NovaConfigurationError';
+  }
+}

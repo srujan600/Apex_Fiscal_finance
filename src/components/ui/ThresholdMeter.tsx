@@ -26,8 +26,8 @@ export const ThresholdMeter: React.FC<ThresholdMeterProps> = ({
 
   const heightClass = {
     sm: 'h-1.5',
-    md: 'h-2',
-    lg: 'h-3',
+    md: 'h-2.5',
+    lg: 'h-3.5',
   }[height];
 
   return (
@@ -35,45 +35,49 @@ export const ThresholdMeter: React.FC<ThresholdMeterProps> = ({
       {showLabels && (
         <div className="flex items-center justify-between text-[11px] font-mono">
           <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1 text-[#8c909f]">
-              <span className="w-2 h-2 rounded-xs bg-[#3B82F6]" />
+            <span className="flex items-center gap-1.5 text-slate-500 font-medium">
+              <span className="w-2 h-2 rounded-full bg-blue-600" />
               Settled: {settledPercent.toFixed(0)}%
             </span>
-            <span className="flex items-center gap-1 text-[#8c909f]">
-              <span className="w-2 h-2 rounded-xs bg-[#818CF8]" />
+            <span className="flex items-center gap-1.5 text-slate-500 font-medium">
+              <span className="w-2 h-2 rounded-full bg-indigo-500" />
               Committed: {committedPercent.toFixed(0)}%
             </span>
           </div>
-          <span className={`font-semibold ${isBreached ? 'text-[#ff8093]' : totalPercent > 85 ? 'text-[#F59E0B]' : 'text-[#10B981]'}`}>
+          <span
+            className={`font-semibold ${
+              isBreached ? 'text-rose-600' : totalPercent > 85 ? 'text-amber-600' : 'text-emerald-600'
+            }`}
+          >
             Total: {totalPercent.toFixed(1)}% {isBreached ? '(BREACH)' : ''}
           </span>
         </div>
       )}
 
       {/* Progress Track */}
-      <div className={`w-full ${heightClass} rounded-full bg-[#181B25] flex overflow-hidden border border-[#1E2D4A]/50`}>
+      <div className={`w-full ${heightClass} rounded-full bg-slate-100 flex overflow-hidden border border-slate-200/70 shadow-xs`}>
         {/* Settled Bar */}
         <div
-          className="bg-[#3B82F6] h-full transition-all duration-500 ease-out"
+          className="bg-blue-600 h-full transition-all duration-500 ease-out"
           style={{ width: `${settledPercent}%` }}
           title={`Settled: ${settledPercent.toFixed(1)}%`}
         />
         {/* Committed Bar */}
         <div
-          className="bg-[#818CF8] h-full transition-all duration-500 ease-out"
+          className="bg-indigo-500 h-full transition-all duration-500 ease-out"
           style={{ width: `${committedPercent}%` }}
           title={`Committed: ${committedPercent.toFixed(1)}%`}
         />
         {/* Buffer Headroom Bar */}
         <div
-          className="bg-[#262A34] h-full transition-all duration-500 ease-out"
+          className="bg-slate-200/60 h-full transition-all duration-500 ease-out"
           style={{ width: `${bufferPercent}%` }}
           title={`Headroom: ${bufferPercent.toFixed(1)}%`}
         />
         {/* Overrun Deficit Bar if breached */}
         {isBreached && (
           <div
-            className="bg-[#E11D48] h-full animate-pulse"
+            className="bg-rose-500 h-full animate-pulse"
             style={{ width: `${overrunPercent}%` }}
             title={`Overrun Deficit: +${(totalPercent - 100).toFixed(1)}%`}
           />

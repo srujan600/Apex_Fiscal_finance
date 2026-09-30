@@ -109,32 +109,32 @@ export const ReportsView: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* View Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#1E293B] pb-5">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200/80 pb-5">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold tracking-tight text-white font-sans">
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900 font-sans">
               Financial Performance & Variance Reports
             </h1>
-            <span className="px-2.5 py-0.5 rounded text-[11px] font-mono font-bold bg-[#3B82F6]/10 text-[#3B82F6] border border-[#3B82F6]/30">
+            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-blue-50 text-blue-700 border border-blue-200">
               GAAS / SOX COMPLIANT
             </span>
           </div>
-          <p className="text-xs text-[#8c909f] mt-1 font-mono">
+          <p className="text-xs text-slate-500 mt-1 font-mono">
             Executive Ledger Synthesis · Budget Pacing Metrics · Real-time Variance Reconciliation
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
           {/* Period Selector */}
-          <div className="flex items-center bg-[#0D1526] border border-[#1E293B] rounded p-1">
+          <div className="flex items-center bg-slate-100/80 border border-slate-200/80 rounded-xl p-1">
             {(['Q1', 'Q2', 'Q3', 'FY2026'] as const).map((p) => (
               <button
                 key={p}
                 onClick={() => setSelectedPeriod(p)}
-                className={`px-3 py-1 rounded text-xs font-mono font-medium transition-colors cursor-pointer ${
+                className={`px-3 py-1 rounded-lg text-xs font-mono font-medium transition-all duration-200 cursor-pointer ${
                   selectedPeriod === p
-                    ? 'bg-[#3B82F6] text-white'
-                    : 'text-[#8c909f] hover:text-white'
+                    ? 'bg-slate-900 text-white shadow-sm'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
                 }`}
               >
                 {p}
@@ -157,8 +157,8 @@ export const ReportsView: React.FC = () => {
 
       {/* Export Toast Notification */}
       {exportToast && (
-        <div className="p-3 bg-[#10B981]/10 border border-[#10B981]/30 rounded text-xs font-mono text-[#10B981] flex items-center gap-2 animate-fadeIn">
-          <span className="material-symbols-outlined text-[18px]">check_circle</span>
+        <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs font-mono text-emerald-800 flex items-center gap-2 shadow-sm animate-fadeIn">
+          <span className="material-symbols-outlined text-[18px] text-emerald-600">check_circle</span>
           <span>{exportToast}</span>
         </div>
       )}
@@ -168,15 +168,15 @@ export const ReportsView: React.FC = () => {
         {/* Total Allocated */}
         <DoubleBezelCard>
           <div>
-            <span className="text-[10px] uppercase font-mono tracking-wider text-[#8c909f]">
+            <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 font-medium">
               Net Budget Authorized ({selectedPeriod})
             </span>
-            <div className="mt-1 text-2xl font-bold font-mono text-white tracking-tight">
+            <div className="mt-1 text-2xl font-bold font-mono text-slate-900 tracking-tight">
               {formatCurrency(totalAllocated, currency)}
             </div>
-            <div className="mt-2 flex items-center justify-between text-xs text-[#8c909f]">
+            <div className="mt-2 flex items-center justify-between text-xs text-slate-500">
               <span>Board Discretionary Cap</span>
-              <span className="font-mono text-white">100.0%</span>
+              <span className="font-mono text-slate-900 font-semibold">100.0%</span>
             </div>
           </div>
         </DoubleBezelCard>
@@ -184,15 +184,15 @@ export const ReportsView: React.FC = () => {
         {/* Total Spent */}
         <DoubleBezelCard>
           <div>
-            <span className="text-[10px] uppercase font-mono tracking-wider text-[#8c909f]">
+            <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 font-medium">
               Incurred Cash Outflow
             </span>
-            <div className="mt-1 text-2xl font-bold font-mono text-slate-100 tracking-tight">
+            <div className="mt-1 text-2xl font-bold font-mono text-slate-900 tracking-tight">
               {formatCurrency(totalSettled, currency)}
             </div>
-            <div className="mt-2 flex items-center justify-between text-xs text-[#8c909f]">
+            <div className="mt-2 flex items-center justify-between text-xs text-slate-500">
               <span>Cleared Invoices & Payroll</span>
-              <span className="font-mono text-[#3B82F6]">
+              <span className="font-mono text-blue-600 font-semibold">
                 {((totalSettled / totalAllocated) * 100).toFixed(1)}%
               </span>
             </div>
@@ -202,15 +202,15 @@ export const ReportsView: React.FC = () => {
         {/* Encumbered Commitments */}
         <DoubleBezelCard>
           <div>
-            <span className="text-[10px] uppercase font-mono tracking-wider text-[#8c909f]">
+            <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 font-medium">
               Active Encumbrances (PO Pipeline)
             </span>
-            <div className="mt-1 text-2xl font-bold font-mono text-[#F59E0B] tracking-tight">
+            <div className="mt-1 text-2xl font-bold font-mono text-amber-600 tracking-tight">
               {formatCurrency(totalCommitted, currency)}
             </div>
-            <div className="mt-2 flex items-center justify-between text-xs text-[#8c909f]">
+            <div className="mt-2 flex items-center justify-between text-xs text-slate-500">
               <span>Pre-cleared Purchase Orders</span>
-              <span className="font-mono text-[#F59E0B]">
+              <span className="font-mono text-amber-600 font-semibold">
                 {((totalCommitted / totalAllocated) * 100).toFixed(1)}%
               </span>
             </div>
@@ -218,23 +218,23 @@ export const ReportsView: React.FC = () => {
         </DoubleBezelCard>
 
         {/* Net Available Runway */}
-        <DoubleBezelCard className={totalRemaining < 0 ? 'border border-[#EF4444]/40' : ''}>
+        <DoubleBezelCard className={totalRemaining < 0 ? 'border border-rose-300 bg-rose-50/20' : ''}>
           <div>
-            <span className="text-[10px] uppercase font-mono tracking-wider text-[#8c909f]">
+            <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 font-medium">
               Unencumbered Liquid Runway
             </span>
             <div
               className={`mt-1 text-2xl font-bold font-mono tracking-tight ${
-                totalRemaining >= 0 ? 'text-[#10B981]' : 'text-[#EF4444]'
+                totalRemaining >= 0 ? 'text-emerald-600' : 'text-rose-600'
               }`}
             >
               {formatCurrency(totalRemaining, currency)}
             </div>
             <div className="mt-2 flex items-center justify-between text-xs">
-              <span className="text-[#8c909f]">Remaining Authorization</span>
+              <span className="text-slate-500">Remaining Authorization</span>
               <span
                 className={`font-mono font-bold ${
-                  totalRemaining >= 0 ? 'text-[#10B981]' : 'text-[#EF4444]'
+                  totalRemaining >= 0 ? 'text-emerald-600' : 'text-rose-600'
                 }`}
               >
                 {(100 - totalBurnRate).toFixed(1)}% free
@@ -247,23 +247,23 @@ export const ReportsView: React.FC = () => {
       {/* Department Variance Ledger */}
       <DoubleBezelCard>
         <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-[#1E293B]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-slate-100">
             <div>
-              <h2 className="text-sm font-bold uppercase tracking-wider text-white font-mono">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900 font-mono">
                 Departmental Budget vs. Run-Rate Variance Matrix
               </h2>
-              <p className="text-xs text-[#8c909f] mt-0.5">
+              <p className="text-xs text-slate-500 mt-0.5">
                 Multi-center cost analysis including executed vouchers and committed contracts
               </p>
             </div>
 
             {/* Filter by Department */}
             <div className="flex items-center gap-2">
-              <span className="text-xs font-mono text-[#8c909f]">Cost Center:</span>
+              <span className="text-xs font-mono text-slate-500">Cost Center:</span>
               <select
                 value={selectedDeptFilter}
                 onChange={(e) => setSelectedDeptFilter(e.target.value)}
-                className="bg-[#0D1526] border border-[#1E293B] text-white text-xs rounded px-2.5 py-1.5 font-mono cursor-pointer"
+                className="bg-white border border-slate-200 text-slate-900 text-xs rounded-xl px-3 py-1.5 font-mono cursor-pointer focus:outline-none focus:ring-4 focus:ring-slate-100 focus:border-slate-400 transition-all shadow-sm"
               >
                 <option value="ALL">All Cost Centers ({budgets.length})</option>
                 {budgets.map((b: BudgetEnvelope) => (
@@ -279,7 +279,7 @@ export const ReportsView: React.FC = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs font-mono">
               <thead>
-                <tr className="border-b border-[#1E293B] text-[#8c909f] bg-[#090D16]">
+                <tr className="border-b border-slate-200/80 text-slate-500 bg-slate-50/70">
                   <th className="py-2.5 px-3 font-semibold">Cost Center</th>
                   <th className="py-2.5 px-3 font-semibold">Department & Lead</th>
                   <th className="py-2.5 px-3 font-semibold text-right">Allocated</th>
@@ -291,38 +291,38 @@ export const ReportsView: React.FC = () => {
                   <th className="py-2.5 px-3 font-semibold text-center">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#1E293B]">
+              <tbody className="divide-y divide-slate-100">
                 {filteredDeptRows.map((row: DepartmentReportRow) => {
                   const isOver = row.variance > 0;
                   return (
                     <tr
                       key={row.id}
-                      className="hover:bg-[#131E36]/40 transition-colors"
+                      className="hover:bg-slate-50/80 transition-colors"
                     >
-                      <td className="py-3 px-3 font-bold text-white">
+                      <td className="py-3 px-3 font-bold text-slate-900">
                         {row.code}
                       </td>
                       <td className="py-3 px-3">
-                        <div className="font-bold text-white">{row.name}</div>
-                        <div className="text-[10px] text-[#8c909f]">
+                        <div className="font-bold text-slate-900">{row.name}</div>
+                        <div className="text-[10px] text-slate-500">
                           Lead: {row.manager}
                         </div>
                       </td>
-                      <td className="py-3 px-3 text-right font-bold text-white">
+                      <td className="py-3 px-3 text-right font-bold text-slate-900">
                         {formatCurrency(row.allocated, currency)}
                       </td>
-                      <td className="py-3 px-3 text-right text-slate-300">
+                      <td className="py-3 px-3 text-right text-slate-600">
                         {formatCurrency(row.spent, currency)}
                       </td>
-                      <td className="py-3 px-3 text-right text-[#F59E0B]">
+                      <td className="py-3 px-3 text-right text-amber-600 font-medium">
                         {formatCurrency(row.committed, currency)}
                       </td>
-                      <td className="py-3 px-3 text-right font-bold text-white">
+                      <td className="py-3 px-3 text-right font-bold text-slate-900">
                         {formatCurrency(row.totalLiability, currency)}
                       </td>
                       <td
                         className={`py-3 px-3 text-right font-bold ${
-                          isOver ? 'text-[#EF4444]' : 'text-[#10B981]'
+                          isOver ? 'text-rose-600' : 'text-emerald-600'
                         }`}
                       >
                         {isOver ? '+' : ''}
@@ -333,22 +333,22 @@ export const ReportsView: React.FC = () => {
                           <span
                             className={`font-bold ${
                               row.utilPct > 100
-                                ? 'text-[#EF4444]'
+                                ? 'text-rose-600'
                                 : row.utilPct > 85
-                                ? 'text-[#F59E0B]'
-                                : 'text-[#10B981]'
+                                ? 'text-amber-600'
+                                : 'text-emerald-600'
                             }`}
                           >
                             {row.utilPct.toFixed(1)}%
                           </span>
-                          <div className="w-12 bg-[#090D16] h-1.5 rounded-full overflow-hidden border border-[#1E293B]">
+                          <div className="w-12 bg-slate-100 h-1.5 rounded-full overflow-hidden border border-slate-200/70">
                             <div
                               className={`h-full ${
                                 row.utilPct > 100
-                                  ? 'bg-[#EF4444]'
+                                  ? 'bg-rose-500'
                                   : row.utilPct > 85
-                                  ? 'bg-[#F59E0B]'
-                                  : 'bg-[#10B981]'
+                                  ? 'bg-amber-500'
+                                  : 'bg-emerald-500'
                               }`}
                               style={{ width: `${Math.min(row.utilPct, 100)}%` }}
                             />
@@ -371,16 +371,16 @@ export const ReportsView: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <DoubleBezelCard>
           <div className="space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-[#1E293B]">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[18px] text-[#3B82F6]">
+                <span className="material-symbols-outlined text-[18px] text-blue-600">
                   pie_chart
                 </span>
-                <h3 className="text-sm font-bold text-white uppercase tracking-wider font-mono">
+                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider font-mono">
                   Operational Category Pacing
                 </h3>
               </div>
-              <span className="text-[10px] font-mono text-[#8c909f]">
+              <span className="text-[10px] font-mono text-slate-500">
                 Quarterly Target: 75.0%
               </span>
             </div>
@@ -393,18 +393,18 @@ export const ReportsView: React.FC = () => {
                   <div key={cat.id} className="space-y-1.5">
                     <div className="flex items-center justify-between text-xs font-mono">
                       <div className="flex items-center gap-2">
-                        <span className="material-symbols-outlined text-[14px] text-[#8c909f]">
+                        <span className="material-symbols-outlined text-[14px] text-slate-400">
                           folder
                         </span>
-                        <span className="font-bold text-white">{cat.name}</span>
+                        <span className="font-bold text-slate-900">{cat.name}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <span className="text-slate-300">
+                        <span className="text-slate-600">
                           {formatCurrency(cat.spent, currency)} / {formatCurrency(cat.allocated, currency)}
                         </span>
                         <span
                           className={`font-bold ${
-                            isOverPaced ? 'text-[#EF4444]' : 'text-[#10B981]'
+                            isOverPaced ? 'text-rose-600' : 'text-emerald-600'
                           }`}
                         >
                           {pacingPct.toFixed(1)}%
@@ -412,16 +412,16 @@ export const ReportsView: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className="w-full bg-[#0D1526] h-2 rounded-full overflow-hidden border border-[#1E293B] relative">
+                    <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden border border-slate-200/70 relative">
                       {/* 75% Quarterly pacing benchmark marker */}
-                      <div className="absolute top-0 bottom-0 left-[75%] w-0.5 bg-white/40 z-10" />
+                      <div className="absolute top-0 bottom-0 left-[75%] w-0.5 bg-slate-400/80 z-10" />
                       <div
                         className={`h-full transition-all duration-500 ${
                           pacingPct > 100
-                            ? 'bg-[#EF4444]'
+                            ? 'bg-rose-500'
                             : pacingPct > 80
-                            ? 'bg-[#F59E0B]'
-                            : 'bg-[#3B82F6]'
+                            ? 'bg-amber-500'
+                            : 'bg-blue-600'
                         }`}
                         style={{ width: `${Math.min(pacingPct, 100)}%` }}
                       />
@@ -436,25 +436,25 @@ export const ReportsView: React.FC = () => {
         {/* Audit Compliance & Scheduled Subscriptions */}
         <DoubleBezelCard>
           <div className="space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-[#1E293B]">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[18px] text-[#10B981]">
+                <span className="material-symbols-outlined text-[18px] text-emerald-600">
                   mark_email_read
                 </span>
-                <h3 className="text-sm font-bold text-white uppercase tracking-wider font-mono">
+                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider font-mono">
                   Audit Subscriptions & Automation
                 </h3>
               </div>
-              <span className="text-[10px] font-mono text-[#10B981] bg-[#10B981]/10 px-2 py-0.5 rounded border border-[#10B981]/20">
+              <span className="text-[10px] font-mono text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
                 Active Cron Active
               </span>
             </div>
 
             <div className="space-y-3">
-              <div className="p-3 bg-[#0D1526] border border-[#1E293B] rounded flex items-center justify-between">
+              <div className="p-3.5 bg-slate-50/70 border border-slate-200/80 rounded-xl flex items-center justify-between hover:border-slate-300 transition-all">
                 <div>
-                  <div className="text-xs font-bold text-white">Monday Morning CFO Variance Digest</div>
-                  <div className="text-[11px] text-[#8c909f] mt-0.5 font-mono">
+                  <div className="text-xs font-bold text-slate-900">Monday Morning CFO Variance Digest</div>
+                  <div className="text-[11px] text-slate-500 mt-0.5 font-mono">
                     Weekly 08:00 EST · Encumbered PO review & runway forecast
                   </div>
                 </div>
@@ -463,10 +463,10 @@ export const ReportsView: React.FC = () => {
                 </TactileButton>
               </div>
 
-              <div className="p-3 bg-[#0D1526] border border-[#1E293B] rounded flex items-center justify-between">
+              <div className="p-3.5 bg-slate-50/70 border border-slate-200/80 rounded-xl flex items-center justify-between hover:border-slate-300 transition-all">
                 <div>
-                  <div className="text-xs font-bold text-white">Monthly Board Fiscal Pack (PDF + Signed)</div>
-                  <div className="text-[11px] text-[#8c909f] mt-0.5 font-mono">
+                  <div className="text-xs font-bold text-slate-900">Monthly Board Fiscal Pack (PDF + Signed)</div>
+                  <div className="text-[11px] text-slate-500 mt-0.5 font-mono">
                     1st of each month · Cryptographically hashed GAAS reconciliation
                   </div>
                 </div>
@@ -475,10 +475,10 @@ export const ReportsView: React.FC = () => {
                 </TactileButton>
               </div>
 
-              <div className="p-3 bg-[#0D1526] border border-[#1E293B] rounded flex items-center justify-between">
+              <div className="p-3.5 bg-slate-50/70 border border-slate-200/80 rounded-xl flex items-center justify-between hover:border-slate-300 transition-all">
                 <div>
-                  <div className="text-xs font-bold text-white">Critical Cap Breach Webhook (Slack / PagerDuty)</div>
-                  <div className="text-[11px] text-[#8c909f] mt-0.5 font-mono">
+                  <div className="text-xs font-bold text-slate-900">Critical Cap Breach Webhook (Slack / PagerDuty)</div>
+                  <div className="text-[11px] text-slate-500 mt-0.5 font-mono">
                     Instant trigger upon any department crossing 95% ceiling
                   </div>
                 </div>
@@ -498,46 +498,46 @@ export const ReportsView: React.FC = () => {
         title="Executive Fiscal Dossier (Pre-Print Preview)"
         maxWidth="xl"
       >
-        <div className="space-y-6 text-slate-200">
+        <div className="space-y-6 text-slate-800">
           {/* Document Header */}
-          <div className="border-b-2 border-slate-700 pb-4 flex justify-between items-start">
+          <div className="border-b-2 border-slate-200 pb-4 flex justify-between items-start">
             <div>
-              <div className="text-xs font-mono uppercase tracking-widest text-[#3B82F6]">
+              <div className="text-xs font-mono uppercase tracking-widest text-blue-600 font-semibold">
                 Confidential · Corporate Governance Directive
               </div>
-              <h1 className="text-xl font-bold font-sans text-white mt-1">
+              <h1 className="text-xl font-bold font-sans text-slate-900 mt-1">
                 Apex Fiscal Executive Spend Dossier
               </h1>
-              <p className="text-xs text-[#8c909f] font-mono mt-0.5">
+              <p className="text-xs text-slate-500 font-mono mt-0.5">
                 Period: Q3 FY 2026 · Generated on September 30, 2026 · Hash: #8F9A-40D9-92C1
               </p>
             </div>
             <div className="text-right">
-              <span className="px-2.5 py-1 rounded bg-[#10B981]/20 text-[#10B981] font-mono text-xs font-bold border border-[#10B981]/40">
+              <span className="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 font-mono text-xs font-bold border border-emerald-200">
                 AUDIT VERIFIED
               </span>
             </div>
           </div>
 
           {/* Executive Summary Metrics */}
-          <div className="grid grid-cols-3 gap-4 font-mono text-xs p-4 bg-[#090D16] rounded border border-[#1E293B]">
+          <div className="grid grid-cols-3 gap-4 font-mono text-xs p-4 bg-slate-50 rounded-xl border border-slate-200/80">
             <div>
-              <span className="text-[#8c909f] uppercase text-[10px]">Total Authorized Cap:</span>
-              <div className="text-base font-bold text-white mt-0.5">
+              <span className="text-slate-500 uppercase text-[10px]">Total Authorized Cap:</span>
+              <div className="text-base font-bold text-slate-900 mt-0.5">
                 {formatCurrency(totalAllocated, currency)}
               </div>
             </div>
             <div>
-              <span className="text-[#8c909f] uppercase text-[10px]">Net Commitments Incurred:</span>
-              <div className="text-base font-bold text-white mt-0.5">
+              <span className="text-slate-500 uppercase text-[10px]">Net Commitments Incurred:</span>
+              <div className="text-base font-bold text-slate-900 mt-0.5">
                 {formatCurrency(totalRunRate, currency)}
               </div>
             </div>
             <div>
-              <span className="text-[#8c909f] uppercase text-[10px]">Runway Capacity:</span>
+              <span className="text-slate-500 uppercase text-[10px]">Runway Capacity:</span>
               <div
                 className={`text-base font-bold mt-0.5 ${
-                  totalRemaining >= 0 ? 'text-[#10B981]' : 'text-[#EF4444]'
+                  totalRemaining >= 0 ? 'text-emerald-600' : 'text-rose-600'
                 }`}
               >
                 {formatCurrency(totalRemaining, currency)} ({(100 - totalBurnRate).toFixed(1)}%)
@@ -546,7 +546,7 @@ export const ReportsView: React.FC = () => {
           </div>
 
           {/* Detailed Narrative */}
-          <div className="space-y-2 text-xs leading-relaxed text-[#c4c7d6]">
+          <div className="space-y-2 text-xs leading-relaxed text-slate-600">
             <p>
               This document serves as the formal quarterly spend reconciliation for the executive committee. Total capital authorized across all four primary operating centers stands at <strong>{formatCurrency(totalAllocated, currency)}</strong>. Incurred expenditures plus active legal commitments amount to <strong>{formatCurrency(totalRunRate, currency)}</strong>, representing a net utilization velocity of <strong>{totalBurnRate.toFixed(1)}%</strong>.
             </p>
@@ -556,21 +556,21 @@ export const ReportsView: React.FC = () => {
           </div>
 
           {/* Sign-off Stamps */}
-          <div className="pt-4 border-t border-[#1E293B] grid grid-cols-2 gap-6 text-xs font-mono">
-            <div className="p-3 bg-[#090D16] border border-[#1E293B] rounded">
-              <span className="text-[10px] text-[#8c909f] uppercase">Group CFO Authorization</span>
-              <div className="font-bold text-white mt-1">Marcus Vance, CFO</div>
-              <div className="text-[10px] text-[#10B981] mt-0.5">Signature Validated: 0x94F2...3A19</div>
+          <div className="pt-4 border-t border-slate-200 grid grid-cols-2 gap-6 text-xs font-mono">
+            <div className="p-3 bg-slate-50 border border-slate-200/80 rounded-xl">
+              <span className="text-[10px] text-slate-400 uppercase">Group CFO Authorization</span>
+              <div className="font-bold text-slate-900 mt-1">Marcus Vance, CFO</div>
+              <div className="text-[10px] text-emerald-600 mt-0.5 font-medium">Signature Validated: 0x94F2...3A19</div>
             </div>
-            <div className="p-3 bg-[#090D16] border border-[#1E293B] rounded">
-              <span className="text-[10px] text-[#8c909f] uppercase">Corporate Controller</span>
-              <div className="font-bold text-white mt-1">Dr. Aris Thorne, VP Finance</div>
-              <div className="text-[10px] text-[#10B981] mt-0.5">Signature Validated: 0x62B8...9F04</div>
+            <div className="p-3 bg-slate-50 border border-slate-200/80 rounded-xl">
+              <span className="text-[10px] text-slate-400 uppercase">Corporate Controller</span>
+              <div className="font-bold text-slate-900 mt-1">Dr. Aris Thorne, VP Finance</div>
+              <div className="text-[10px] text-emerald-600 mt-0.5 font-medium">Signature Validated: 0x62B8...9F04</div>
             </div>
           </div>
 
           {/* Modal Actions */}
-          <div className="flex justify-end gap-3 pt-3 border-t border-[#1E293B]">
+          <div className="flex justify-end gap-3 pt-3 border-t border-slate-200">
             <TactileButton variant="surface" onClick={() => setPdfModalOpen(false)}>
               Close Preview
             </TactileButton>

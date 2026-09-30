@@ -85,15 +85,15 @@ export const EditBudgetModal: React.FC<EditBudgetModalProps> = ({
           helperText={`Currently committed: $${(budget.actualSettled + budget.committed).toLocaleString()}`}
         />
 
-        <div className="space-y-1">
-          <label className="text-[11px] font-sans text-[#8c909f] font-medium block">
+        <div className="space-y-1.5">
+          <label className="text-[11px] font-sans text-slate-500 font-medium block">
             Executive Justification for Budget Revision (Mandatory for Board Audit)
           </label>
           <textarea
             value={justification}
             onChange={(e) => setJustification(e.target.value)}
             rows={3}
-            className="w-full text-xs font-sans bg-[#090D16] text-[#dfe2ef] border border-[#1E2D4A] rounded p-2.5 focus:border-[#3B82F6] focus:outline-none"
+            className="w-full text-xs font-sans bg-white text-slate-900 placeholder:text-slate-400 border border-slate-200 rounded-xl p-3 focus:outline-none focus:border-slate-400 focus:ring-4 focus:ring-slate-100 transition-all shadow-sm"
           />
         </div>
       </form>

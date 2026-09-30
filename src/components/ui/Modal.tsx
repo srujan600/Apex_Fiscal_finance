@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { TactileButton } from './TactileButton';
 
 interface ModalProps {
   isOpen: boolean;
@@ -49,35 +48,32 @@ export const Modal: React.FC<ModalProps> = ({
   }[maxWidth];
 
   const badgeClass = {
-    primary: 'bg-[#3B82F6]/15 text-[#adc6ff] border-[#3B82F6]/30',
-    destructive: 'bg-[#E11D48]/20 text-[#ff8093] border-[#E11D48]/40',
-    warning: 'bg-[#F59E0B]/15 text-[#F59E0B] border-[#F59E0B]/30',
+    primary: 'bg-blue-50 text-blue-700 border-blue-200',
+    destructive: 'bg-rose-50 text-rose-700 border-rose-200',
+    warning: 'bg-amber-50 text-amber-700 border-amber-200',
   }[badgeVariant];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#090D16]/80 backdrop-blur-md animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-in fade-in duration-200">
       <div
-        className={`w-full ${maxWidthClass} bg-[#0D1526] border border-[#1E2D4A] rounded-lg shadow-2xl overflow-hidden flex flex-col max-h-[90vh]`}
-        style={{
-          boxShadow: 'inset 0px 1px 2px 0px rgba(255, 255, 255, 0.12), 0 24px 48px -8px rgba(0, 0, 0, 0.85)',
-        }}
+        className={`w-full ${maxWidthClass} bg-white border border-slate-200/80 rounded-2xl shadow-2xl shadow-slate-900/10 overflow-hidden flex flex-col max-h-[90vh] transition-all`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-[#1E2D4A] bg-[#090D16]/60">
+        <div className="flex items-center justify-between px-6 py-4.5 border-b border-slate-100 bg-slate-50/60">
           <div className="space-y-0.5">
             <div className="flex items-center gap-2">
               {badge && (
-                <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-semibold uppercase border ${badgeClass}`}>
+                <span className={`px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold uppercase border ${badgeClass}`}>
                   {badge}
                 </span>
               )}
-              <h2 className="text-sm md:text-base font-semibold text-white tracking-tight">{title}</h2>
+              <h2 className="text-base font-semibold text-slate-900 tracking-tight">{title}</h2>
             </div>
-            {subtitle && <p className="text-xs text-[#8c909f]">{subtitle}</p>}
+            {subtitle && <p className="text-xs text-slate-500">{subtitle}</p>}
           </div>
           <button
             onClick={onClose}
-            className="text-[#8c909f] hover:text-white p-1 rounded hover:bg-[#1E2D4A]/50 transition-colors cursor-pointer"
+            className="text-slate-400 hover:text-slate-700 hover:bg-slate-100 p-1.5 rounded-xl transition-all cursor-pointer"
             aria-label="Close modal"
           >
             <span className="material-symbols-outlined text-lg leading-none" data-icon="close">
@@ -87,13 +83,13 @@ export const Modal: React.FC<ModalProps> = ({
         </div>
 
         {/* Content */}
-        <div className="p-6 overflow-y-auto space-y-4 flex-1">
+        <div className="p-6 overflow-y-auto space-y-4 flex-1 text-slate-700 text-sm">
           {children}
         </div>
 
         {/* Footer */}
         {footer && (
-          <div className="px-6 py-3.5 border-t border-[#1E2D4A] bg-[#090D16]/60 flex items-center justify-end gap-2.5">
+          <div className="px-6 py-4 border-t border-slate-100 bg-slate-50/60 flex items-center justify-end gap-2.5">
             {footer}
           </div>
         )}

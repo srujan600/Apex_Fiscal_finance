@@ -69,39 +69,39 @@ export const PreClearanceSimulator: React.FC<PreClearanceSimulatorProps> = ({
   };
 
   return (
-    <section className="tactile-tier-1 rounded-xl p-5 border border-[#3B82F6]/30 relative">
+    <section className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-sm relative">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3.5 border-b border-[#1E2D4A] gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 gap-2">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded bg-[#3B82F6]/20 border border-[#3B82F6]/40 flex items-center justify-center text-[#3B82F6]">
+          <div className="w-9 h-9 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
             <span className="material-symbols-outlined text-lg" data-icon="terminal">
               terminal
             </span>
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono font-semibold text-[#3B82F6] uppercase">
+              <span className="text-[10px] font-mono font-semibold text-blue-600 uppercase">
                 Deterministic Rule Simulator
               </span>
-              <span className="px-1.5 py-0.2 rounded text-[9px] font-mono font-bold bg-[#10B981]/20 text-[#10B981] border border-[#10B981]/30">
+              <span className="px-2 py-0.5 rounded-md text-[9px] font-mono font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                 ZERO-REGRET SANDBOX
               </span>
             </div>
-            <h3 className="text-sm md:text-base font-semibold text-white tracking-tight mt-0.5">
+            <h3 className="text-sm md:text-base font-bold text-slate-900 tracking-tight mt-0.5">
               Real-Time Spending Pre-Clearance & Policy Evaluation Simulator
             </h3>
           </div>
         </div>
-        <span className="text-[11px] font-mono text-[#8c909f]">
+        <span className="text-[11px] font-mono text-slate-400 font-medium">
           Simulated on Policy Graph v4.12.8
         </span>
       </div>
 
       {/* Simulator Interactive Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 mt-4">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 mt-5">
         {/* Left Input Parameters Form (5 Cols) */}
-        <div className="lg:col-span-5 space-y-3 bg-[#090D16] p-4 rounded-lg border border-[#1E2D4A]">
-          <span className="text-[10px] font-mono font-semibold text-[#8c909f] uppercase tracking-wider block">
+        <div className="lg:col-span-5 space-y-3 bg-slate-50/70 p-4 rounded-xl border border-slate-200/80">
+          <span className="text-[10px] font-mono font-semibold text-slate-400 uppercase tracking-wider block">
             Requisition Draft Attributes
           </span>
 
@@ -149,8 +149,8 @@ export const PreClearanceSimulator: React.FC<PreClearanceSimulatorProps> = ({
             onChange={(e) => setPurpose(e.target.value)}
           />
 
-          <div className="pt-1.5 flex items-center justify-between">
-            <span className="text-[11px] font-mono text-[#8c909f]">Evaluation Latency: ~14ms</span>
+          <div className="pt-2 flex items-center justify-between">
+            <span className="text-[11px] font-mono text-slate-400">Evaluation Latency: ~14ms</span>
             <TactileButton
               variant="surface"
               size="sm"
@@ -164,18 +164,22 @@ export const PreClearanceSimulator: React.FC<PreClearanceSimulatorProps> = ({
         </div>
 
         {/* Right Live Engine Readout (7 Cols) */}
-        <div className="lg:col-span-7 bg-[#131E36]/40 p-4 rounded-lg border border-[#2A3E66] flex flex-col justify-between">
+        <div className={`lg:col-span-7 p-5 rounded-xl border flex flex-col justify-between ${
+          isViolation
+            ? 'bg-rose-50/30 border-rose-200/80'
+            : 'bg-emerald-50/30 border-emerald-200/80'
+        }`}>
           <div>
-            <div className="flex items-center justify-between pb-2 border-b border-[#2A3E66]">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200/60">
               <div className="flex items-center gap-2">
                 <span
                   className={`w-2 h-2 rounded-full ${
-                    isViolation ? 'bg-[#E11D48] animate-ping' : 'bg-[#10B981]'
+                    isViolation ? 'bg-rose-500 animate-ping' : 'bg-emerald-500'
                   }`}
                 />
                 <span
                   className={`text-xs font-mono font-bold ${
-                    isViolation ? 'text-[#ff8093]' : 'text-[#10B981]'
+                    isViolation ? 'text-rose-600' : 'text-emerald-700'
                   }`}
                 >
                   {isViolation
@@ -183,48 +187,48 @@ export const PreClearanceSimulator: React.FC<PreClearanceSimulatorProps> = ({
                     : 'VERDICT: PRE-CLEARED FOR EXECUTION'}
                 </span>
               </div>
-              <span className="text-[11px] font-mono text-[#8c909f]">
+              <span className="text-[11px] font-mono text-slate-400 font-medium">
                 {isViolation ? 'RULE-ENG-08' : 'RULE-ENG-01'}
               </span>
             </div>
 
-            {/* Dynamic Metrics Delta from Stitch */}
-            <div className="grid grid-cols-3 gap-2.5 my-3">
-              <div className="p-2.5 rounded bg-[#090D16]/80 border border-[#1E2D4A]">
-                <span className="text-[10px] font-mono text-[#8c909f] uppercase block">
+            {/* Dynamic Metrics Delta */}
+            <div className="grid grid-cols-3 gap-2.5 my-3.5">
+              <div className="p-3 rounded-xl bg-white border border-slate-200/80 shadow-sm">
+                <span className="text-[10px] font-mono text-slate-400 uppercase block font-medium">
                   CURRENT DEPT UTIL
                 </span>
-                <span className="text-sm font-mono font-bold text-white block mt-0.5">
+                <span className="text-sm font-mono font-bold text-slate-900 block mt-0.5">
                   {currentUtil.toFixed(1)}%
                 </span>
-                <span className="text-[10px] font-mono text-[#8c909f] block">
+                <span className="text-[10px] font-mono text-slate-500 block">
                   {formatCurrency(currentTotal, currency, 'compact')} of{' '}
                   {formatCurrency(targetDept.allocated, currency, 'compact')}
                 </span>
               </div>
 
               <div
-                className={`p-2.5 rounded bg-[#090D16]/80 border ${
-                  isViolation ? 'border-[#E11D48]/60 bg-[#E11D48]/5' : 'border-[#1E2D4A]'
+                className={`p-3 rounded-xl bg-white border shadow-sm ${
+                  isViolation ? 'border-rose-300' : 'border-emerald-300'
                 }`}
               >
                 <span
-                  className={`text-[10px] font-mono uppercase block ${
-                    isViolation ? 'text-[#ff8093]' : 'text-[#8c909f]'
+                  className={`text-[10px] font-mono uppercase block font-medium ${
+                    isViolation ? 'text-rose-600' : 'text-slate-400'
                   }`}
                 >
                   PROJECTED POST-REQ
                 </span>
                 <span
                   className={`text-sm font-mono font-bold block mt-0.5 ${
-                    isViolation ? 'text-[#ff8093]' : 'text-[#10B981]'
+                    isViolation ? 'text-rose-600' : 'text-emerald-700'
                   }`}
                 >
                   {postUtil.toFixed(1)}%
                 </span>
                 <span
-                  className={`text-[10px] font-mono block ${
-                    isViolation ? 'text-[#ff8093]' : 'text-[#10B981]'
+                  className={`text-[10px] font-mono block font-semibold ${
+                    isViolation ? 'text-rose-600' : 'text-emerald-600'
                   }`}
                 >
                   {isViolation
@@ -233,25 +237,25 @@ export const PreClearanceSimulator: React.FC<PreClearanceSimulatorProps> = ({
                 </span>
               </div>
 
-              <div className="p-2.5 rounded bg-[#090D16]/80 border border-[#1E2D4A]">
-                <span className="text-[10px] font-mono text-[#8c909f] uppercase block">
+              <div className="p-3 rounded-xl bg-white border border-slate-200/80 shadow-sm">
+                <span className="text-[10px] font-mono text-slate-400 uppercase block font-medium">
                   ENFORCEMENT PATH
                 </span>
-                <span className="text-xs font-mono font-bold text-[#F59E0B] block mt-0.5">
+                <span className="text-xs font-mono font-bold text-amber-700 block mt-0.5">
                   {isViolation ? 'L3 CFO Required' : 'Automated Release'}
                 </span>
-                <span className="text-[10px] font-mono text-[#8c909f] block">
+                <span className="text-[10px] font-mono text-slate-500 block">
                   {isViolation ? 'Auto-Block Active' : 'Pre-Cleared'}
                 </span>
               </div>
             </div>
 
             {/* Policy Log Explanation Box */}
-            <div className="p-2.5 rounded bg-[#090D16] border border-[#1E2D4A] space-y-1">
-              <div className="flex items-center gap-1.5 text-xs font-semibold text-white">
+            <div className="p-3.5 rounded-xl bg-white border border-slate-200/80 shadow-sm space-y-1.5">
+              <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-900">
                 <span
                   className={`material-symbols-outlined text-sm ${
-                    isViolation ? 'text-[#E11D48]' : 'text-[#10B981]'
+                    isViolation ? 'text-rose-600' : 'text-emerald-600'
                   }`}
                   data-icon={isViolation ? 'block' : 'check_circle'}
                 >
@@ -263,7 +267,7 @@ export const PreClearanceSimulator: React.FC<PreClearanceSimulatorProps> = ({
                     : 'Guardrail Passed: Standard Quota Compliant'}
                 </span>
               </div>
-              <p className="text-[11px] font-sans text-[#8c909f] leading-relaxed">
+              <p className="text-[11px] font-sans text-slate-600 leading-relaxed">
                 {isViolation
                   ? `Requisition causes ${targetDept.departmentName} quarterly commitment to exceed ${formatCurrency(targetDept.allocated, currency)} baseline ceiling. Automated processing has been halted. Requires explicit Group CFO digital sign-off and formal reallocation offset from Cloud Ops buffer.`
                   : `Requisition is within approved threshold bands and maintains positive liquidity buffer for ${targetDept.departmentName}. Ready for immediate dispatch.`}
@@ -272,9 +276,9 @@ export const PreClearanceSimulator: React.FC<PreClearanceSimulatorProps> = ({
           </div>
 
           {/* Tactile Action Triggers */}
-          <div className="flex flex-wrap items-center justify-end gap-2.5 pt-3 border-t border-[#2A3E66] mt-3">
+          <div className="flex flex-wrap items-center justify-end gap-2.5 pt-4 border-t border-slate-200/60 mt-4">
             {evalSuccess && (
-              <span className="text-xs font-mono text-[#10B981] flex items-center gap-1">
+              <span className="text-xs font-mono text-emerald-700 font-semibold flex items-center gap-1 mr-auto">
                 <span className="material-symbols-outlined text-sm" data-icon="check">check</span>
                 Requisition Submitted to Queue!
               </span>

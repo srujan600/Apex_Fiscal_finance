@@ -17,15 +17,22 @@ export const DoubleBezelCard: React.FC<DoubleBezelCardProps> = ({
   onClick,
   hoverEffect = true,
 }) => {
-  const tierClass = tier === 1 ? 'tactile-tier-1' : 'tactile-tier-2';
-  const hoverClass = hoverEffect ? 'hover:border-[#3B82F6]/40 transition-colors' : '';
+  const isInteractive = Boolean(onClick);
+  const hoverClass =
+    hoverEffect || isInteractive
+      ? 'transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-200/60 hover:border-slate-300/80'
+      : 'transition-all duration-200';
+
+  const tierBg = tier === 1 ? 'bg-white' : 'bg-slate-50/50';
 
   return (
     <div
       onClick={onClick}
-      className={`rounded-lg ${tierClass} ${hoverClass} relative overflow-hidden ${className} ${onClick ? 'cursor-pointer' : ''}`}
+      className={`rounded-2xl ${tierBg} border border-slate-200/80 shadow-sm relative overflow-hidden ${hoverClass} ${
+        isInteractive ? 'cursor-pointer' : ''
+      } ${className}`}
     >
-      <div className={`p-4 md:p-5 ${innerClassName}`}>
+      <div className={`p-5 md:p-6 ${innerClassName}`}>
         {children}
       </div>
     </div>

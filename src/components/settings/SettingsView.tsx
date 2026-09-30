@@ -110,17 +110,17 @@ export const SettingsView: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* View Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#1E293B] pb-5">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200/80 pb-5">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold tracking-tight text-white font-sans">
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900 font-sans">
               System Settings & Enterprise Governance
             </h1>
-            <span className="px-2.5 py-0.5 rounded text-[11px] font-mono font-bold bg-[#3B82F6]/15 text-[#3B82F6] border border-[#3B82F6]/30">
+            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-blue-50 text-blue-700 border border-blue-200">
               L4 ROOT CONSOLE
             </span>
           </div>
-          <p className="text-xs text-[#8c909f] mt-1 font-mono">
+          <p className="text-xs text-slate-500 mt-1 font-mono">
             5-Tier RBAC Architecture · Emergency Killswitch · Institutional Peg Calibration · Validator Consensus
           </p>
         </div>
@@ -133,21 +133,21 @@ export const SettingsView: React.FC = () => {
 
       {/* Save Toast Notification */}
       {saveToast && (
-        <div className="p-3 bg-[#10B981]/10 border border-[#10B981]/30 rounded text-xs font-mono text-[#10B981] flex items-center gap-2 animate-fadeIn">
-          <span className="material-symbols-outlined text-[18px]">check_circle</span>
+        <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs font-mono text-emerald-800 flex items-center gap-2 shadow-sm animate-fadeIn">
+          <span className="material-symbols-outlined text-[18px] text-emerald-600">check_circle</span>
           <span>{saveToast}</span>
         </div>
       )}
 
       {/* Emergency Freeze Killswitch Banner */}
-      <DoubleBezelCard className={isEmergencyFreezeActive ? 'border-2 border-[#EF4444]' : 'border border-[#EF4444]/30'}>
+      <DoubleBezelCard className={isEmergencyFreezeActive ? 'border-2 border-rose-400 bg-rose-50/50' : 'border border-rose-200/80 bg-rose-50/20'}>
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-3.5">
             <div
-              className={`w-12 h-12 rounded-lg flex items-center justify-center border shrink-0 ${
+              className={`w-12 h-12 rounded-xl flex items-center justify-center border shrink-0 ${
                 isEmergencyFreezeActive
-                  ? 'bg-[#EF4444]/20 border-[#EF4444] text-[#EF4444] animate-pulse'
-                  : 'bg-[#EF4444]/10 border-[#EF4444]/40 text-[#EF4444]'
+                  ? 'bg-rose-100 border-rose-300 text-rose-700 animate-pulse shadow-sm'
+                  : 'bg-rose-50 border-rose-200 text-rose-600'
               }`}
             >
               <span className="material-symbols-outlined text-2xl">
@@ -156,12 +156,12 @@ export const SettingsView: React.FC = () => {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-sm font-bold text-white uppercase font-mono">
+                <h3 className="text-sm font-bold text-slate-900 uppercase font-mono">
                   Global Capital Outflow Killswitch
                 </h3>
                 <StatusBadge status={isEmergencyFreezeActive ? 'BLOCKED' : 'APPROVED'} />
               </div>
-              <p className="text-xs text-[#8c909f] mt-0.5">
+              <p className="text-xs text-slate-600 mt-0.5">
                 {isEmergencyFreezeActive
                   ? 'TOTAL CAPITAL LOCKDOWN ACTIVE. All non-statutory outbound purchase orders and disbursement pipelines are frozen.'
                   : 'Normal operations active. Real-time pre-clearance rules are processing requisitions under standard policy graph.'}
@@ -194,19 +194,19 @@ export const SettingsView: React.FC = () => {
       {/* 5-Persona RBAC Governance Matrix */}
       <DoubleBezelCard>
         <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-[#1E293B]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-slate-100">
             <div>
-              <h2 className="text-sm font-bold uppercase tracking-wider text-white font-mono">
+              <h2 className="text-sm font-bold uppercase tracking-wider text-slate-900 font-mono">
                 5-Tier Role-Based Access Control (RBAC) Matrix
               </h2>
-              <p className="text-xs text-[#8c909f] mt-0.5">
+              <p className="text-xs text-slate-500 mt-0.5">
                 Switch perspective in real-time to inspect UI workflows across all operational ranks
               </p>
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-xs font-mono text-[#8c909f]">Active Perspective:</span>
-              <span className="px-2.5 py-1 rounded bg-[#3B82F6]/20 text-[#3B82F6] font-mono text-xs font-bold border border-[#3B82F6]/40">
+              <span className="text-xs font-mono text-slate-500">Active Perspective:</span>
+              <span className="px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 font-mono text-xs font-bold border border-blue-200 shadow-sm">
                 {role}
               </span>
             </div>
@@ -218,48 +218,48 @@ export const SettingsView: React.FC = () => {
               return (
                 <div
                   key={r.key}
-                  className={`p-4 rounded-lg border transition-all ${
+                  className={`p-4 rounded-xl border transition-all duration-200 ${
                     isCurrent
-                      ? 'bg-[#131E36] border-[#3B82F6] shadow-lg shadow-[#3B82F6]/10'
-                      : 'bg-[#0D1526] border-[#1E293B] hover:border-slate-700'
+                      ? 'bg-white border-2 border-blue-600 shadow-md ring-4 ring-blue-50/60'
+                      : 'bg-slate-50/70 border-slate-200/80 hover:border-slate-300 hover:bg-slate-50'
                   }`}
                 >
-                  <div className="flex items-center justify-between pb-2 border-b border-[#1E293B]">
+                  <div className="flex items-center justify-between pb-2 border-b border-slate-100">
                     <div>
-                      <div className="text-xs font-bold text-white font-mono">{r.name}</div>
-                      <div className="text-[10px] text-[#3B82F6] font-mono">{r.level}</div>
+                      <div className="text-xs font-bold text-slate-900 font-mono">{r.name}</div>
+                      <div className="text-[10px] text-blue-600 font-mono font-medium">{r.level}</div>
                     </div>
                     {isCurrent ? (
-                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-[#10B981]/20 text-[#10B981] border border-[#10B981]/40">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
                         ACTIVE
                       </span>
                     ) : (
                       <button
                         onClick={() => setRole(r.key)}
-                        className="px-2 py-0.5 rounded text-[10px] font-mono font-bold text-[#8c909f] hover:text-white bg-[#090D16] border border-[#1E293B] hover:border-[#3B82F6] cursor-pointer transition-colors"
+                        className="px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold text-slate-600 hover:text-slate-900 bg-white border border-slate-200 hover:bg-slate-100 hover:border-slate-300 cursor-pointer transition-all shadow-sm active:scale-95"
                       >
                         Switch To
                       </button>
                     )}
                   </div>
 
-                  <p className="text-[11px] text-[#8c909f] mt-2 line-clamp-2">
+                  <p className="text-[11px] text-slate-600 mt-2 line-clamp-2">
                     {r.desc}
                   </p>
 
-                  <div className="mt-3 pt-2 border-t border-[#1E293B]/60 flex items-center justify-between text-[10px] font-mono">
-                    <span className="text-[#8c909f]">Authority Limit:</span>
-                    <span className="font-bold text-white">{r.spendingLimit}</span>
+                  <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-[10px] font-mono">
+                    <span className="text-slate-500">Authority Limit:</span>
+                    <span className="font-bold text-slate-900">{r.spendingLimit}</span>
                   </div>
 
                   <div className="mt-3 space-y-1">
-                    <span className="text-[9px] uppercase font-mono tracking-wider text-[#8c909f]">
+                    <span className="text-[9px] uppercase font-mono tracking-wider text-slate-400 font-medium">
                       Granted Permissions:
                     </span>
                     <ul className="space-y-0.5">
                       {r.permissions.map((perm, idx) => (
-                        <li key={idx} className="text-[10px] text-slate-300 flex items-center gap-1.5 font-mono">
-                          <span className="material-symbols-outlined text-[12px] text-[#10B981]">
+                        <li key={idx} className="text-[10px] text-slate-600 flex items-center gap-1.5 font-mono">
+                          <span className="material-symbols-outlined text-[12px] text-emerald-600">
                             check
                           </span>
                           <span className="truncate">{perm}</span>
@@ -278,37 +278,37 @@ export const SettingsView: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <DoubleBezelCard>
           <div className="space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-[#1E293B]">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[18px] text-[#3B82F6]">
+                <span className="material-symbols-outlined text-[18px] text-blue-600">
                   currency_exchange
                 </span>
-                <h3 className="text-sm font-bold text-white uppercase tracking-wider font-mono">
+                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider font-mono">
                   Institutional Currency Calibration
                 </h3>
               </div>
-              <span className="text-[10px] font-mono text-[#8c909f]">
+              <span className="text-[10px] font-mono text-slate-500">
                 Dual Currency Engine
               </span>
             </div>
 
             <div className="space-y-4 text-xs font-mono">
-              <div className="flex items-center justify-between p-3 bg-[#0D1526] border border-[#1E293B] rounded">
+              <div className="flex items-center justify-between p-3.5 bg-slate-50/70 border border-slate-200/80 rounded-xl">
                 <div>
-                  <div className="font-bold text-white">Default Display Currency</div>
-                  <div className="text-[11px] text-[#8c909f]">
+                  <div className="font-bold text-slate-900">Default Display Currency</div>
+                  <div className="text-[11px] text-slate-500">
                     Switch between USD ($) institutional units and INR (₹) Lakhs/Crores
                   </div>
                 </div>
-                <div className="flex items-center gap-1 bg-[#090D16] p-1 border border-[#1E293B] rounded">
+                <div className="flex items-center gap-1 bg-white p-1 border border-slate-200 rounded-xl shadow-sm">
                   {(['USD', 'INR'] as Currency[]).map((c) => (
                     <button
                       key={c}
                       onClick={() => setCurrency(c)}
-                      className={`px-3 py-1 rounded text-xs font-bold transition-colors cursor-pointer ${
+                      className={`px-3 py-1 rounded-lg text-xs font-bold transition-all duration-200 cursor-pointer ${
                         currency === c
-                          ? 'bg-[#3B82F6] text-white shadow-sm'
-                          : 'text-[#8c909f] hover:text-white'
+                          ? 'bg-slate-900 text-white shadow-sm'
+                          : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                       }`}
                     >
                       {c === 'USD' ? 'USD ($)' : 'INR (₹)'}
@@ -317,28 +317,28 @@ export const SettingsView: React.FC = () => {
                 </div>
               </div>
 
-              <div className="p-3 bg-[#0D1526] border border-[#1E293B] rounded space-y-2">
+              <div className="p-3.5 bg-slate-50/70 border border-slate-200/80 rounded-xl space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-white">Institutional Peg Rate</span>
-                  <span className="text-[10px] text-[#8c909f]">1 USD = ? INR</span>
+                  <span className="font-bold text-slate-900">Institutional Peg Rate</span>
+                  <span className="text-[10px] text-slate-500">1 USD = ? INR</span>
                 </div>
                 <div className="flex items-center gap-3">
                   <input
                     type="text"
                     value={exchangeRate}
                     onChange={(e) => setExchangeRate(e.target.value)}
-                    className="w-32 px-3 py-1.5 bg-[#090D16] border border-[#1E293B] rounded text-white font-mono focus:border-[#3B82F6] focus:outline-none"
+                    className="w-32 px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-slate-900 font-mono focus:border-slate-400 focus:ring-4 focus:ring-slate-100 focus:outline-none shadow-sm transition-all"
                   />
-                  <span className="text-xs text-[#8c909f]">INR per 1.00 USD</span>
+                  <span className="text-xs text-slate-500">INR per 1.00 USD</span>
                 </div>
               </div>
 
-              <div className="p-3 bg-[#0D1526] border border-[#1E293B] rounded flex items-center justify-between">
+              <div className="p-3.5 bg-slate-50/70 border border-slate-200/80 rounded-xl flex items-center justify-between">
                 <div>
-                  <div className="font-bold text-white">Active Fiscal Quarter</div>
-                  <div className="text-[11px] text-[#8c909f]">Current Statutory Board Authorization</div>
+                  <div className="font-bold text-slate-900">Active Fiscal Quarter</div>
+                  <div className="text-[11px] text-slate-500">Current Statutory Board Authorization</div>
                 </div>
-                <span className="px-2.5 py-1 rounded bg-[#090D16] border border-[#1E293B] text-white font-bold">
+                <span className="px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-900 font-bold shadow-sm">
                   Q3 FY 2026
                 </span>
               </div>
@@ -349,53 +349,53 @@ export const SettingsView: React.FC = () => {
         {/* Security, Webhooks & Consensus Validator Set */}
         <DoubleBezelCard>
           <div className="space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-[#1E293B]">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[18px] text-[#10B981]">
+                <span className="material-symbols-outlined text-[18px] text-emerald-600">
                   security
                 </span>
-                <h3 className="text-sm font-bold text-white uppercase tracking-wider font-mono">
+                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider font-mono">
                   Webhooks & Distributed Validators
                 </h3>
               </div>
-              <span className="text-[10px] font-mono text-[#10B981] bg-[#10B981]/15 px-2 py-0.5 rounded border border-[#10B981]/30">
+              <span className="text-[10px] font-mono text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
                 12 / 12 Nodes Online
               </span>
             </div>
 
             <div className="space-y-3 text-xs font-mono">
-              <div className="p-3 bg-[#0D1526] border border-[#1E293B] rounded space-y-1.5">
+              <div className="p-3.5 bg-slate-50/70 border border-slate-200/80 rounded-xl space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-white">Slack Spend Alerts Webhook</span>
-                  <span className="text-[10px] text-[#10B981]">Connected (#corp-spend-alerts)</span>
+                  <span className="font-bold text-slate-900">Slack Spend Alerts Webhook</span>
+                  <span className="text-[10px] text-emerald-700 font-medium">Connected (#corp-spend-alerts)</span>
                 </div>
                 <input
                   type="text"
                   value={slackWebhook}
                   onChange={(e) => setSlackWebhook(e.target.value)}
-                  className="w-full px-2.5 py-1.5 bg-[#090D16] border border-[#1E293B] rounded text-slate-300 font-mono text-[11px] focus:border-[#3B82F6] focus:outline-none"
+                  className="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-slate-800 font-mono text-[11px] focus:border-slate-400 focus:ring-4 focus:ring-slate-100 focus:outline-none shadow-sm transition-all"
                 />
               </div>
 
-              <div className="p-3 bg-[#0D1526] border border-[#1E293B] rounded space-y-1.5">
+              <div className="p-3.5 bg-slate-50/70 border border-slate-200/80 rounded-xl space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-white">PagerDuty Breach Escalation Key</span>
-                  <span className="text-[10px] text-[#10B981]">Active (P1 Incident Routing)</span>
+                  <span className="font-bold text-slate-900">PagerDuty Breach Escalation Key</span>
+                  <span className="text-[10px] text-emerald-700 font-medium">Active (P1 Incident Routing)</span>
                 </div>
                 <input
                   type="text"
                   value={pagerdutyKey}
                   onChange={(e) => setPagerdutyKey(e.target.value)}
-                  className="w-full px-2.5 py-1.5 bg-[#090D16] border border-[#1E293B] rounded text-slate-300 font-mono text-[11px] focus:border-[#3B82F6] focus:outline-none"
+                  className="w-full px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-slate-800 font-mono text-[11px] focus:border-slate-400 focus:ring-4 focus:ring-slate-100 focus:outline-none shadow-sm transition-all"
                 />
               </div>
 
-              <div className="p-3 bg-[#0D1526] border border-[#1E293B] rounded flex items-center justify-between">
+              <div className="p-3.5 bg-slate-50/70 border border-slate-200/80 rounded-xl flex items-center justify-between">
                 <div>
-                  <div className="font-bold text-white">Statutory Audit Retention Standard</div>
-                  <div className="text-[10px] text-[#8c909f]">SOX 404 / GAAS Compliant Immutable Log</div>
+                  <div className="font-bold text-slate-900">Statutory Audit Retention Standard</div>
+                  <div className="text-[10px] text-slate-500">SOX 404 / GAAS Compliant Immutable Log</div>
                 </div>
-                <span className="text-[#3B82F6] font-bold">7 Years / Immutable WORM</span>
+                <span className="text-blue-600 font-bold">7 Years / Immutable WORM</span>
               </div>
             </div>
           </div>
@@ -413,25 +413,25 @@ export const SettingsView: React.FC = () => {
         maxWidth="md"
       >
         <div className="space-y-4 text-xs font-mono">
-          <div className="p-3.5 bg-[#EF4444]/15 border border-[#EF4444]/40 rounded text-rose-300 space-y-2">
-            <div className="flex items-center gap-2 font-bold text-sm text-white">
-              <span className="material-symbols-outlined text-[20px] text-[#EF4444]">
+          <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 space-y-2">
+            <div className="flex items-center gap-2 font-bold text-sm text-rose-900">
+              <span className="material-symbols-outlined text-[20px] text-rose-600">
                 warning
               </span>
               CRITICAL GOVERNANCE DIRECTIVE
             </div>
-            <p className="text-[11px] leading-relaxed text-slate-200">
+            <p className="text-[11px] leading-relaxed text-rose-700">
               Activating this killswitch will instantaneously freeze all outgoing purchase orders, halt pending automated credit card settlements, and require manual CFO cryptographic unlock to resume disbursements.
             </p>
           </div>
 
-          <div className="p-3 bg-[#090D16] border border-[#1E293B] rounded space-y-1">
-            <span className="text-[10px] text-[#8c909f] uppercase">Signing Authority:</span>
-            <div className="font-bold text-white">Marcus Vance (Group CFO)</div>
-            <div className="text-[10px] text-[#10B981]">Consensus Verification: 12 Nodes Armed</div>
+          <div className="p-3 bg-slate-50 border border-slate-200/80 rounded-xl space-y-1">
+            <span className="text-[10px] text-slate-400 uppercase">Signing Authority:</span>
+            <div className="font-bold text-slate-900">Marcus Vance (Group CFO)</div>
+            <div className="text-[10px] text-emerald-700 font-medium">Consensus Verification: 12 Nodes Armed</div>
           </div>
 
-          <div className="flex justify-end gap-3 pt-3 border-t border-[#1E293B]">
+          <div className="flex justify-end gap-3 pt-3 border-t border-slate-200">
             <TactileButton variant="surface" onClick={() => setConfirmFreezeModal(false)}>
               Cancel & Abort
             </TactileButton>

@@ -82,51 +82,51 @@ export const ExceptionsView: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-[#1E2D4A]/50">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-3 border-b border-slate-200/80">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold uppercase bg-[#E11D48]/20 text-[#ff8093] border border-[#E11D48]/40">
+            <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-semibold uppercase bg-rose-50 text-rose-700 border border-rose-200">
               Sovereign Exception Triage
             </span>
-            <span className="text-[11px] font-mono text-[#8c909f]">POLICY CEILING BREACHES</span>
+            <span className="text-[11px] font-mono text-slate-400 font-medium">POLICY CEILING BREACHES</span>
           </div>
-          <h1 className="text-xl md:text-2xl text-white font-semibold tracking-tight mt-1">
+          <h1 className="text-xl md:text-2xl text-slate-900 font-bold tracking-tight mt-1">
             Exception Management & Executive Override Command
           </h1>
-          <p className="text-xs text-[#8c909f] mt-0.5">
+          <p className="text-xs text-slate-500 mt-0.5">
             Interception queue for expenditures that exceed authorized departmental envelopes or category sub-caps.
           </p>
         </div>
 
         <div className="flex items-center gap-2.5">
-          <span className="px-3 py-1.5 rounded bg-[#E11D48]/10 border border-[#E11D48]/30 text-xs font-mono text-[#ff8093]">
-            Total Blocked: <strong>{formatCurrency(totalBlockedCapital, currency)}</strong>
+          <span className="px-3.5 py-1.5 rounded-xl bg-rose-50 border border-rose-200 text-xs font-mono text-rose-700 shadow-sm font-semibold">
+            Total Blocked: {formatCurrency(totalBlockedCapital, currency)}
           </span>
         </div>
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex items-center gap-1.5 border-b border-[#1E2D4A] pb-2 text-xs font-mono">
+      <div className="flex items-center gap-1.5 border-b border-slate-200/80 pb-3 text-xs font-mono">
         <button
           onClick={() => setActiveSeverityFilter('PENDING')}
-          className={`px-3 py-1.5 rounded transition-colors cursor-pointer flex items-center gap-2 ${
+          className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer flex items-center gap-2 ${
             activeSeverityFilter === 'PENDING'
-              ? 'bg-[#E11D48] text-white font-bold'
-              : 'text-[#8c909f] hover:text-white bg-[#0D1526]'
+              ? 'bg-rose-600 text-white font-bold shadow-sm'
+              : 'text-slate-600 hover:text-slate-900 bg-slate-50 hover:bg-slate-100 border border-slate-200/80'
           }`}
         >
           <span>Action Mandatory</span>
-          <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-black/40 text-white">
+          <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-rose-800 text-white font-bold">
             {pendingExceptions.length}
           </span>
         </button>
 
         <button
           onClick={() => setActiveSeverityFilter('ALL')}
-          className={`px-3 py-1.5 rounded transition-colors cursor-pointer ${
+          className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${
             activeSeverityFilter === 'ALL'
-              ? 'bg-[#3B82F6] text-white font-bold'
-              : 'text-[#8c909f] hover:text-white bg-[#0D1526]'
+              ? 'bg-slate-900 text-white font-semibold shadow-sm'
+              : 'text-slate-600 hover:text-slate-900 bg-slate-50 hover:bg-slate-100 border border-slate-200/80'
           }`}
         >
           All Incidents ({exceptions.length})
@@ -134,10 +134,10 @@ export const ExceptionsView: React.FC = () => {
 
         <button
           onClick={() => setActiveSeverityFilter('OVERRIDDEN')}
-          className={`px-3 py-1.5 rounded transition-colors cursor-pointer ${
+          className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${
             activeSeverityFilter === 'OVERRIDDEN'
-              ? 'bg-[#3B82F6] text-white font-bold'
-              : 'text-[#8c909f] hover:text-white bg-[#0D1526]'
+              ? 'bg-slate-900 text-white font-semibold shadow-sm'
+              : 'text-slate-600 hover:text-slate-900 bg-slate-50 hover:bg-slate-100 border border-slate-200/80'
           }`}
         >
           Authorized Overrides
@@ -145,10 +145,10 @@ export const ExceptionsView: React.FC = () => {
 
         <button
           onClick={() => setActiveSeverityFilter('ENFORCED')}
-          className={`px-3 py-1.5 rounded transition-colors cursor-pointer ${
+          className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer ${
             activeSeverityFilter === 'ENFORCED'
-              ? 'bg-[#3B82F6] text-white font-bold'
-              : 'text-[#8c909f] hover:text-white bg-[#0D1526]'
+              ? 'bg-slate-900 text-white font-semibold shadow-sm'
+              : 'text-slate-600 hover:text-slate-900 bg-slate-50 hover:bg-slate-100 border border-slate-200/80'
           }`}
         >
           Enforced Caps (Rejected)
@@ -164,41 +164,41 @@ export const ExceptionsView: React.FC = () => {
           return (
             <div
               key={ex.id}
-              className={`tactile-tier-1 rounded-xl p-5 border transition-all space-y-4 ${
+              className={`bg-white rounded-2xl p-6 border transition-all duration-300 shadow-sm hover:shadow-xl hover:shadow-slate-200/50 hover:-translate-y-1 space-y-4 ${
                 isCritical && isPending
-                  ? 'border-[#E11D48]/50 hover:border-[#E11D48]'
-                  : 'border-[#1E2D4A] hover:border-[#3B82F6]/40'
+                  ? 'border-rose-200 hover:border-rose-300'
+                  : 'border-slate-200/80 hover:border-slate-300'
               }`}
             >
               {/* Card Header Row */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#1E2D4A]">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3.5 border-b border-slate-100">
                 <div className="flex items-center gap-3">
                   <div
-                    className={`w-8 h-8 rounded-lg flex items-center justify-center font-mono font-bold text-xs ${
-                      isCritical ? 'bg-[#E11D48]/20 text-[#ff8093] border border-[#E11D48]/40' : 'bg-[#F59E0B]/20 text-[#F59E0B] border border-[#F59E0B]/40'
+                    className={`w-9 h-9 rounded-xl flex items-center justify-center font-mono font-bold text-xs shadow-sm ${
+                      isCritical ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-amber-50 text-amber-700 border border-amber-200'
                     }`}
                   >
                     {isCritical ? 'CRIT' : 'WARN'}
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-mono font-bold text-white text-sm">{ex.incidentCode}</span>
-                      <span className="text-xs text-[#8c909f]">·</span>
-                      <span className="text-xs font-semibold text-white uppercase">{ex.department}</span>
-                      <span className="text-[10px] text-[#8c909f]">({ex.subDepartment})</span>
+                      <span className="font-mono font-bold text-slate-900 text-sm">{ex.incidentCode}</span>
+                      <span className="text-xs text-slate-300">·</span>
+                      <span className="text-xs font-bold text-slate-900 uppercase">{ex.department}</span>
+                      <span className="text-[10px] text-slate-400 font-medium">({ex.subDepartment})</span>
                     </div>
-                    <span className="text-[11px] font-mono text-[#8c909f] block mt-0.5">
-                      Detected: {ex.timestamp} via {ex.detectionSource} · Rule: <strong className="text-white">{ex.ruleCode}</strong>
+                    <span className="text-[11px] font-mono text-slate-500 block mt-0.5">
+                      Detected: {ex.timestamp} via {ex.detectionSource} · Rule: <strong className="text-slate-900 font-semibold">{ex.ruleCode}</strong>
                     </span>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3">
                   <div className="text-right">
-                    <span className="text-[10px] font-mono text-[#8c909f] uppercase block">
+                    <span className="text-[10px] font-mono text-slate-400 uppercase block font-semibold">
                       Commitment Blocked
                     </span>
-                    <span className="text-lg font-mono font-bold text-white block leading-tight">
+                    <span className="text-lg font-mono font-bold text-slate-900 block leading-tight">
                       {formatCurrency(ex.commitmentValue, currency)}
                     </span>
                   </div>
@@ -210,39 +210,39 @@ export const ExceptionsView: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-12 gap-4 text-xs">
                 <div className="md:col-span-8 space-y-1.5">
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-white text-sm">{ex.vendor}</span>
-                    <span className="text-[10px] font-mono text-[#8c909f] bg-[#090D16] px-2 py-0.5 rounded border border-[#1E2D4A]">
+                    <span className="font-bold text-slate-900 text-sm">{ex.vendor}</span>
+                    <span className="text-[10px] font-mono text-slate-500 bg-slate-50 px-2.5 py-0.5 rounded-md border border-slate-200">
                       Commercial Contract
                     </span>
                   </div>
-                  <p className="text-white text-xs leading-relaxed">{ex.businessPurpose}</p>
+                  <p className="text-slate-700 text-xs leading-relaxed">{ex.businessPurpose}</p>
                 </div>
 
-                {/* Financial Impact Analysis Box (Required by prompt) */}
-                <div className="md:col-span-4 p-3 rounded bg-[#090D16] border border-[#E11D48]/30 space-y-1.5">
-                  <span className="text-[10px] font-mono font-bold text-[#ff8093] uppercase block flex items-center gap-1">
-                    <span className="material-symbols-outlined text-xs leading-none" data-icon="analytics">analytics</span>
+                {/* Financial Impact Analysis Box */}
+                <div className="md:col-span-4 p-3.5 rounded-xl bg-rose-50/70 border border-rose-200 space-y-1.5 shadow-sm">
+                  <span className="text-[10px] font-mono font-bold text-rose-800 uppercase block flex items-center gap-1">
+                    <span className="material-symbols-outlined text-xs leading-none text-rose-600" data-icon="analytics">analytics</span>
                     Financial Impact of Override
                   </span>
-                  <div className="text-[11px] font-mono text-[#dfe2ef] space-y-0.5">
+                  <div className="text-[11px] font-mono text-slate-700 space-y-0.5">
                     <div className="flex justify-between">
-                      <span className="text-[#8c909f]">Immediate Deficit:</span>
-                      <span className="text-[#ff8093] font-semibold">+{formatCurrency(ex.commitmentValue, currency, 'compact')}</span>
+                      <span className="text-slate-500">Immediate Deficit:</span>
+                      <span className="text-rose-600 font-bold">+{formatCurrency(ex.commitmentValue, currency, 'compact')}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-[#8c909f]">Required Reserve Offset:</span>
-                      <span className="text-[#F59E0B]">Strategic Buffer</span>
+                      <span className="text-slate-500">Required Reserve Offset:</span>
+                      <span className="text-amber-700 font-medium">Strategic Buffer</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-[#8c909f]">Compliance Level:</span>
-                      <span className="text-white">L4 CFO Attestation</span>
+                      <span className="text-slate-500">Compliance Level:</span>
+                      <span className="text-slate-900 font-semibold">L4 CFO Attestation</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Actions Rail (Review, Approve, Reject, Override, Request Justification, Reallocate Budget) */}
-              <div className="pt-3 border-t border-[#1E2D4A] flex flex-wrap items-center justify-between gap-3">
+              {/* Actions Rail */}
+              <div className="pt-3.5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
                 <TactileButton
                   variant="surface"
                   size="sm"
@@ -296,14 +296,14 @@ export const ExceptionsView: React.FC = () => {
                 )}
 
                 {ex.status === 'OVERRIDDEN' && (
-                  <span className="text-xs font-mono text-[#10B981] flex items-center gap-1">
+                  <span className="text-xs font-mono text-emerald-700 font-semibold flex items-center gap-1">
                     <span className="material-symbols-outlined text-sm" data-icon="verified">verified</span>
                     Override Executed by Group CFO
                   </span>
                 )}
 
                 {ex.status === 'ENFORCED_REJECTED' && (
-                  <span className="text-xs font-mono text-[#ff8093] flex items-center gap-1">
+                  <span className="text-xs font-mono text-rose-600 font-semibold flex items-center gap-1">
                     <span className="material-symbols-outlined text-sm" data-icon="cancel">cancel</span>
                     Hard Cap Enforced · Outflow Halted
                   </span>
@@ -336,15 +336,15 @@ export const ExceptionsView: React.FC = () => {
         >
           <div className="space-y-4 text-xs">
             {/* Impact Readout */}
-            <div className="p-3.5 rounded bg-[#E11D48]/10 border border-[#E11D48]/40 space-y-2">
-              <span className="font-mono font-bold text-xs text-[#ff8093] uppercase block">
+            <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200/80 space-y-2">
+              <span className="font-mono font-bold text-xs text-rose-800 uppercase block">
                 Financial Impact & Ledger Offset Analysis
               </span>
-              <p className="text-xs leading-relaxed text-[#dfe2ef]">
+              <p className="text-xs leading-relaxed text-slate-700">
                 Authorizing this override will immediately charge{' '}
-                <strong className="text-white font-mono">{formatCurrency(targetIncidentForOverride.commitmentValue, currency)}</strong>{' '}
+                <strong className="text-slate-900 font-mono font-bold">{formatCurrency(targetIncidentForOverride.commitmentValue, currency)}</strong>{' '}
                 against the quarterly capital allocation and bypass the automated hard cap trigger (
-                <span className="font-mono text-[#ff8093]">{targetIncidentForOverride.ruleCode}</span>).
+                <span className="font-mono text-rose-600 font-semibold">{targetIncidentForOverride.ruleCode}</span>).
               </p>
             </div>
 
@@ -367,15 +367,15 @@ export const ExceptionsView: React.FC = () => {
               />
             </div>
 
-            <div className="space-y-1">
-              <label className="text-[11px] font-sans text-[#8c909f] font-medium block">
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-sans text-slate-500 font-medium block">
                 Executive Justification Memo (Permanent Audit Entry)
               </label>
               <textarea
                 value={overrideMemo}
                 onChange={(e) => setOverrideMemo(e.target.value)}
                 rows={3}
-                className="w-full text-xs font-sans bg-[#090D16] text-[#dfe2ef] border border-[#1E2D4A] rounded p-2.5 focus:border-[#3B82F6] focus:outline-none"
+                className="w-full text-xs font-sans bg-white text-slate-900 placeholder:text-slate-400 border border-slate-200 rounded-xl p-3 focus:outline-none focus:border-slate-400 focus:ring-4 focus:ring-slate-100 transition-all shadow-sm"
               />
             </div>
           </div>
@@ -451,14 +451,14 @@ export const ExceptionsView: React.FC = () => {
           }
         >
           <div className="space-y-3 text-xs">
-            <label className="text-[11px] text-[#8c909f] block">
+            <label className="text-[11px] text-slate-500 font-medium block">
               Inquiry Prompt to Department Lead:
             </label>
             <textarea
               value={justificationPrompt}
               onChange={(e) => setJustificationPrompt(e.target.value)}
               rows={3}
-              className="w-full text-xs font-sans bg-[#090D16] text-[#dfe2ef] border border-[#1E2D4A] rounded p-2.5 focus:border-[#3B82F6] focus:outline-none"
+              className="w-full text-xs font-sans bg-white text-slate-900 placeholder:text-slate-400 border border-slate-200 rounded-xl p-3 focus:outline-none focus:border-slate-400 focus:ring-4 focus:ring-slate-100 transition-all shadow-sm"
             />
           </div>
         </Modal>
@@ -480,20 +480,20 @@ export const ExceptionsView: React.FC = () => {
           }
         >
           <div className="space-y-3 text-xs">
-            <div className="grid grid-cols-2 gap-3 p-3 bg-[#090D16] border border-[#1E2D4A] rounded">
+            <div className="grid grid-cols-2 gap-3 p-3.5 bg-slate-50 border border-slate-200/80 rounded-xl">
               <div>
-                <span className="text-[10px] font-mono text-[#8c909f] block">BLOCKED VALUE</span>
-                <span className="font-mono font-bold text-white text-base">
+                <span className="text-[10px] font-mono text-slate-400 block font-semibold">BLOCKED VALUE</span>
+                <span className="font-mono font-bold text-slate-900 text-base">
                   {formatCurrency(selectedIncidentForDossier.commitmentValue, currency)}
                 </span>
               </div>
               <div>
-                <span className="text-[10px] font-mono text-[#8c909f] block">VIOLATION CLASS</span>
-                <span className="font-bold text-[#ff8093]">{selectedIncidentForDossier.breachClassification}</span>
+                <span className="text-[10px] font-mono text-slate-400 block font-semibold">VIOLATION CLASS</span>
+                <span className="font-bold text-rose-600">{selectedIncidentForDossier.breachClassification}</span>
               </div>
             </div>
 
-            <p className="text-white text-xs leading-relaxed">{selectedIncidentForDossier.violationDetail}</p>
+            <p className="text-slate-700 text-xs leading-relaxed">{selectedIncidentForDossier.violationDetail}</p>
           </div>
         </Modal>
       )}

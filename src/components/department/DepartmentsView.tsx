@@ -108,18 +108,18 @@ export const DepartmentsView: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-[#1E2D4A]/50">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-3 border-b border-slate-200/80">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold uppercase bg-[#3B82F6]/20 text-[#adc6ff] border border-[#3B82F6]/30">
+            <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-semibold uppercase bg-blue-50 text-blue-700 border border-blue-200/80">
               Corporate Hierarchy
             </span>
-            <span className="text-[11px] font-mono text-[#8c909f]">ORGANIZATION MAP</span>
+            <span className="text-[11px] font-mono text-slate-400 font-medium">ORGANIZATION MAP</span>
           </div>
-          <h1 className="text-xl md:text-2xl text-white font-semibold tracking-tight mt-1">
+          <h1 className="text-xl md:text-2xl text-slate-900 font-bold tracking-tight mt-1">
             Cost Centers & Department Governance
           </h1>
-          <p className="text-xs text-[#8c909f] mt-0.5">
+          <p className="text-xs text-slate-500 mt-0.5">
             Operational hierarchy, headcount distribution, designated lead approvers, and risk posture.
           </p>
         </div>
@@ -133,30 +133,30 @@ export const DepartmentsView: React.FC = () => {
 
       {/* Organization Overview Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
-        <div className="tactile-tier-1 p-3.5 rounded-lg border border-[#1E2D4A]">
-          <span className="text-[10px] font-mono text-[#8c909f] uppercase block">TOTAL COST CENTERS</span>
-          <span className="text-xl font-mono font-bold text-white block mt-1">4 Active Units</span>
-          <span className="text-[10px] font-mono text-[#8c909f] block mt-0.5">100% Policy Bound</span>
+        <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+          <span className="text-[10px] font-mono text-slate-400 uppercase block font-semibold">TOTAL COST CENTERS</span>
+          <span className="text-xl font-mono font-bold text-slate-900 block mt-1">4 Active Units</span>
+          <span className="text-[10px] font-mono text-slate-400 block mt-0.5">100% Policy Bound</span>
         </div>
 
-        <div className="tactile-tier-1 p-3.5 rounded-lg border border-[#1E2D4A]">
-          <span className="text-[10px] font-mono text-[#8c909f] uppercase block">GLOBAL HEADCOUNT</span>
-          <span className="text-xl font-mono font-bold text-[#3B82F6] block mt-1">{totalHeadcount} FTEs</span>
-          <span className="text-[10px] font-mono text-[#8c909f] block mt-0.5">Active Requisitioners</span>
+        <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+          <span className="text-[10px] font-mono text-slate-400 uppercase block font-semibold">GLOBAL HEADCOUNT</span>
+          <span className="text-xl font-mono font-bold text-blue-600 block mt-1">{totalHeadcount} FTEs</span>
+          <span className="text-[10px] font-mono text-slate-400 block mt-0.5">Active Requisitioners</span>
         </div>
 
-        <div className="tactile-tier-1 p-3.5 rounded-lg border border-[#1E2D4A]">
-          <span className="text-[10px] font-mono text-[#8c909f] uppercase block">AVERAGE BURN PER FTE</span>
-          <span className="text-xl font-mono font-bold text-[#818CF8] block mt-1">
+        <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+          <span className="text-[10px] font-mono text-slate-400 uppercase block font-semibold">AVERAGE BURN PER FTE</span>
+          <span className="text-xl font-mono font-bold text-indigo-600 block mt-1">
             {formatCurrency(142400 / totalHeadcount, currency, 'compact')}/day
           </span>
-          <span className="text-[10px] font-mono text-[#8c909f] block mt-0.5">Blended run-rate</span>
+          <span className="text-[10px] font-mono text-slate-400 block mt-0.5">Blended run-rate</span>
         </div>
 
-        <div className="tactile-tier-1 p-3.5 rounded-lg border border-[#1E2D4A]">
-          <span className="text-[10px] font-mono text-[#8c909f] uppercase block">BREACH RISK CONCENTRATION</span>
-          <span className="text-xl font-mono font-bold text-[#ff8093] block mt-1">1 Critical Center</span>
-          <span className="text-[10px] font-mono text-[#ff8093] block mt-0.5">Engineering Core (94.2%)</span>
+        <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+          <span className="text-[10px] font-mono text-slate-400 uppercase block font-semibold">BREACH RISK CONCENTRATION</span>
+          <span className="text-xl font-mono font-bold text-rose-600 block mt-1">1 Critical Center</span>
+          <span className="text-[10px] font-mono text-rose-600 block mt-0.5 font-medium">Engineering Core (94.2%)</span>
         </div>
       </div>
 
@@ -170,22 +170,22 @@ export const DepartmentsView: React.FC = () => {
           return (
             <div
               key={dept.id}
-              className="tactile-tier-1 rounded-xl p-5 border border-[#1E2D4A] hover:border-[#3B82F6]/50 transition-all flex flex-col justify-between"
+              className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-sm hover:shadow-xl hover:shadow-slate-200/50 hover:border-slate-300/80 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
             >
               <div>
                 {/* Department Header */}
-                <div className="flex items-start justify-between gap-3 pb-3 border-b border-[#1E2D4A]">
+                <div className="flex items-start justify-between gap-3 pb-3.5 border-b border-slate-100">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono font-bold text-[#3B82F6] uppercase">
+                      <span className="text-[10px] font-mono font-bold text-blue-600 uppercase">
                         {dept.code}
                       </span>
-                      <span className="text-xs text-[#8c909f]">·</span>
-                      <span className="text-[10px] font-mono text-[#8c909f]">
+                      <span className="text-xs text-slate-300">·</span>
+                      <span className="text-[10px] font-mono text-slate-400 font-medium">
                         {dept.headcount} Members
                       </span>
                     </div>
-                    <h2 className="text-base font-semibold text-white tracking-tight mt-0.5">
+                    <h2 className="text-base font-bold text-slate-900 tracking-tight mt-0.5">
                       {dept.name}
                     </h2>
                   </div>
@@ -193,23 +193,23 @@ export const DepartmentsView: React.FC = () => {
                 </div>
 
                 {/* Manager Information Lockup */}
-                <div className="flex items-center gap-3 my-3.5 p-2.5 rounded bg-[#090D16] border border-[#1E2D4A]">
+                <div className="flex items-center gap-3 my-3.5 p-3 rounded-xl bg-slate-50/70 border border-slate-200/80">
                   <img
                     src={dept.managerAvatar}
                     alt={dept.leadManager}
-                    className="w-9 h-9 rounded-full border border-[#3B82F6]/40 object-cover"
+                    className="w-10 h-10 rounded-full border border-slate-200 object-cover shadow-sm"
                   />
                   <div>
-                    <span className="text-xs font-semibold text-white block">{dept.leadManager}</span>
-                    <span className="text-[10px] font-mono text-[#8c909f] block">{dept.managerTitle}</span>
+                    <span className="text-xs font-semibold text-slate-900 block">{dept.leadManager}</span>
+                    <span className="text-[10px] font-mono text-slate-500 block">{dept.managerTitle}</span>
                   </div>
                 </div>
 
                 {/* Budget Utilization Breakdown */}
-                <div className="space-y-2 mb-3">
+                <div className="space-y-2 mb-3.5">
                   <div className="flex items-center justify-between text-xs font-mono">
-                    <span className="text-[#8c909f]">Current Utilization:</span>
-                    <span className="font-bold text-white">
+                    <span className="text-slate-500">Current Utilization:</span>
+                    <span className="font-bold text-slate-900">
                       {utilRate.toFixed(1)}% ({formatCurrency(inFlight, currency, 'compact')} / {formatCurrency(dept.allocated, currency, 'compact')})
                     </span>
                   </div>
@@ -224,26 +224,26 @@ export const DepartmentsView: React.FC = () => {
 
                   <div className="grid grid-cols-2 gap-2 text-[10px] font-mono pt-1">
                     <div>
-                      <span className="text-[#8c909f] block">Settled Disbursed:</span>
-                      <span className="text-white font-medium">{formatCurrency(dept.settled, currency, 'compact')}</span>
+                      <span className="text-slate-400 block font-medium">Settled Disbursed:</span>
+                      <span className="text-slate-900 font-semibold">{formatCurrency(dept.settled, currency, 'compact')}</span>
                     </div>
                     <div className="text-right">
-                      <span className="text-[#8c909f] block">Available Headroom:</span>
-                      <span className="text-[#10B981] font-bold">{formatCurrency(available, currency, 'compact')}</span>
+                      <span className="text-slate-400 block font-medium">Available Headroom:</span>
+                      <span className="text-emerald-600 font-bold">{formatCurrency(available, currency, 'compact')}</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Primary Vendors */}
-                <div className="pt-2 border-t border-[#1E2D4A]/60">
-                  <span className="text-[10px] font-mono text-[#8c909f] uppercase block mb-1.5">
+                <div className="pt-3 border-t border-slate-100">
+                  <span className="text-[10px] font-mono text-slate-400 uppercase block mb-2 font-semibold">
                     Primary Counterparty Commitments
                   </span>
                   <div className="flex flex-wrap gap-1.5">
                     {dept.primaryVendors.map((vendor, i) => (
                       <span
                         key={i}
-                        className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#131E36] text-[#c2c6d6] border border-[#1E2D4A]"
+                        className="px-2.5 py-1 rounded-lg text-[10px] font-mono bg-slate-50 text-slate-700 border border-slate-200/80"
                       >
                         {vendor}
                       </span>
@@ -253,8 +253,8 @@ export const DepartmentsView: React.FC = () => {
               </div>
 
               {/* Actions Footer */}
-              <div className="pt-3.5 border-t border-[#1E2D4A] mt-4 flex items-center justify-between">
-                <span className="text-[11px] font-mono text-[#8c909f]">
+              <div className="pt-3.5 border-t border-slate-100 mt-4 flex items-center justify-between">
+                <span className="text-[11px] font-mono text-slate-400 font-medium">
                   Sub-Teams: {dept.subTeams.length} units
                 </span>
                 <TactileButton variant="surface" size="sm" onClick={() => setSelectedDept(dept)}>
@@ -283,23 +283,23 @@ export const DepartmentsView: React.FC = () => {
           }
         >
           <div className="space-y-4 text-xs">
-            <div className="p-3 bg-[#090D16] border border-[#1E2D4A] rounded space-y-2">
-              <span className="text-[10px] font-mono text-[#8c909f] uppercase block">
+            <div className="p-3.5 bg-slate-50 border border-slate-200/80 rounded-xl space-y-2.5">
+              <span className="text-[10px] font-mono text-slate-400 uppercase block font-semibold">
                 Sub-Team Organizational Hierarchy & Allocation
               </span>
               <div className="space-y-2">
                 {selectedDept.subTeams.map((sub, i) => (
                   <div
                     key={i}
-                    className="p-2.5 rounded bg-[#0D1526] border border-[#1E2D4A] flex items-center justify-between"
+                    className="p-3 rounded-xl bg-white border border-slate-200/80 shadow-sm flex items-center justify-between"
                   >
                     <div>
-                      <span className="text-white font-medium block">{sub.name}</span>
-                      <span className="text-[10px] text-[#8c909f] font-mono">
+                      <span className="text-slate-900 font-semibold block">{sub.name}</span>
+                      <span className="text-[10px] text-slate-400 font-mono">
                         Lead: {sub.lead} · {sub.members} Members
                       </span>
                     </div>
-                    <span className="font-mono font-bold text-white">
+                    <span className="font-mono font-bold text-slate-900">
                       {formatCurrency(sub.spend, currency, 'compact')}
                     </span>
                   </div>
@@ -307,7 +307,7 @@ export const DepartmentsView: React.FC = () => {
               </div>
             </div>
 
-            <div className="p-3 rounded bg-[#131E36]/40 border border-[#2A3E66] text-xs font-mono text-[#8c909f]">
+            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 text-xs font-mono text-slate-600">
               <span>Cost Center Authority: Pre-clearance required on all requisitions exceeding $25,000 USD.</span>
             </div>
           </div>

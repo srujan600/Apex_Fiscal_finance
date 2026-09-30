@@ -56,6 +56,24 @@ export function errorHandler(
     return;
   }
 
+  // Handle Nova AI Errors (Configuration, Auth, Timeout, Validation)
+  if (err.name === 'NovaConfigurationError' || err.name === 'NovaAuthError' || err.name === 'NovaTimeoutError' || err.name === 'NovaValidationError' || err.name === 'NovaError') {
+    const statusCode = (err as any).statusCode || 500;
+    const response: ApiResponse = {
+      success: false,
+      error: {
+        message: err.message,
+        code: err.name.toUpperCase(),
+        details: {
+          retryable: (err as any).isRetryable || false,
+        },
+      },
+      meta: { timestamp: new Date().toISOString() },
+    };
+    res.status(statusCode).json(response);
+    return;
+  }
+
   // Internal Unhandled Errors (Sanitized)
   console.error('[UNHANDLED_ERROR]:', err);
   const response: ApiResponse = {

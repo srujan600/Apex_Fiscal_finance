@@ -354,6 +354,30 @@ export class ApiClient {
     return this.request<any>('/ai/management-insights');
   }
 
+  public async getNovaLiveSummary(): Promise<any> {
+    return this.request<any>('/ai/nova/live-summary');
+  }
+
+  public async getNovaStatus(): Promise<any> {
+    return this.request<any>('/ai/status');
+  }
+
+  // --- Aczen Nova AI Copilot / Agent ---
+  public async getAgentCapabilities(): Promise<any> {
+    return this.request<any>('/ai/agent/capabilities');
+  }
+
+  public async chatWithAgent(payload: {
+    message: string;
+    conversationHistory?: { role: 'user' | 'assistant' | 'system'; content: string; timestamp?: string }[];
+    context?: any;
+  }): Promise<any> {
+    return this.request<any>('/ai/agent/chat', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
   // --- Dashboard Aggregates ---
   public async getDashboardSummary(): Promise<any> {
     return this.request<any>('/dashboard/summary');

@@ -133,8 +133,8 @@ export const CreateRequestModal: React.FC<CreateRequestModalProps> = ({
             onChange={(e) => setDate(e.target.value)}
           />
 
-          <div className="space-y-1">
-            <label className="text-[11px] font-sans text-[#8c909f] font-medium block">
+          <div className="space-y-1.5">
+            <label className="text-[11px] font-sans text-slate-500 font-medium block">
               Attachment (Signed Quote / SOW)
             </label>
             <div className="flex items-center gap-2">
@@ -142,7 +142,7 @@ export const CreateRequestModal: React.FC<CreateRequestModalProps> = ({
                 type="text"
                 value={attachmentName}
                 onChange={(e) => setAttachmentName(e.target.value)}
-                className="w-full h-8 text-xs font-mono bg-[#0D1526] text-[#dfe2ef] border border-[#1E2D4A] rounded px-2.5"
+                className="w-full h-9 text-xs font-mono bg-white text-slate-900 placeholder:text-slate-400 border border-slate-200 rounded-xl px-3 focus:outline-none focus:border-slate-400 focus:ring-4 focus:ring-slate-100 transition-all shadow-sm"
               />
             </div>
           </div>
@@ -154,54 +154,56 @@ export const CreateRequestModal: React.FC<CreateRequestModalProps> = ({
           onChange={(e) => setPurpose(e.target.value)}
         />
 
-        {/* LIVE BUDGET CONTEXT & POLICY VERDICT BOX (Exact match to prompt example) */}
+        {/* LIVE BUDGET CONTEXT & POLICY VERDICT BOX */}
         <div
-          className={`p-4 rounded-lg border space-y-3 ${
+          className={`p-4 rounded-xl border space-y-3 shadow-sm ${
             isOverBudget
-              ? 'bg-[#E11D48]/10 border-[#E11D48]/50 text-[#ffb4ab]'
-              : 'bg-[#10B981]/10 border-[#10B981]/40 text-[#10B981]'
+              ? 'bg-rose-50/70 border-rose-200 text-rose-800'
+              : 'bg-emerald-50/70 border-emerald-200 text-emerald-800'
           }`}
         >
-          <div className="flex items-center justify-between border-b border-[#1E2D4A]/50 pb-2">
+          <div className="flex items-center justify-between border-b border-slate-200/60 pb-2.5">
             <div className="flex items-center gap-2 font-mono font-bold text-xs uppercase tracking-wider">
               <span
                 className={`w-2 h-2 rounded-full ${
-                  isOverBudget ? 'bg-[#E11D48] animate-ping' : 'bg-[#10B981]'
+                  isOverBudget ? 'bg-rose-500 animate-ping' : 'bg-emerald-500'
                 }`}
               />
-              <span>Decision: {isOverBudget ? 'BLOCKED' : 'PRE-CLEARED'}</span>
+              <span className={isOverBudget ? 'text-rose-700' : 'text-emerald-700'}>
+                Decision: {isOverBudget ? 'BLOCKED' : 'PRE-CLEARED'}
+              </span>
             </div>
-            <span className="text-[10px] font-mono text-[#8c909f]">
+            <span className="text-[10px] font-mono text-slate-400 font-medium">
               {selectedDept.departmentName} Ceiling Check
             </span>
           </div>
 
           <div className="grid grid-cols-3 gap-3 text-xs font-mono">
             <div>
-              <span className="text-[10px] text-[#8c909f] uppercase block">Requested:</span>
-              <span className="text-white font-bold text-sm">
+              <span className="text-[10px] text-slate-400 uppercase block font-semibold">Requested:</span>
+              <span className="text-slate-900 font-bold text-sm block mt-0.5">
                 {formatCurrency(numAmount, currency)}
               </span>
             </div>
 
             <div>
-              <span className="text-[10px] text-[#8c909f] uppercase block">Available:</span>
-              <span className={`font-bold text-sm ${currentAvailable < numAmount ? 'text-[#ff8093]' : 'text-[#10B981]'}`}>
+              <span className="text-[10px] text-slate-400 uppercase block font-semibold">Available:</span>
+              <span className={`font-bold text-sm block mt-0.5 ${currentAvailable < numAmount ? 'text-rose-600' : 'text-emerald-700'}`}>
                 {formatCurrency(currentAvailable, currency)}
               </span>
             </div>
 
             <div>
-              <span className="text-[10px] text-[#8c909f] uppercase block">Projected Utilization:</span>
-              <span className={`font-bold text-sm ${projectedUtil > 100 ? 'text-[#ff8093]' : 'text-[#10B981]'}`}>
+              <span className="text-[10px] text-slate-400 uppercase block font-semibold">Projected Utilization:</span>
+              <span className={`font-bold text-sm block mt-0.5 ${projectedUtil > 100 ? 'text-rose-600' : 'text-emerald-700'}`}>
                 {projectedUtil.toFixed(1)}%
               </span>
             </div>
           </div>
 
-          <div className="pt-2 border-t border-[#1E2D4A]/50 text-xs">
-            <span className="font-semibold block mb-0.5 text-white">Reason:</span>
-            <p className="text-[#dfe2ef] text-[11px] leading-relaxed">
+          <div className="pt-2.5 border-t border-slate-200/60 text-xs">
+            <span className="font-semibold block mb-0.5 text-slate-900">Reason:</span>
+            <p className="text-slate-700 text-[11px] leading-relaxed">
               {isOverBudget
                 ? `"This request would exceed the available budget (causes a ${formatCurrency(deficit, currency)} deficit beyond the ${formatCurrency(selectedDept.allocated, currency)} quarterly cap). Automated stop active. Routing to Exception Queue for mandatory Group CFO sign-off."`
                 : `"This request is within the approved departmental envelope ($${formatCurrency(currentAvailable - numAmount, currency)} remaining buffer). Automated pre-clearance granted."`}

@@ -29,19 +29,19 @@ export const DashboardView: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Screen Header & Execution Status Banner from Stitch */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-[#1E2D4A]/50">
+      {/* Screen Header & Execution Status Banner */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-3 border-b border-slate-200/80">
         <div>
           <div className="flex items-center gap-2">
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold uppercase bg-[#3B82F6]/20 text-[#adc6ff] border border-[#3B82F6]/30">
+            <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-semibold uppercase bg-blue-50 text-blue-700 border border-blue-200/80">
               L4 Sovereign Control
             </span>
-            <span className="text-[11px] font-mono text-[#8c909f]">NODE ID: APX-GLOBAL-US-01</span>
+            <span className="text-[11px] font-mono text-slate-400 font-medium">NODE ID: APX-GLOBAL-US-01</span>
           </div>
-          <h1 className="text-xl md:text-2xl text-white font-semibold tracking-tight mt-1">
+          <h1 className="text-xl md:text-2xl text-slate-900 font-bold tracking-tight mt-1">
             Executive Financial Control & Risk Intelligence Command
           </h1>
-          <p className="text-xs text-[#8c909f] mt-0.5">
+          <p className="text-xs text-slate-500 mt-0.5">
             Continuous algorithmic verification of enterprise spending thresholds, automated liquidity buffers, and sovereign override triage.
           </p>
         </div>
@@ -49,10 +49,10 @@ export const DashboardView: React.FC = () => {
         {/* Action Protocol Status */}
         <div className="flex items-center gap-3.5">
           <div className="text-right">
-            <span className="text-[10px] font-mono text-[#8c909f] uppercase block">Active Epoch</span>
-            <span className="text-xs font-mono text-white font-medium">Q3-2025 · DAY 68/92</span>
+            <span className="text-[10px] font-mono text-slate-400 uppercase block font-medium">Active Epoch</span>
+            <span className="text-xs font-mono text-slate-900 font-semibold">Q3-2025 · DAY 92/92 (SEPT 30)</span>
           </div>
-          <div className="h-8 w-px bg-[#1E2D4A]" />
+          <div className="h-8 w-px bg-slate-200" />
           <TactileButton
             variant="surface"
             icon="file_download"
@@ -65,21 +65,21 @@ export const DashboardView: React.FC = () => {
 
       {/* Emergency Lockdown Notice Banner if active */}
       {isEmergencyFreezeActive && (
-        <div className="p-4 rounded-lg bg-[#E11D48]/15 border-2 border-[#E11D48] flex items-center justify-between gap-3 animate-pulse">
+        <div className="p-4 rounded-2xl bg-rose-50 border-2 border-rose-300 flex items-center justify-between gap-3 shadow-sm animate-pulse">
           <div className="flex items-center gap-3">
-            <span className="material-symbols-outlined text-2xl text-[#E11D48]" data-icon="warning">
+            <span className="material-symbols-outlined text-2xl text-rose-600" data-icon="warning">
               warning
             </span>
             <div>
-              <span className="text-xs font-bold text-white font-mono uppercase tracking-wider block">
+              <span className="text-xs font-bold text-rose-950 font-mono uppercase tracking-wider block">
                 TOTAL CAPITAL OUTFLOW FREEZE ACTIVE
               </span>
-              <p className="text-xs text-[#ffdad6]">
+              <p className="text-xs text-rose-700 font-medium">
                 All automated disbursements, purchase requisitions, and secondary delegations are halted by CFO order.
               </p>
             </div>
           </div>
-          <span className="text-xs font-mono font-bold text-[#ff8093] px-3 py-1 bg-[#090D16] border border-[#E11D48] rounded">
+          <span className="text-xs font-mono font-bold text-rose-800 px-3 py-1 bg-white border border-rose-300 rounded-lg shadow-sm">
             L4 LOCKDOWN
           </span>
         </div>
@@ -164,13 +164,13 @@ export const DashboardView: React.FC = () => {
             helperText="Transfers are executed immediately and appended to the cryptographic audit trail."
           />
 
-          <div className="p-3 rounded bg-[#090D16] border border-[#1E2D4A] space-y-1">
-            <span className="text-[10px] font-mono text-[#8c909f] uppercase block">
+          <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 space-y-1">
+            <span className="text-[10px] font-mono text-slate-400 uppercase block font-semibold">
               Projected Post-Transfer Posture
             </span>
             <div className="flex justify-between items-center text-xs">
-              <span className="text-white">Engineering Headroom:</span>
-              <span className="font-mono text-[#10B981] font-semibold">
+              <span className="text-slate-700 font-medium">Engineering Headroom:</span>
+              <span className="font-mono text-emerald-600 font-semibold">
                 Expands from $870k to $1.37M (Breach mitigated +18 days)
               </span>
             </div>

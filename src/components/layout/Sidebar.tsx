@@ -60,30 +60,30 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen = false, onClose }) => 
       {isOpen && (
         <div
           onClick={onClose}
-          className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm md:hidden animate-fadeIn"
+          className="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-sm md:hidden animate-fadeIn"
         />
       )}
 
       <aside
-        className={`fixed top-0 left-0 h-screen w-[260px] z-50 md:z-40 bg-[#0D1526] border-r border-[#1E2D4A] shadow-2xl flex flex-col justify-between p-3.5 select-none overflow-y-auto transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 left-0 h-screen w-[260px] z-50 md:z-40 bg-white border-r border-slate-200/80 shadow-sm flex flex-col justify-between p-4 select-none overflow-y-auto transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         }`}
       >
         {/* Top Brand & Status */}
         <div>
           {/* Brand Lockup & Mobile Close Button */}
-          <div className="flex items-center justify-between px-2 py-1 mb-3">
+          <div className="flex items-center justify-between px-2 py-1 mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#3B82F6] to-[#2563EB] flex items-center justify-center border border-[#3B82F6]/40 shadow-inner">
+              <div className="w-9 h-9 rounded-xl bg-slate-900 flex items-center justify-center shadow-xs">
                 <span className="material-symbols-outlined text-white text-lg" data-icon="lock_reset">
                   lock_reset
                 </span>
               </div>
               <div className="leading-tight">
-                <span className="text-xs font-bold tracking-wider text-white uppercase block">
+                <span className="text-xs font-bold tracking-wider text-slate-900 uppercase block">
                   APEX FISCAL
                 </span>
-                <span className="text-[10px] font-mono text-[#8c909f] block tracking-widest mt-0.5">
+                <span className="text-[10px] font-mono text-slate-400 font-medium block tracking-wider mt-0.5">
                   SpendGuard L4 Core
                 </span>
               </div>
@@ -92,41 +92,60 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen = false, onClose }) => 
             {/* Close button for mobile */}
             <button
               onClick={onClose}
-              className="md:hidden text-[#8c909f] hover:text-white p-1 rounded hover:bg-[#1E2D4A]/50 transition-colors cursor-pointer"
+              className="md:hidden text-slate-400 hover:text-slate-700 p-1.5 rounded-xl hover:bg-slate-100 transition-all cursor-pointer"
             >
               <span className="material-symbols-outlined text-lg leading-none">close</span>
             </button>
           </div>
 
-          {/* Live System Status Strip from Stitch */}
-          <div className="px-2.5 py-1.5 rounded bg-[#090D16] border border-[#1E2D4A] flex items-center justify-between mb-4">
+          {/* Live System Status Strip */}
+          <div className="px-3 py-2 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between mb-2 shadow-xs">
             <div className="flex items-center gap-2">
-              <span className={`w-2 h-2 rounded-full ${isEmergencyFreezeActive ? 'bg-[#E11D48] animate-ping' : 'bg-[#10B981] status-pulse'}`} />
-              <span className={`text-[10px] font-mono font-semibold uppercase tracking-wider ${isEmergencyFreezeActive ? 'text-[#ff8093]' : 'text-[#10B981]'}`}>
-                {isEmergencyFreezeActive ? 'OUTFLOW FREEZE' : 'ALL POLICIES ENFORCED'}
+              <span
+                className={`w-2 h-2 rounded-full ${
+                  isEmergencyFreezeActive ? 'bg-rose-500 animate-ping' : 'bg-emerald-500 status-pulse'
+                }`}
+              />
+              <span
+                className={`text-[10px] font-mono font-semibold uppercase tracking-wider ${
+                  isEmergencyFreezeActive ? 'text-rose-600' : 'text-emerald-700'
+                }`}
+              >
+                {isEmergencyFreezeActive ? 'OUTFLOW FREEZE' : 'ALL POLICIES ACTIVE'}
               </span>
             </div>
-            <span className="text-[10px] font-mono text-[#8c909f]">L9-HASH</span>
+            <span className="text-[10px] font-mono text-slate-400 font-medium">L9-HASH</span>
+          </div>
+
+          {/* Aczen Nova Live Financial Books Indicator */}
+          <div className="px-3 py-2 rounded-xl bg-blue-50/70 border border-blue-200/80 flex items-center justify-between mb-4 shadow-xs">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
+              <span className="text-[10px] font-mono font-semibold uppercase tracking-wider text-blue-800">
+                ACZEN NOVA SYNCED
+              </span>
+            </div>
+            <span className="text-[10px] font-mono text-blue-700 font-bold">372 ENVELOPES</span>
           </div>
 
           {/* Main Nav Rail */}
-          <nav className="space-y-0.5">
+          <nav className="space-y-1">
             {navItems.map((item) => {
               const isActive = activeTab === item.id;
               return (
                 <button
                   key={item.id}
                   onClick={() => handleNavClick(item.id)}
-                  className={`w-full flex items-center justify-between px-3 py-2 text-xs font-medium rounded-r-md transition-all cursor-pointer group ${
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 text-xs rounded-xl transition-all duration-200 cursor-pointer group active:scale-[0.98] ${
                     isActive
-                      ? 'text-[#adc6ff] bg-[#1E2D4A]/60 border-l-2 border-[#3B82F6] shadow-sm font-semibold'
-                      : 'text-[#c2c6d6] hover:text-white hover:bg-[#1E2D4A]/30 border-l-2 border-transparent'
+                      ? 'text-slate-900 bg-slate-100 font-semibold shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-medium'
                   }`}
                 >
-                  <div className="flex items-center gap-2.5">
+                  <div className="flex items-center gap-3">
                     <span
                       className={`material-symbols-outlined text-lg leading-none transition-colors ${
-                        isActive ? 'text-[#3B82F6]' : 'text-[#8c909f] group-hover:text-white'
+                        isActive ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-700'
                       }`}
                       data-icon={item.icon}
                     >
@@ -136,7 +155,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen = false, onClose }) => 
                   </div>
 
                   {item.badge !== undefined && Number(item.badge) > 0 && (
-                    <span className="px-1.5 py-0.2 rounded text-[10px] font-mono font-bold bg-[#E11D48]/20 text-[#ff8093] border border-[#E11D48]/50">
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-rose-50 text-rose-700 border border-rose-200">
                       {item.badge}
                     </span>
                   )}
@@ -147,12 +166,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen = false, onClose }) => 
         </div>
 
         {/* Footer Nav & Emergency Freeze */}
-        <div className="space-y-3 pt-3 border-t border-[#1E2D4A]">
-          {/* Emergency Freeze CTA from Stitch */}
+        <div className="space-y-3 pt-4 border-t border-slate-200/80">
+          {/* Emergency Freeze CTA */}
           {isEmergencyFreezeActive ? (
             <button
               onClick={resolveEmergencyFreeze}
-              className="w-full h-8 rounded text-xs font-mono font-semibold flex items-center justify-center gap-2 bg-[#10B981]/20 text-[#10B981] border border-[#10B981]/40 hover:bg-[#10B981]/30 transition-all cursor-pointer"
+              className="w-full h-9 rounded-xl text-xs font-mono font-semibold flex items-center justify-center gap-2 bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition-all cursor-pointer shadow-xs active:scale-[0.98]"
             >
               <span className="material-symbols-outlined text-base" data-icon="lock_open">
                 lock_open
@@ -162,7 +181,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen = false, onClose }) => 
           ) : (
             <button
               onClick={triggerEmergencyFreeze}
-              className="w-full h-8 rounded text-xs font-semibold flex items-center justify-center gap-2 btn-tactile-destructive cursor-pointer"
+              className="w-full h-9 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-600 hover:text-white hover:border-rose-600 shadow-xs transition-all cursor-pointer active:scale-[0.98]"
             >
               <span className="material-symbols-outlined text-base" data-icon="ac_unit">
                 ac_unit
@@ -175,11 +194,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen = false, onClose }) => 
           <div className="space-y-0.5">
             <button
               onClick={() => handleNavClick('settings')}
-              className={`w-full flex items-center gap-2.5 px-3 py-1.5 text-xs rounded transition-colors cursor-pointer ${
-                activeTab === 'settings' ? 'text-[#adc6ff] bg-[#1E2D4A]/50' : 'text-[#8c909f] hover:text-white hover:bg-[#1E2D4A]/30'
+              className={`w-full flex items-center gap-3 px-3.5 py-2 text-xs rounded-xl transition-all cursor-pointer active:scale-[0.98] ${
+                activeTab === 'settings'
+                  ? 'text-slate-900 bg-slate-100 font-semibold shadow-xs'
+                  : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50 font-medium'
               }`}
             >
-              <span className="material-symbols-outlined text-base text-[#8c909f]" data-icon="settings">
+              <span className="material-symbols-outlined text-base text-slate-400" data-icon="settings">
                 settings
               </span>
               <span>System Settings</span>
@@ -187,19 +208,19 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen = false, onClose }) => 
           </div>
 
           {/* Executive Profile Card */}
-          <div className="p-2 rounded bg-[#090D16] border border-[#1E2D4A] flex items-center justify-between">
+          <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 flex items-center justify-between shadow-xs">
             <div className="flex items-center gap-2.5 overflow-hidden">
               <img
                 src={user.avatar}
                 alt={user.name}
-                className="w-7 h-7 rounded-full border border-[#3B82F6]/50 object-cover shrink-0"
+                className="w-8 h-8 rounded-full border border-slate-200 object-cover shrink-0"
               />
               <div className="leading-tight truncate">
-                <span className="text-xs font-semibold text-white block truncate">{user.name}</span>
-                <span className="text-[10px] font-mono text-[#8c909f] block truncate">{user.title}</span>
+                <span className="text-xs font-semibold text-slate-900 block truncate">{user.name}</span>
+                <span className="text-[10px] font-mono text-slate-400 font-medium block truncate">{user.title}</span>
               </div>
             </div>
-            <span className="material-symbols-outlined text-base text-[#8c909f]" data-icon="badge">
+            <span className="material-symbols-outlined text-base text-slate-400" data-icon="badge">
               badge
             </span>
           </div>

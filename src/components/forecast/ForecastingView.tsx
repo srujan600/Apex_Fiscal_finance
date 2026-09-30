@@ -118,15 +118,15 @@ export const ForecastingView: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* View Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#1E293B] pb-5">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200/80 pb-5">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold tracking-tight text-white font-sans">
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900 font-sans">
               Spend Trajectory & Horizon Forecasting
             </h1>
             <StatusBadge status={isBreached ? 'BLOCKED' : 'APPROVED'} />
           </div>
-          <p className="text-xs text-[#8c909f] mt-1 font-mono">
+          <p className="text-xs text-slate-500 mt-1 font-mono">
             Monte Carlo Predictive Engine · Multi-Curve Horizon Analysis · Macroeconomic Sensitivity Testing
           </p>
         </div>
@@ -136,10 +136,10 @@ export const ForecastingView: React.FC = () => {
             <button
               key={h}
               onClick={() => setTimeHorizon(h)}
-              className={`px-3 py-1.5 rounded text-xs font-mono font-medium transition-colors cursor-pointer ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-mono font-medium transition-all duration-200 cursor-pointer ${
                 timeHorizon === h
-                  ? 'bg-[#3B82F6] text-white shadow-sm'
-                  : 'bg-[#0D1526] text-[#8c909f] hover:text-white border border-[#1E293B]'
+                  ? 'bg-slate-900 text-white shadow-sm'
+                  : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200/80 hover:bg-slate-50'
               }`}
             >
               {h.replace('_', ' ')}
@@ -153,36 +153,36 @@ export const ForecastingView: React.FC = () => {
         {/* Approved Ceiling */}
         <DoubleBezelCard>
           <div>
-            <span className="text-[10px] uppercase font-mono tracking-wider text-[#8c909f]">
+            <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 font-medium">
               Approved Corporate Ceiling
             </span>
-            <div className="mt-1 text-2xl font-bold font-mono text-white tracking-tight">
+            <div className="mt-1 text-2xl font-bold font-mono text-slate-900 tracking-tight">
               {formatCurrency(totalCeiling, currency)}
             </div>
-            <div className="mt-2 flex items-center gap-1.5 text-xs text-[#8c909f]">
-              <span className="material-symbols-outlined text-[14px] text-[#3B82F6]">lock</span>
+            <div className="mt-2 flex items-center gap-1.5 text-xs text-slate-500">
+              <span className="material-symbols-outlined text-[14px] text-blue-600">lock</span>
               <span>Fixed Q4 Board Authorization</span>
             </div>
           </div>
         </DoubleBezelCard>
 
         {/* Projected Year-End */}
-        <DoubleBezelCard className={isBreached ? 'border border-[#EF4444]/40' : ''}>
+        <DoubleBezelCard className={isBreached ? 'border border-rose-300 bg-rose-50/20' : ''}>
           <div>
-            <span className="text-[10px] uppercase font-mono tracking-wider text-[#8c909f]">
+            <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 font-medium">
               Projected Year-End Run-Rate
             </span>
             <div
               className={`mt-1 text-2xl font-bold font-mono tracking-tight ${
-                isBreached ? 'text-[#EF4444]' : 'text-[#10B981]'
+                isBreached ? 'text-rose-600' : 'text-emerald-600'
               }`}
             >
               {formatCurrency(yearEndProjected, currency)}
             </div>
-            <div className="mt-2 flex items-center gap-1.5 text-xs text-[#8c909f]">
+            <div className="mt-2 flex items-center gap-1.5 text-xs text-slate-500">
               <span
                 className={`material-symbols-outlined text-[14px] ${
-                  isBreached ? 'text-[#EF4444]' : 'text-[#10B981]'
+                  isBreached ? 'text-rose-600' : 'text-emerald-600'
                 }`}
               >
                 {isBreached ? 'trending_up' : 'trending_flat'}
@@ -195,14 +195,14 @@ export const ForecastingView: React.FC = () => {
         </DoubleBezelCard>
 
         {/* Projected Variance */}
-        <DoubleBezelCard className={isBreached ? 'border border-[#EF4444]/40' : ''}>
+        <DoubleBezelCard className={isBreached ? 'border border-rose-300 bg-rose-50/20' : ''}>
           <div>
-            <span className="text-[10px] uppercase font-mono tracking-wider text-[#8c909f]">
+            <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 font-medium">
               Projected Fiscal Variance
             </span>
             <div
               className={`mt-1 text-2xl font-bold font-mono tracking-tight ${
-                isBreached ? 'text-[#EF4444]' : 'text-[#10B981]'
+                isBreached ? 'text-rose-600' : 'text-emerald-600'
               }`}
             >
               {isBreached ? '+' : ''}
@@ -211,33 +211,33 @@ export const ForecastingView: React.FC = () => {
             <div className="mt-2 flex items-center gap-1.5 text-xs">
               <span
                 className={`font-semibold ${
-                  isBreached ? 'text-[#EF4444]' : 'text-[#10B981]'
+                  isBreached ? 'text-rose-600' : 'text-emerald-600'
                 }`}
               >
                 {isBreached ? 'DEFICIT RISK' : 'HEALTHY SURPLUS'}
               </span>
-              <span className="text-[#8c909f]">vs baseline</span>
+              <span className="text-slate-500">vs baseline</span>
             </div>
           </div>
         </DoubleBezelCard>
 
         {/* Breach Horizon */}
-        <DoubleBezelCard className={isBreached ? 'border border-[#EF4444]/40' : ''}>
+        <DoubleBezelCard className={isBreached ? 'border border-rose-300 bg-rose-50/20' : ''}>
           <div>
-            <span className="text-[10px] uppercase font-mono tracking-wider text-[#8c909f]">
+            <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 font-medium">
               Estimated Breach Horizon
             </span>
             <div
               className={`mt-1 text-lg font-bold font-mono tracking-tight truncate ${
-                isBreached ? 'text-[#EF4444]' : 'text-[#10B981]'
+                isBreached ? 'text-rose-600' : 'text-emerald-600'
               }`}
             >
               {breachDateString}
             </div>
-            <div className="mt-2 flex items-center gap-1.5 text-xs text-[#8c909f]">
+            <div className="mt-2 flex items-center gap-1.5 text-xs text-slate-500">
               <span
                 className={`material-symbols-outlined text-[14px] ${
-                  isBreached ? 'text-[#EF4444]' : 'text-[#10B981]'
+                  isBreached ? 'text-rose-600' : 'text-emerald-600'
                 }`}
               >
                 {isBreached ? 'warning' : 'verified_user'}
@@ -256,10 +256,10 @@ export const ForecastingView: React.FC = () => {
             <div>
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
                 <div>
-                  <h3 className="text-sm font-bold text-white uppercase tracking-wider font-mono">
+                  <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider font-mono">
                     Spend Trajectory: Actuals vs. Committed vs. Predictive Horizon
                   </h3>
-                  <p className="text-xs text-[#8c909f] mt-0.5">
+                  <p className="text-xs text-slate-500 mt-0.5">
                     Continuous cumulative monthly progression with Monte Carlo variance envelope
                   </p>
                 </div>
@@ -267,20 +267,20 @@ export const ForecastingView: React.FC = () => {
                 {/* Legend Chips */}
                 <div className="flex flex-wrap items-center gap-3 text-xs font-mono">
                   <div className="flex items-center gap-1.5">
-                    <span className="w-3 h-1 bg-[#3B82F6] rounded-full inline-block" />
-                    <span className="text-slate-300">Actual Spend</span>
+                    <span className="w-3 h-1 bg-blue-600 rounded-full inline-block" />
+                    <span className="text-slate-600">Actual Spend</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <span className="w-3 h-1 bg-[#F59E0B] rounded-full inline-block" />
-                    <span className="text-slate-300">Committed</span>
+                    <span className="w-3 h-1 bg-amber-500 rounded-full inline-block" />
+                    <span className="text-slate-600">Committed</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <span className="w-3 h-1 bg-[#EC4899] rounded-full inline-block border-t border-dashed" />
-                    <span className="text-slate-300">Projected Run</span>
+                    <span className="w-3 h-1 bg-pink-500 rounded-full inline-block border-t border-dashed" />
+                    <span className="text-slate-600">Projected Run</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <span className="w-3 h-1 bg-[#EF4444] rounded-full inline-block" />
-                    <span className="text-slate-300">Cap Limit</span>
+                    <span className="w-3 h-1 bg-rose-500 rounded-full inline-block" />
+                    <span className="text-slate-600">Cap Limit</span>
                   </div>
                 </div>
               </div>
@@ -294,27 +294,27 @@ export const ForecastingView: React.FC = () => {
                   >
                     <defs>
                       <linearGradient id="actualGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.35} />
-                        <stop offset="95%" stopColor="#3B82F6" stopOpacity={0.0} />
+                        <stop offset="5%" stopColor="#2563EB" stopOpacity={0.25} />
+                        <stop offset="95%" stopColor="#2563EB" stopOpacity={0.0} />
                       </linearGradient>
                       <linearGradient id="projectedGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#EC4899" stopOpacity={0.25} />
+                        <stop offset="5%" stopColor="#EC4899" stopOpacity={0.2} />
                         <stop offset="95%" stopColor="#EC4899" stopOpacity={0.0} />
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" vertical={false} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
                     <XAxis
                       dataKey="month"
-                      stroke="#8c909f"
+                      stroke="#94a3b8"
                       fontSize={11}
                       tickLine={false}
-                      axisLine={{ stroke: '#1E293B' }}
+                      axisLine={{ stroke: '#e2e8f0' }}
                     />
                     <YAxis
-                      stroke="#8c909f"
+                      stroke="#94a3b8"
                       fontSize={11}
                       tickLine={false}
-                      axisLine={{ stroke: '#1E293B' }}
+                      axisLine={{ stroke: '#e2e8f0' }}
                       tickFormatter={(val) => `$${(val / 1000000).toFixed(0)}M`}
                       domain={[0, 60000000]}
                     />
@@ -322,11 +322,11 @@ export const ForecastingView: React.FC = () => {
                       content={({ active, payload, label }) => {
                         if (active && payload && payload.length) {
                           return (
-                            <div className="p-3 bg-[#0D1526]/95 border border-[#1E293B] rounded shadow-2xl backdrop-blur-md font-mono text-xs">
-                              <div className="font-bold text-white mb-2 pb-1 border-b border-[#1E293B] flex items-center justify-between">
+                            <div className="p-3 bg-white/95 border border-slate-200 rounded-xl shadow-xl backdrop-blur-md font-mono text-xs text-slate-800">
+                              <div className="font-bold text-slate-900 mb-2 pb-1 border-b border-slate-100 flex items-center justify-between">
                                 <span>{label} 2026</span>
                                 {payload[0]?.payload?.isForecast && (
-                                  <span className="text-[10px] text-[#EC4899] font-normal uppercase">
+                                  <span className="text-[10px] text-pink-600 font-normal uppercase bg-pink-50 px-1.5 py-0.5 rounded">
                                     Forecast Horizon
                                   </span>
                                 )}
@@ -334,14 +334,14 @@ export const ForecastingView: React.FC = () => {
                               {payload.map((entry: any, idx: number) => (
                                 <div key={idx} className="flex items-center justify-between gap-4 py-0.5">
                                   <span style={{ color: entry.color }}>{entry.name}:</span>
-                                  <span className="font-bold text-white">
+                                  <span className="font-bold text-slate-900">
                                     {formatCurrency(entry.value, currency)}
                                   </span>
                                 </div>
                               ))}
-                              <div className="mt-2 pt-1 border-t border-[#1E293B] flex items-center justify-between text-[11px]">
-                                <span className="text-[#8c909f]">Corporate Ceiling:</span>
-                                <span className="text-[#EF4444] font-bold">
+                              <div className="mt-2 pt-1 border-t border-slate-100 flex items-center justify-between text-[11px]">
+                                <span className="text-slate-500">Corporate Ceiling:</span>
+                                <span className="text-rose-600 font-bold">
                                   {formatCurrency(totalCeiling, currency)}
                                 </span>
                               </div>
@@ -357,7 +357,7 @@ export const ForecastingView: React.FC = () => {
                       type="monotone"
                       dataKey="actual"
                       name="Actual Incurred"
-                      stroke="#3B82F6"
+                      stroke="#2563EB"
                       strokeWidth={2.5}
                       fillOpacity={1}
                       fill="url(#actualGradient)"
@@ -403,16 +403,16 @@ export const ForecastingView: React.FC = () => {
               </div>
 
               {/* Stress Factor Quick Controls Bar */}
-              <div className="mt-4 pt-4 border-t border-[#1E293B] flex flex-col md:flex-row items-center justify-between gap-4">
-                <div className="flex items-center gap-2 text-xs text-[#8c909f]">
-                  <span className="material-symbols-outlined text-[16px] text-[#3B82F6]">
+              <div className="mt-4 pt-4 border-t border-slate-100 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div className="flex items-center gap-2 text-xs text-slate-500">
+                  <span className="material-symbols-outlined text-[16px] text-blue-600">
                     tune
                   </span>
                   <span>Sensitivity Multiplier:</span>
-                  <span className="font-mono font-bold text-white">
+                  <span className="font-mono font-bold text-slate-900">
                     {stressFactor > 0 ? `+${stressFactor}%` : `${stressFactor}%`}
                   </span>
-                  <span className="text-[10px] text-[#8c909f] font-mono">
+                  <span className="text-[10px] text-slate-400 font-mono">
                     (Effective: {(totalMultiplier * 100).toFixed(1)}% of base)
                   </span>
                 </div>
@@ -422,10 +422,10 @@ export const ForecastingView: React.FC = () => {
                     <button
                       key={val}
                       onClick={() => setStressFactor(val)}
-                      className={`px-2 py-1 rounded text-[11px] font-mono transition-colors cursor-pointer ${
+                      className={`px-2 py-1 rounded-lg text-[11px] font-mono transition-all duration-200 cursor-pointer ${
                         stressFactor === val
-                          ? 'bg-[#3B82F6] text-white font-bold'
-                          : 'bg-[#0D1526] text-[#8c909f] hover:text-white border border-[#1E293B]'
+                          ? 'bg-slate-900 text-white font-bold shadow-sm'
+                          : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200/80 hover:bg-slate-50'
                       }`}
                     >
                       {val > 0 ? `+${val}%` : `${val}%`}
@@ -433,7 +433,7 @@ export const ForecastingView: React.FC = () => {
                   ))}
                   <button
                     onClick={() => setStressFactor(0)}
-                    className="px-2 py-1 rounded text-[11px] font-mono text-[#8c909f] hover:text-white underline cursor-pointer"
+                    className="px-2 py-1 rounded-lg text-[11px] font-mono text-slate-500 hover:text-slate-900 underline cursor-pointer"
                   >
                     Reset
                   </button>
@@ -449,14 +449,14 @@ export const ForecastingView: React.FC = () => {
           <DoubleBezelCard>
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-white uppercase font-mono">
+                <span className="text-xs font-bold text-slate-900 uppercase font-mono">
                   Macro Scenarios
                 </span>
-                <span className="material-symbols-outlined text-[16px] text-[#8c909f]">
+                <span className="material-symbols-outlined text-[16px] text-slate-400">
                   science
                 </span>
               </div>
-              <p className="text-[11px] text-[#8c909f]">
+              <p className="text-[11px] text-slate-500">
                 Simulate business conditions against pre-cleared burn trajectory.
               </p>
 
@@ -467,53 +467,53 @@ export const ForecastingView: React.FC = () => {
                     name: 'Baseline Plan',
                     desc: 'Organic growth at 3.2% MoM burn',
                     badge: '1.0x',
-                    color: 'text-slate-300',
+                    color: 'text-slate-600',
                   },
                   {
                     id: 'inflation',
                     name: 'Cloud & SaaS Inflation',
                     desc: 'Vendor renewals +5% cost increase',
                     badge: '+5%',
-                    color: 'text-amber-400',
+                    color: 'text-amber-600',
                   },
                   {
                     id: 'hiring',
                     name: 'H2 Engineering Surge',
                     desc: '35 net-new hires with tooling & hardware',
                     badge: '+8%',
-                    color: 'text-rose-400',
+                    color: 'text-rose-600',
                   },
                   {
                     id: 'ai_spike',
                     name: 'LLM Inference Spike',
                     desc: 'OpenAI & Bedrock token volume doubling',
                     badge: '+12%',
-                    color: 'text-purple-400',
+                    color: 'text-purple-600',
                   },
                   {
                     id: 'renegotiation',
                     name: 'Vendor Optimization',
                     desc: 'Enterprise tier consolidation savings',
                     badge: '-6%',
-                    color: 'text-emerald-400',
+                    color: 'text-emerald-600',
                   },
                 ].map((s) => (
                   <button
                     key={s.id}
                     onClick={() => setSelectedScenario(s.id)}
-                    className={`w-full text-left p-2.5 rounded transition-all cursor-pointer border ${
+                    className={`w-full text-left p-2.5 rounded-xl transition-all duration-200 cursor-pointer border ${
                       selectedScenario === s.id
-                        ? 'bg-[#131E36] border-[#3B82F6] shadow-sm'
-                        : 'bg-[#0D1526] border-[#1E293B] hover:border-slate-700'
+                        ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
+                        : 'bg-slate-50/70 border-slate-200/80 text-slate-900 hover:bg-slate-100 hover:border-slate-300'
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-white">{s.name}</span>
-                      <span className={`text-[10px] font-mono font-bold ${s.color}`}>
+                      <span className={`text-xs font-bold ${selectedScenario === s.id ? 'text-white' : 'text-slate-900'}`}>{s.name}</span>
+                      <span className={`text-[10px] font-mono font-bold ${selectedScenario === s.id ? 'text-slate-200' : s.color}`}>
                         {s.badge}
                       </span>
                     </div>
-                    <div className="text-[10px] text-[#8c909f] mt-0.5 line-clamp-1">
+                    <div className={`text-[10px] mt-0.5 line-clamp-1 ${selectedScenario === s.id ? 'text-slate-300' : 'text-slate-500'}`}>
                       {s.desc}
                     </div>
                   </button>
@@ -526,14 +526,14 @@ export const ForecastingView: React.FC = () => {
           <DoubleBezelCard>
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-white uppercase font-mono">
+                <span className="text-xs font-bold text-slate-900 uppercase font-mono">
                   Stress-Test Slider
                 </span>
-                <span className="text-xs font-mono font-bold text-[#3B82F6]">
+                <span className="text-xs font-mono font-bold text-blue-600">
                   {stressFactor > 0 ? `+${stressFactor}%` : `${stressFactor}%`}
                 </span>
               </div>
-              <p className="text-[11px] text-[#8c909f]">
+              <p className="text-[11px] text-slate-500">
                 Fine-tune variance stress from -15% (freeze) to +25% (runaway cost).
               </p>
 
@@ -544,10 +544,10 @@ export const ForecastingView: React.FC = () => {
                 step="1"
                 value={stressFactor}
                 onChange={(e) => setStressFactor(parseInt(e.target.value, 10))}
-                className="w-full accent-[#3B82F6] cursor-pointer bg-[#0D1526]"
+                className="w-full accent-slate-900 cursor-pointer bg-slate-200"
               />
 
-              <div className="flex justify-between text-[10px] font-mono text-[#8c909f]">
+              <div className="flex justify-between text-[10px] font-mono text-slate-400">
                 <span>-15% Freeze</span>
                 <span>0% Plan</span>
                 <span>+25% Surge</span>
@@ -562,56 +562,56 @@ export const ForecastingView: React.FC = () => {
         {/* Identified Risk Drivers */}
         <DoubleBezelCard>
           <div className="space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-[#1E293B]">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[18px] text-[#EF4444]">
+                <span className="material-symbols-outlined text-[18px] text-rose-600">
                   report_problem
                 </span>
-                <h3 className="text-sm font-bold text-white uppercase tracking-wider font-mono">
+                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider font-mono">
                   Key Horizon Risk Drivers
                 </h3>
               </div>
-              <span className="text-[10px] font-mono text-[#EF4444] bg-[#EF4444]/10 px-2 py-0.5 rounded border border-[#EF4444]/20">
+              <span className="text-[10px] font-mono text-rose-700 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200">
                 3 Critical Vulnerabilities
               </span>
             </div>
 
             <div className="space-y-3">
-              <div className="p-3 rounded bg-[#0D1526] border border-[#1E293B] space-y-1">
+              <div className="p-3 rounded-xl bg-slate-50/70 border border-slate-200/80 space-y-1">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-white">Cloud GPU Auto-Scaling Variance</span>
-                  <span className="text-xs font-mono font-bold text-[#EF4444]">+$820,000 / Q3</span>
+                  <span className="text-xs font-bold text-slate-900">Cloud GPU Auto-Scaling Variance</span>
+                  <span className="text-xs font-mono font-bold text-rose-600">+$820,000 / Q3</span>
                 </div>
-                <p className="text-[11px] text-[#8c909f]">
+                <p className="text-[11px] text-slate-500">
                   Engineering training cluster scaling without spot instance quotas. Projected breach window: 28 days.
                 </p>
-                <div className="text-[10px] font-mono text-[#3B82F6]">
+                <div className="text-[10px] font-mono text-blue-600">
                   Affected Cost Center: Cloud Infrastructure (#104)
                 </div>
               </div>
 
-              <div className="p-3 rounded bg-[#0D1526] border border-[#1E293B] space-y-1">
+              <div className="p-3 rounded-xl bg-slate-50/70 border border-slate-200/80 space-y-1">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-white">Q4 Enterprise SaaS License True-Ups</span>
-                  <span className="text-xs font-mono font-bold text-[#F59E0B]">+$440,000 / Q4</span>
+                  <span className="text-xs font-bold text-slate-900">Q4 Enterprise SaaS License True-Ups</span>
+                  <span className="text-xs font-mono font-bold text-amber-600">+$440,000 / Q4</span>
                 </div>
-                <p className="text-[11px] text-[#8c909f]">
+                <p className="text-[11px] text-slate-500">
                   Workday, Snowflake, and Datadog annual seat expansion exceeds original budget allocation by 14.2%.
                 </p>
-                <div className="text-[10px] font-mono text-[#3B82F6]">
+                <div className="text-[10px] font-mono text-blue-600">
                   Affected Cost Center: Information Security & IT (#102)
                 </div>
               </div>
 
-              <div className="p-3 rounded bg-[#0D1526] border border-[#1E293B] space-y-1">
+              <div className="p-3 rounded-xl bg-slate-50/70 border border-slate-200/80 space-y-1">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-white">Q3 Global Summit & Travel Burn</span>
-                  <span className="text-xs font-mono font-bold text-[#F59E0B]">+$285,000 / Q3</span>
+                  <span className="text-xs font-bold text-slate-900">Q3 Global Summit & Travel Burn</span>
+                  <span className="text-xs font-mono font-bold text-amber-600">+$285,000 / Q3</span>
                 </div>
-                <p className="text-[11px] text-[#8c909f]">
+                <p className="text-[11px] text-slate-500">
                   Executive summit airline bookings pacing 34% higher than historical Q2 baseline.
                 </p>
-                <div className="text-[10px] font-mono text-[#3B82F6]">
+                <div className="text-[10px] font-mono text-blue-600">
                   Affected Cost Center: Sales & Marketing (#101)
                 </div>
               </div>
@@ -622,36 +622,36 @@ export const ForecastingView: React.FC = () => {
         {/* Automated Mitigation Recommendations */}
         <DoubleBezelCard>
           <div className="space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-[#1E293B]">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined text-[18px] text-[#10B981]">
+                <span className="material-symbols-outlined text-[18px] text-emerald-600">
                   lightbulb
                 </span>
-                <h3 className="text-sm font-bold text-white uppercase tracking-wider font-mono">
+                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider font-mono">
                   Prescriptive Mitigation Playbook
                 </h3>
               </div>
-              <span className="text-[10px] font-mono text-[#10B981] bg-[#10B981]/10 px-2 py-0.5 rounded border border-[#10B981]/20">
+              <span className="text-[10px] font-mono text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
                 +$1,545,000 Recoverable
               </span>
             </div>
 
             <div className="space-y-3">
-              <div className="p-3 rounded bg-[#0D1526] border border-[#1E293B] space-y-2">
+              <div className="p-3 rounded-xl bg-slate-50/70 border border-slate-200/80 space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="material-symbols-outlined text-[16px] text-[#10B981]">
+                    <span className="material-symbols-outlined text-[16px] text-emerald-600">
                       check_circle
                     </span>
-                    <span className="text-xs font-bold text-white">
+                    <span className="text-xs font-bold text-slate-900">
                       Enforce AWS Savings Plans & Spot Instances
                     </span>
                   </div>
-                  <span className="text-xs font-mono font-bold text-[#10B981]">
+                  <span className="text-xs font-mono font-bold text-emerald-600">
                     +$620,000 Savings
                   </span>
                 </div>
-                <p className="text-[11px] text-[#8c909f]">
+                <p className="text-[11px] text-slate-500">
                   Commit to 1-year compute savings plan on base Kubernetes clusters to eliminate on-demand pricing.
                 </p>
                 <div className="flex justify-end">
@@ -661,21 +661,21 @@ export const ForecastingView: React.FC = () => {
                 </div>
               </div>
 
-              <div className="p-3 rounded bg-[#0D1526] border border-[#1E293B] space-y-2">
+              <div className="p-3 rounded-xl bg-slate-50/70 border border-slate-200/80 space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="material-symbols-outlined text-[16px] text-[#10B981]">
+                    <span className="material-symbols-outlined text-[16px] text-emerald-600">
                       check_circle
                     </span>
-                    <span className="text-xs font-bold text-white">
+                    <span className="text-xs font-bold text-slate-900">
                       Consolidate Redundant Analytics SaaS
                     </span>
                   </div>
-                  <span className="text-xs font-mono font-bold text-[#10B981]">
+                  <span className="text-xs font-mono font-bold text-emerald-600">
                     +$480,000 Savings
                   </span>
                 </div>
-                <p className="text-[11px] text-[#8c909f]">
+                <p className="text-[11px] text-slate-500">
                   Merge Mixpanel and Amplitude seats into unified enterprise contract expiring October 2026.
                 </p>
                 <div className="flex justify-end">
@@ -685,21 +685,21 @@ export const ForecastingView: React.FC = () => {
                 </div>
               </div>
 
-              <div className="p-3 rounded bg-[#0D1526] border border-[#1E293B] space-y-2">
+              <div className="p-3 rounded-xl bg-slate-50/70 border border-slate-200/80 space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="material-symbols-outlined text-[16px] text-[#10B981]">
+                    <span className="material-symbols-outlined text-[16px] text-emerald-600">
                       check_circle
                     </span>
-                    <span className="text-xs font-bold text-white">
+                    <span className="text-xs font-bold text-slate-900">
                       Tighten Discretionary T&E Cap to $1.2k/trip
                     </span>
                   </div>
-                  <span className="text-xs font-mono font-bold text-[#10B981]">
+                  <span className="text-xs font-mono font-bold text-emerald-600">
                     +$445,000 Savings
                   </span>
                 </div>
-                <p className="text-[11px] text-[#8c909f]">
+                <p className="text-[11px] text-slate-500">
                   Temporarily throttle domestic flight class caps and hotel allowances for non-client revenue teams.
                 </p>
                 <div className="flex justify-end">
