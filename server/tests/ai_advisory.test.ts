@@ -136,4 +136,88 @@ test('Phase 8 Aczen Nova AI Advisory Integration Tests', async (t) => {
     assert.ok(cached, 'Briefing must be cached in database');
     assert.ok(cached.insight_text.length > 0);
   });
+
+  // 8. REST API Endpoints Verification
+  await t.test('AI Advisory API: verifies REST endpoints and deterministic fail-safes', async () => {
+    const { createApp } = await import('../src/app');
+    const app = createApp();
+
+    const server = await new Promise<any>((resolve) => {
+      const s = app.listen(0, () => resolve(s));
+    });
+    const port = server.address().port;
+    const baseUrl = `http://127.0.0.1:${port}`;
+
+    try {
+      // 1. GET /api/ai/status
+      const statusRes = await fetch(`${baseUrl}/api/ai/status`);
+      assert.strictEqual(statusRes.status, 200);
+      const statusData: any = await statusRes.json();
+      assert.strictEqual(statusData.success, true);
+      assert.ok(statusData.data.architecture);
+
+      // 2. POST /api/ai/explain-budget (by budgetId)
+      const budgetRes = await fetch(`${baseUrl}/api/ai/explain-budget`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ budgetId: 'bgt-eng' }),
+      });
+      assert.strictEqual(budgetRes.status, 200);
+      const budgetData: any = await budgetRes.json();
+      assert.strictEqual(budgetData.success, true);
+      assert.ok(budgetData.data.summary);
+      assert.ok(budgetData.data.recommendations.length >= 2);
+
+      // 3. POST /api/ai/explain-forecast
+      const forecastRes = await fetch(`${baseUrl}/api/ai/explain-forecast`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ scenario: 'ai_spike', stressFactor: 12 }),
+      });
+      assert.strictEqual(forecastRes.status, 200);
+      const forecastData: any = await forecastRes.json();
+      assert.strictEqual(forecastData.success, true);
+      assert.ok(forecastData.data.summary);
+
+      // 4. POST /api/ai/explain-spending
+      const spendingRes = await fetch(`${baseUrl}/api/ai/explain-spending`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: 75000, department: 'Engineering' }),
+      });
+      assert.strictEqual(spendingRes.status, 200);
+      const spendingData: any = await spendingRes.json();
+      assert.strictEqual(spendingData.success, true);
+
+      // 5. POST /api/ai/detect-anomalies
+      const anomalyRes = await fetch(`${baseUrl}/api/ai/detect-anomalies`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      assert.strictEqual(anomalyRes.status, 200);
+      const anomalyData: any = await anomalyRes.json();
+      assert.strictEqual(anomalyData.success, true);
+      assert.ok(anomalyData.data.anomalyCount >= 0);
+
+      // 6. GET /api/ai/management-insights
+      const insightsRes = await fetch(`${baseUrl}/api/ai/management-insights`);
+      assert.strictEqual(insightsRes.status, 200);
+      const insightsData: any = await insightsRes.json();
+      assert.strictEqual(insightsData.success, true);
+      assert.ok(insightsData.data.executive_briefing);
+
+      // 7. GET /api/ai/insights (alias)
+      const aliasRes = await fetch(`${baseUrl}/api/ai/insights`);
+      assert.strictEqual(aliasRes.status, 200);
+      const aliasData: any = await aliasRes.json();
+      assert.strictEqual(aliasData.success, true);
+      assert.ok(aliasData.data.executive_briefing);
+    } finally {
+      if (server) {
+        server.close();
+      }
+    }
+  });
+
+  closeDb();
 });
