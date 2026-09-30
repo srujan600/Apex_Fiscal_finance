@@ -1,4 +1,4 @@
-import { test, describe, before, beforeEach } from 'node:test';
+import { test, describe, before, beforeEach, after } from 'node:test';
 import assert from 'node:assert';
 import { getDb, closeDb } from '../src/db/connection';
 import { initSchema } from '../src/db/schema';
@@ -22,6 +22,10 @@ describe('Phase 10 Security Hardening & Concurrency Stress Tests', () => {
     const db = getDb(':memory:');
     initSchema(db);
     seedDatabase(db);
+  });
+
+  after(() => {
+    closeDb();
   });
 
   // 1. Concurrency: High-Frequency Race Condition Prevention
@@ -289,4 +293,33 @@ describe('Phase 10 Security Hardening & Concurrency Stress Tests', () => {
       (err: any) => err instanceof AppError && err.statusCode === 400
     );
   });
+
+  // 8. OWASP Security Headers Verification
+  test('Security Headers: enforces OWASP enterprise headers on all HTTP responses', async () => {
+    const { createApp } = await import('../src/app');
+    const app = createApp();
+
+    const server = await new Promise<any>((resolve) => {
+      const s = app.listen(0, () => resolve(s));
+    });
+    const port = server.address().port;
+    const baseUrl = `http://127.0.0.1:${port}`;
+
+    try {
+      const res = await fetch(`${baseUrl}/api/health`);
+      assert.strictEqual(res.status, 200);
+
+      assert.strictEqual(res.headers.get('x-content-type-options'), 'nosniff');
+      assert.strictEqual(res.headers.get('x-frame-options'), 'DENY');
+      assert.strictEqual(res.headers.get('x-xss-protection'), '1; mode=block');
+      assert.strictEqual(res.headers.get('referrer-policy'), 'strict-origin-when-cross-origin');
+      assert.ok(res.headers.get('content-security-policy')?.includes("default-src 'none'"));
+      assert.ok(res.headers.get('cache-control')?.includes('no-store'));
+    } finally {
+      if (server) {
+        server.close();
+      }
+    }
+  });
 });
+
