@@ -84,8 +84,15 @@ export interface AnomalyExplanationDTO {
 
 export interface ManagementInsightsDTO {
   executive_briefing: string;
+  executiveSummary?: string;
   liquidity_runway_assessment: string;
   cost_center_vulnerabilities: Array<{
+    department: string;
+    risk_level: string;
+    exposure_amount: number;
+    recommended_action: string;
+  }>;
+  keyRiskDrivers?: Array<{
     department: string;
     risk_level: string;
     exposure_amount: number;

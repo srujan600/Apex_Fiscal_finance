@@ -37,7 +37,9 @@ export interface VarianceReportDTO {
   totalRunRate: number;
   totalVariance: number;
   departments: DepartmentVarianceDTO[];
+  departmentVariance?: DepartmentVarianceDTO[];
   categories: CategoryVarianceDTO[];
+  categoryVariance?: CategoryVarianceDTO[];
 }
 
 export class ReportsService {
@@ -118,7 +120,9 @@ export class ReportsService {
       totalRunRate,
       totalVariance,
       departments: departmentRows,
+      departmentVariance: departmentRows,
       categories: categoryRows,
+      categoryVariance: categoryRows,
     };
   }
 

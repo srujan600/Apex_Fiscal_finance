@@ -2,6 +2,7 @@ import { getDb } from '../../db/connection';
 
 export interface DashboardSummaryDTO {
   totalAllocated: number;
+  totalBudgetCap?: number;
   totalSettled: number;
   totalCommitted: number;
   totalAvailable: number;
@@ -77,6 +78,7 @@ export class DashboardService {
 
     return {
       totalAllocated,
+      totalBudgetCap: totalAllocated,
       totalSettled,
       totalCommitted,
       totalAvailable,

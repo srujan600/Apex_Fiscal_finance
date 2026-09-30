@@ -253,8 +253,10 @@ Respond in JSON:
 
     return {
       executive_briefing: briefing,
+      executiveSummary: briefing,
       liquidity_runway_assessment: runway,
       cost_center_vulnerabilities: vulnerabilities,
+      keyRiskDrivers: vulnerabilities,
       policy_effectiveness_score: policyScore,
       is_ai_generated: false,
       generated_at: new Date().toISOString(),

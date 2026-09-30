@@ -37,6 +37,8 @@ export interface ForecastSummaryDTO {
   breachMonth: string | null;
   breachDateString: string;
   chartData: ForecastDataPoint[];
+  projectedTrajectory?: ForecastDataPoint[];
+  burnRatePerMonth?: number;
   scenario: string;
   stressFactor: number;
   totalMultiplier: number;
@@ -152,6 +154,8 @@ export class ForecastsService {
       breachMonth,
       breachDateString,
       chartData,
+      projectedTrajectory: chartData,
+      burnRatePerMonth: Math.round(yearEndProjected / 12),
       scenario,
       stressFactor,
       totalMultiplier: parseFloat(totalMultiplier.toFixed(3)),
