@@ -13,6 +13,16 @@ dashboardRouter.get('/summary', (_req: Request, res: Response, next: NextFunctio
   }
 });
 
+// GET /api/dashboard/spending-trends
+dashboardRouter.get('/spending-trends', (_req: Request, res: Response, next: NextFunction) => {
+  try {
+    const trends = dashboardService.getSpendingTrends();
+    res.json({ success: true, data: trends });
+  } catch (error) {
+    next(error);
+  }
+});
+
 // GET /api/dashboard/trajectory
 dashboardRouter.get('/trajectory', (_req: Request, res: Response, next: NextFunction) => {
   try {
@@ -22,3 +32,15 @@ dashboardRouter.get('/trajectory', (_req: Request, res: Response, next: NextFunc
     next(error);
   }
 });
+
+// GET /api/dashboard/risk
+dashboardRouter.get('/risk', (_req: Request, res: Response, next: NextFunction) => {
+  try {
+    const risk = dashboardService.getRiskMatrix();
+    res.json({ success: true, data: risk });
+  } catch (error) {
+    next(error);
+  }
+});
+
+

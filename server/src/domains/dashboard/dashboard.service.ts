@@ -115,6 +115,138 @@ export class DashboardService {
       { month: 'Dec', committed: 48100000, projected: 52400000, ceiling, isForecast: true },
     ];
   }
+
+  public getSpendingTrends(): {
+    trajectory: SpendTrajectoryPoint[];
+    monthlyBreakdown: {
+      month: string;
+      totalSpend: number;
+      byCategory: Record<string, number>;
+      momGrowthPct: number;
+    }[];
+  } {
+    const trajectory = this.getSpendTrajectory();
+    const monthlyBreakdown = [
+      {
+        month: 'Jan',
+        totalSpend: 3800000,
+        byCategory: { 'Cloud Infrastructure': 1800000, 'AI Clusters': 900000, 'Software Licenses': 600000, Travel: 300000, Hardware: 200000 },
+        momGrowthPct: 0,
+      },
+      {
+        month: 'Feb',
+        totalSpend: 4100000,
+        byCategory: { 'Cloud Infrastructure': 1950000, 'AI Clusters': 1050000, 'Software Licenses': 600000, Travel: 320000, Hardware: 180000 },
+        momGrowthPct: 7.9,
+      },
+      {
+        month: 'Mar',
+        totalSpend: 4300000,
+        byCategory: { 'Cloud Infrastructure': 2050000, 'AI Clusters': 1150000, 'Software Licenses': 600000, Travel: 310000, Hardware: 190000 },
+        momGrowthPct: 4.9,
+      },
+      {
+        month: 'Apr',
+        totalSpend: 4300000,
+        byCategory: { 'Cloud Infrastructure': 2000000, 'AI Clusters': 1200000, 'Software Licenses': 610000, Travel: 300000, Hardware: 190000 },
+        momGrowthPct: 0,
+      },
+      {
+        month: 'May',
+        totalSpend: 4600000,
+        byCategory: { 'Cloud Infrastructure': 2100000, 'AI Clusters': 1350000, 'Software Licenses': 620000, Travel: 330000, Hardware: 200000 },
+        momGrowthPct: 7.0,
+      },
+      {
+        month: 'Jun',
+        totalSpend: 4800000,
+        byCategory: { 'Cloud Infrastructure': 2200000, 'AI Clusters': 1450000, 'Software Licenses': 630000, Travel: 310000, Hardware: 210000 },
+        momGrowthPct: 4.3,
+      },
+      {
+        month: 'Jul',
+        totalSpend: 5300000,
+        byCategory: { 'Cloud Infrastructure': 2400000, 'AI Clusters': 1750000, 'Software Licenses': 640000, Travel: 320000, Hardware: 190000 },
+        momGrowthPct: 10.4,
+      },
+      {
+        month: 'Aug',
+        totalSpend: 5200000,
+        byCategory: { 'Cloud Infrastructure': 2350000, 'AI Clusters': 1700000, 'Software Licenses': 650000, Travel: 310000, Hardware: 190000 },
+        momGrowthPct: -1.9,
+      },
+    ];
+
+    return {
+      trajectory,
+      monthlyBreakdown,
+    };
+  }
+
+  public getRiskMatrix(): {
+    overallRiskLevel: 'HEALTHY' | 'WARNING' | 'CRITICAL';
+    criticalCount: number;
+    warningCount: number;
+    healthyCount: number;
+    departments: {
+      id: string;
+      code: string;
+      name: string;
+      allocated: number;
+      settled: number;
+      committed: number;
+      available: number;
+      utilizationRate: number;
+      riskLevel: string;
+      daysToDepletion: number;
+      projectedOverrun: number;
+    }[];
+  } {
+    const db = getDb();
+    const rows = db.prepare('SELECT * FROM budgets ORDER BY utilization_rate DESC').all() as any[];
+
+    let criticalCount = 0;
+    let warningCount = 0;
+    let healthyCount = 0;
+
+    const departments = rows.map((b) => {
+      const allocated = b.allocated_cents / 100;
+      const settled = b.actual_settled_cents / 100;
+      const committed = b.committed_cents / 100;
+      const available = b.available_cents / 100;
+      const utilizationRate = b.utilization_rate;
+      const riskLevel = b.risk_level;
+
+      if (riskLevel === 'CRITICAL_BREACH') criticalCount++;
+      else if (riskLevel === 'HIGH_RISK') warningCount++;
+      else healthyCount++;
+
+      return {
+        id: b.department_id,
+        code: b.code,
+        name: b.department_name,
+        allocated,
+        settled,
+        committed,
+        available,
+        utilizationRate,
+        riskLevel,
+        daysToDepletion: b.days_to_run_out || 30,
+        projectedOverrun: (b.projected_overrun_cents || 0) / 100,
+      };
+    });
+
+    const overallRiskLevel = criticalCount > 0 ? 'CRITICAL' : warningCount > 0 ? 'WARNING' : 'HEALTHY';
+
+    return {
+      overallRiskLevel,
+      criticalCount,
+      warningCount,
+      healthyCount,
+      departments,
+    };
+  }
 }
 
 export const dashboardService = new DashboardService();
+

@@ -14,14 +14,19 @@ reportsRouter.get('/variance', (req: Request, res: Response, next: NextFunction)
   }
 });
 
-// GET /api/reports/export/csv
-reportsRouter.get('/export/csv', (req: Request, res: Response, next: NextFunction) => {
+// GET /api/reports/export/csv and GET /api/reports/export/:type
+const handleExportCsv = (req: Request, res: Response, next: NextFunction) => {
   try {
-    const type = (req.query.type as any) || 'variance';
+    const paramType = Array.isArray(req.params.type) ? req.params.type[0] : req.params.type;
+    const rawType = String(paramType || req.query.type || 'variance');
+    const type = rawType.replace(/\.csv$/, '') as any;
     const period = (req.query.period as string) || 'Q3';
 
-    const csvContent = reportsService.exportCsv(type, period);
-    const filename = `apex_fiscal_${type}_export_${period}_2026.csv`;
+    const validTypes = ['variance', 'spending', 'audit', 'budgets'];
+    const exportType = validTypes.includes(type) ? type : 'variance';
+
+    const csvContent = reportsService.exportCsv(exportType, period);
+    const filename = `apex_fiscal_${exportType}_export_${period}_2026.csv`;
 
     res.setHeader('Content-Type', 'text/csv');
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
@@ -29,4 +34,8 @@ reportsRouter.get('/export/csv', (req: Request, res: Response, next: NextFunctio
   } catch (error) {
     next(error);
   }
-});
+};
+
+reportsRouter.get('/export/csv', handleExportCsv);
+reportsRouter.get('/export/:type', handleExportCsv);
+

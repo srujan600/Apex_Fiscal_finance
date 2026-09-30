@@ -105,4 +105,86 @@ test('Phase 9 Dashboard & Reporting Data Aggregation Tests', async (t) => {
     assert.ok(budgetsCsv.includes('BGT-2025-CLD'));
     assert.ok(budgetsCsv.includes('14000000.00'));
   });
+
+  // 6. Spending Trends & Risk Matrix Aggregation
+  await t.test('Dashboard: evaluates monthly trends and departmental risk matrices', () => {
+    const trends = dashboardService.getSpendingTrends();
+    assert.ok(trends.trajectory.length === 12);
+    assert.ok(trends.monthlyBreakdown.length >= 8);
+    const aug = trends.monthlyBreakdown.find((m) => m.month === 'Aug');
+    assert.ok(aug);
+    assert.ok(aug.totalSpend > 0);
+
+    const risk = dashboardService.getRiskMatrix();
+    assert.strictEqual(risk.overallRiskLevel, 'CRITICAL');
+    assert.ok(risk.criticalCount >= 1);
+    assert.strictEqual(risk.departments.length, 4);
+  });
+
+  // 7. REST API Endpoints Verification
+  await t.test('Dashboard & Reports API: verifies REST endpoints and streaming CSV responses', async () => {
+    const { createApp } = await import('../src/app');
+    const app = createApp();
+
+    const server = await new Promise<any>((resolve) => {
+      const s = app.listen(0, () => resolve(s));
+    });
+    const port = server.address().port;
+    const baseUrl = `http://127.0.0.1:${port}`;
+
+    try {
+      // 1. GET /api/dashboard/summary
+      const summaryRes = await fetch(`${baseUrl}/api/dashboard/summary`);
+      assert.strictEqual(summaryRes.status, 200);
+      const summaryData: any = await summaryRes.json();
+      assert.strictEqual(summaryData.success, true);
+      assert.strictEqual(summaryData.data.totalAllocated, 48500000);
+
+      // 2. GET /api/dashboard/spending-trends
+      const trendsRes = await fetch(`${baseUrl}/api/dashboard/spending-trends`);
+      assert.strictEqual(trendsRes.status, 200);
+      const trendsData: any = await trendsRes.json();
+      assert.strictEqual(trendsData.success, true);
+      assert.ok(trendsData.data.monthlyBreakdown.length >= 8);
+
+      // 3. GET /api/dashboard/risk
+      const riskRes = await fetch(`${baseUrl}/api/dashboard/risk`);
+      assert.strictEqual(riskRes.status, 200);
+      const riskData: any = await riskRes.json();
+      assert.strictEqual(riskData.success, true);
+      assert.ok(riskData.data.departments.length === 4);
+
+      // 4. GET /api/reports/variance
+      const varianceRes = await fetch(`${baseUrl}/api/reports/variance?period=Q3`);
+      assert.strictEqual(varianceRes.status, 200);
+      const varianceData: any = await varianceRes.json();
+      assert.strictEqual(varianceData.success, true);
+      assert.strictEqual(varianceData.data.departments.length, 4);
+
+      // 5. GET /api/reports/export/spending (Direct parameter export)
+      const exportSpendingRes = await fetch(`${baseUrl}/api/reports/export/spending`);
+      assert.strictEqual(exportSpendingRes.status, 200);
+      assert.ok(exportSpendingRes.headers.get('content-type')?.includes('text/csv'));
+      const spendingCsv = await exportSpendingRes.text();
+      assert.ok(spendingCsv.startsWith('Tracking #,Submitted At,Department'));
+
+      // 6. GET /api/reports/export/budgets
+      const exportBudgetsRes = await fetch(`${baseUrl}/api/reports/export/budgets`);
+      assert.strictEqual(exportBudgetsRes.status, 200);
+      const budgetsCsv = await exportBudgetsRes.text();
+      assert.ok(budgetsCsv.startsWith('Code,Department,Fiscal Period'));
+
+      // 7. GET /api/reports/export/csv?type=audit (Query param export)
+      const exportAuditRes = await fetch(`${baseUrl}/api/reports/export/csv?type=audit`);
+      assert.strictEqual(exportAuditRes.status, 200);
+      const auditCsv = await exportAuditRes.text();
+      assert.ok(auditCsv.startsWith('Block #,Tx Hash,Timestamp,Actor'));
+    } finally {
+      if (server) {
+        server.close();
+      }
+    }
+  });
+
+  closeDb();
 });
