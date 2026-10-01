@@ -48,7 +48,7 @@ export const AppShell: React.FC<AppShellProps> = ({ children }) => {
 
       {/* 3. Main Workspace Container */}
       <main className="md:ml-[260px] pt-14 w-full md:w-[calc(100%-260px)] min-h-screen bg-slate-50 bg-grid-subtle flex flex-col justify-between transition-all">
-        <div className="p-4 md:p-8 space-y-8 flex-1 max-w-[1720px] w-full mx-auto">
+        <div className="p-3.5 sm:p-6 md:p-8 space-y-6 md:space-y-8 flex-1 max-w-[1720px] w-full mx-auto pb-16 md:pb-20">
           {children}
         </div>
 

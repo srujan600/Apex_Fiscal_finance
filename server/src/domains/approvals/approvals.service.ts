@@ -1,6 +1,6 @@
 import { getDb, runTransaction } from '../../db/connection';
 import { AppError } from '../../middleware/errorHandler';
-import { UserRole } from '../../types/common';
+import { UserRole, getTierForRole } from '../../types/common';
 import { SpendingRequestDTO } from '../spending/spending.service';
 import { auditService } from '../audit/audit.service';
 
@@ -57,9 +57,15 @@ export class ApprovalsService {
         throw new AppError('Cannot approve a rejected request. A new requisition must be submitted.', 400, 'ALREADY_REJECTED');
       }
 
-      // If actor is employee, block approval
-      if (actorRole === 'EMPLOYEE') {
-        throw new AppError('Employees do not possess supervisory approval privileges.', 403, 'INSUFFICIENT_PRIVILEGES');
+      // Hierarchical check: Tier 1 (Executive) or Tier 2 (Controller) required for approvals
+      // Tier 3 (Analyst) and Tier 4 (Auditor) lack approval authority
+      const actorTier = getTierForRole(actorRole);
+      if (actorTier > 2 || actorRole === 'EMPLOYEE' || actorRole === 'TIER_3_ANALYST' || actorRole === 'TIER_4_AUDITOR') {
+        throw new AppError(
+          'Action requires Tier 2 (Finance Manager / Controller) or higher authorization. Tier 3 analysts and Tier 4 auditors do not possess supervisory approval privileges.',
+          403,
+          'INSUFFICIENT_PRIVILEGES'
+        );
       }
 
       // Transition to APPROVED
@@ -126,8 +132,14 @@ export class ApprovalsService {
       }
 
       // If actor is employee, block rejection
-      if (actorRole === 'EMPLOYEE') {
-        throw new AppError('Employees do not possess supervisory signoff privileges.', 403, 'INSUFFICIENT_PRIVILEGES');
+      // Hierarchical check: Tier 1 (Executive) or Tier 2 (Controller) required for rejections
+      const actorTier = getTierForRole(actorRole);
+      if (actorTier > 2 || actorRole === 'EMPLOYEE' || actorRole === 'TIER_3_ANALYST' || actorRole === 'TIER_4_AUDITOR') {
+        throw new AppError(
+          'Action requires Tier 2 (Finance Manager / Controller) or higher authorization. Tier 3 analysts and Tier 4 auditors do not possess supervisory signoff privileges.',
+          403,
+          'INSUFFICIENT_PRIVILEGES'
+        );
       }
 
       // Release reserved committed funds back into available headroom
@@ -187,6 +199,11 @@ export class ApprovalsService {
       const request = db.prepare('SELECT * FROM spending_requests WHERE id = ?').get(id) as any;
       if (!request) {
         throw new AppError(`Spending request '${id}' not found`, 404, 'REQUEST_NOT_FOUND');
+      }
+
+      const actorTier = getTierForRole(actorRole);
+      if (actorTier === 4 || actorRole === 'TIER_4_AUDITOR') {
+        throw new AppError('Tier 4 (Read-Only / Auditor) clearance prohibits workflow escalation or modification.', 403, 'INSUFFICIENT_PRIVILEGES');
       }
 
       const escalationNote = note || 'Escalated to Group CFO for multi-sig review.';

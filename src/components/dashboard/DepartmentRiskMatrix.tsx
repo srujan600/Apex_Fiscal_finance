@@ -50,19 +50,21 @@ export const DepartmentRiskMatrix: React.FC<DepartmentRiskMatrixProps> = ({
                     : 'bg-slate-50/60 border-slate-200/70 hover:border-slate-300 hover:shadow-sm'
                 }`}
               >
-                <div className="flex items-center justify-between text-xs mb-1.5">
-                  <span className="font-semibold text-slate-900 truncate max-w-[170px]">
+                <div className="flex items-center justify-between text-xs mb-1">
+                  <span className="font-semibold text-slate-900 truncate pr-2">
                     {b.departmentName}
                   </span>
                   <span
-                    className={`font-mono font-bold text-xs ${
+                    className={`font-mono font-bold text-xs shrink-0 ${
                       isCritical ? 'text-rose-600' : isWarning ? 'text-amber-600' : 'text-emerald-600'
                     }`}
                   >
-                    {b.utilizationRate.toFixed(1)}% (
-                    {formatCurrency(b.actualSettled + b.committed, currency, 'compact')} /{' '}
-                    {formatCurrency(b.allocated, currency, 'compact')})
+                    {b.utilizationRate.toFixed(1)}%
                   </span>
+                </div>
+                <div className="flex items-center justify-between text-[11px] font-mono text-slate-500 mb-1.5">
+                  <span>Burn: {formatCurrency(b.actualSettled + b.committed, currency, 'compact')}</span>
+                  <span>Ceiling: {formatCurrency(b.allocated, currency, 'compact')}</span>
                 </div>
 
                 {/* Multi-segment gauge */}

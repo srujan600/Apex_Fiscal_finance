@@ -3,7 +3,7 @@ import { budgetsService } from './budgets.service';
 import { ApiResponse } from '../../types/common';
 import { z } from 'zod';
 import { validateBody } from '../../middleware/validation';
-import { requirePermission } from '../../middleware/auth';
+import { requirePermission, requireTier } from '../../middleware/auth';
 
 export const budgetsRouter = Router();
 
@@ -46,9 +46,10 @@ const createBudgetSchema = z.object({
   hardCapThresholdPct: z.number().min(1).max(150).optional(),
 });
 
-// POST /api/budgets
+// POST /api/budgets (Tier 1 & Tier 2: Budget envelope creation)
 budgetsRouter.post(
   '/',
+  requireTier(1, 2),
   requirePermission('MANAGE_BUDGETS'),
   validateBody(createBudgetSchema),
   (req: Request, res: Response, next: NextFunction) => {
@@ -74,9 +75,10 @@ const updateBudgetSchema = z.object({
   justification: z.string().min(5),
 });
 
-// PATCH /api/budgets/:id
+// PATCH /api/budgets/:id (Tier 1 & Tier 2: Risk threshold & allocation adjustments)
 budgetsRouter.patch(
   '/:id',
+  requireTier(1, 2),
   requirePermission('MANAGE_BUDGETS'),
   validateBody(updateBudgetSchema),
   (req: Request, res: Response, next: NextFunction) => {
@@ -104,9 +106,10 @@ const reallocateBudgetSchema = z.object({
   reason: z.string().optional(),
 });
 
-// POST /api/budgets/reallocate
+// POST /api/budgets/reallocate (Tier 1 & Tier 2: Capital rebalancing)
 budgetsRouter.post(
   '/reallocate',
+  requireTier(1, 2),
   requirePermission('REALLOCATE_BUDGET'),
   validateBody(reallocateBudgetSchema),
   (req: Request, res: Response, next: NextFunction) => {
@@ -130,6 +133,7 @@ budgetsRouter.post(
 // POST /api/budgets/rebalance (Alias for frontend compatibility)
 budgetsRouter.post(
   '/rebalance',
+  requireTier(1, 2),
   requirePermission('REALLOCATE_BUDGET'),
   validateBody(reallocateBudgetSchema),
   (req: Request, res: Response, next: NextFunction) => {

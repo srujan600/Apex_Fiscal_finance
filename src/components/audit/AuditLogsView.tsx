@@ -252,16 +252,16 @@ export const AuditLogsView: React.FC = () => {
             </span>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs font-mono">
+          <div className="overflow-x-auto w-full">
+            <table className="w-full min-w-[960px] text-left text-xs font-mono">
               <thead>
                 <tr className="border-b border-slate-200/80 text-slate-500 bg-slate-50/70">
-                  <th className="py-2.5 px-3 font-semibold">Block & Time</th>
-                  <th className="py-2.5 px-3 font-semibold">Actor & Role</th>
-                  <th className="py-2.5 px-3 font-semibold">Action & Target Entity</th>
-                  <th className="py-2.5 px-3 font-semibold">Cryptographic Hash (SHA-256)</th>
-                  <th className="py-2.5 px-3 font-semibold">Consensus</th>
-                  <th className="py-2.5 px-3 font-semibold text-center">Audit Diff</th>
+                  <th className="py-2.5 px-3 font-semibold w-36">Block & Time</th>
+                  <th className="py-2.5 px-3 font-semibold w-44">Actor & Role</th>
+                  <th className="py-2.5 px-3 font-semibold min-w-[220px]">Action & Target Entity</th>
+                  <th className="py-2.5 px-3 font-semibold w-48">Cryptographic Hash (SHA-256)</th>
+                  <th className="py-2.5 px-3 font-semibold w-28">Consensus</th>
+                  <th className="py-2.5 px-3 font-semibold text-center w-36">Audit Diff</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -271,11 +271,11 @@ export const AuditLogsView: React.FC = () => {
                       key={log.id}
                       className="hover:bg-slate-50/80 transition-colors"
                     >
-                      <td className="py-3 px-3">
+                      <td className="py-3 px-3 whitespace-nowrap">
                         <div className="font-bold text-slate-900">#{log.blockNumber}</div>
                         <div className="text-[10px] text-slate-500">{log.timestamp}</div>
                       </td>
-                      <td className="py-3 px-3">
+                      <td className="py-3 px-3 whitespace-nowrap">
                         <div className="font-bold text-slate-900">{log.actor}</div>
                         <span className="px-1.5 py-0.5 rounded-md text-[10px] bg-slate-100 border border-slate-200 text-slate-600">
                           {log.actorRole}
@@ -287,7 +287,7 @@ export const AuditLogsView: React.FC = () => {
                           {log.entity} ({log.entityId})
                         </div>
                       </td>
-                      <td className="py-3 px-3">
+                      <td className="py-3 px-3 whitespace-nowrap">
                         <div className="flex items-center gap-1.5">
                           <span className="text-indigo-600 font-mono text-[11px] font-medium">
                             {log.txHash.substring(0, 10)}...{log.txHash.slice(-6)}
@@ -303,7 +303,7 @@ export const AuditLogsView: React.FC = () => {
                           </button>
                         </div>
                       </td>
-                      <td className="py-3 px-3">
+                      <td className="py-3 px-3 whitespace-nowrap">
                         <div className="flex items-center gap-1 text-[11px] text-emerald-700 font-medium">
                           <span className="material-symbols-outlined text-[14px]">
                             verified
@@ -311,7 +311,7 @@ export const AuditLogsView: React.FC = () => {
                           <span>{log.verifiedNodes}</span>
                         </div>
                       </td>
-                      <td className="py-3 px-3 text-center">
+                      <td className="py-3 px-3 text-center whitespace-nowrap">
                         <TactileButton
                           variant="surface"
                           size="sm"

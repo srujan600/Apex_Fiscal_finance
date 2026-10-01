@@ -419,6 +419,30 @@ export class ApiClient {
   public async verifyAuditLedger(): Promise<any> {
     return this.request<any>('/audit/verify');
   }
+
+  // --- System Settings & Governance ---
+  public async getSettings(): Promise<any> {
+    return this.request<any>('/settings');
+  }
+
+  public async updateSettings(data: { inrExchangeRate?: number; slackWebhook?: string; pagerdutyKey?: string }): Promise<any> {
+    return this.request<any>('/settings', {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  }
+
+  public async triggerEmergencyFreeze(): Promise<any> {
+    return this.request<any>('/settings/freeze', {
+      method: 'POST',
+    });
+  }
+
+  public async resolveEmergencyFreeze(): Promise<any> {
+    return this.request<any>('/settings/unfreeze', {
+      method: 'POST',
+    });
+  }
 }
 
 export const api = new ApiClient();

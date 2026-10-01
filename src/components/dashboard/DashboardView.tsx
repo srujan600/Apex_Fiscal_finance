@@ -158,7 +158,7 @@ export const DashboardView: React.FC = () => {
 
           <Input
             label="Transfer Amount"
-            prefixSymbol={currency === 'INR' ? '₹' : '$'}
+            prefixSymbol="₹"
             value={transferAmount}
             onChange={(e) => setTransferAmount(e.target.value)}
             helperText="Transfers are executed immediately and appended to the cryptographic audit trail."
@@ -171,7 +171,7 @@ export const DashboardView: React.FC = () => {
             <div className="flex justify-between items-center text-xs">
               <span className="text-slate-700 font-medium">Engineering Headroom:</span>
               <span className="font-mono text-emerald-600 font-semibold">
-                Expands from $870k to $1.37M (Breach mitigated +18 days)
+                Expands from ₹7.22 Cr to ₹11.37 Cr (Breach mitigated +18 days)
               </span>
             </div>
           </div>

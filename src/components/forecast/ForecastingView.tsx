@@ -15,6 +15,7 @@ import { formatCurrency } from '../../utils/formatters';
 import { DoubleBezelCard } from '../ui/DoubleBezelCard';
 import { StatusBadge } from '../ui/StatusBadge';
 import { TactileButton } from '../ui/TactileButton';
+import { TierBadge, TierAuthorizationBanner, LockedActionIndicator } from '../common/TierRestrictedBadge';
 
 interface ForecastDataPoint {
   month: string;
@@ -26,7 +27,7 @@ interface ForecastDataPoint {
 }
 
 export const ForecastingView: React.FC = () => {
-  const { currency, budgets } = useApp();
+  const { currency, budgets, canAdjustModels, isReadOnlyAuditor, governanceTier } = useApp();
 
   // Sensitivity Stress-Tester multiplier (-15% to +25%)
   const [stressFactor, setStressFactor] = useState<number>(0);
@@ -125,6 +126,7 @@ export const ForecastingView: React.FC = () => {
               Spend Trajectory & Horizon Forecasting
             </h1>
             <StatusBadge status={isBreached ? 'BLOCKED' : 'APPROVED'} />
+            <TierBadge tier={governanceTier} size="sm" />
           </div>
           <p className="text-xs text-slate-500 mt-1 font-mono">
             Monte Carlo Predictive Engine · Multi-Curve Horizon Analysis · Macroeconomic Sensitivity Testing
@@ -391,7 +393,7 @@ export const ForecastingView: React.FC = () => {
                       strokeWidth={2}
                       strokeDasharray="6 3"
                       label={{
-                        value: 'ANNUAL BUDGET CAP ($48.5M)',
+                        value: 'ANNUAL BUDGET CAP (₹402.55 Cr)',
                         position: 'top',
                         fill: '#EF4444',
                         fontSize: 10,
@@ -417,27 +419,31 @@ export const ForecastingView: React.FC = () => {
                   </span>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  {[-10, -5, 0, 5, 10, 15].map((val) => (
+                {canAdjustModels ? (
+                  <div className="flex items-center gap-2">
+                    {[-10, -5, 0, 5, 10, 15].map((val) => (
+                      <button
+                        key={val}
+                        onClick={() => setStressFactor(val)}
+                        className={`px-2 py-1 rounded-lg text-[11px] font-mono transition-all duration-200 cursor-pointer ${
+                          stressFactor === val
+                            ? 'bg-slate-900 text-white font-bold shadow-sm'
+                            : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200/80 hover:bg-slate-50'
+                        }`}
+                      >
+                        {val > 0 ? `+${val}%` : `${val}%`}
+                      </button>
+                    ))}
                     <button
-                      key={val}
-                      onClick={() => setStressFactor(val)}
-                      className={`px-2 py-1 rounded-lg text-[11px] font-mono transition-all duration-200 cursor-pointer ${
-                        stressFactor === val
-                          ? 'bg-slate-900 text-white font-bold shadow-sm'
-                          : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200/80 hover:bg-slate-50'
-                      }`}
+                      onClick={() => setStressFactor(0)}
+                      className="px-2 py-1 rounded-lg text-[11px] font-mono text-slate-500 hover:text-slate-900 underline cursor-pointer"
                     >
-                      {val > 0 ? `+${val}%` : `${val}%`}
+                      Reset
                     </button>
-                  ))}
-                  <button
-                    onClick={() => setStressFactor(0)}
-                    className="px-2 py-1 rounded-lg text-[11px] font-mono text-slate-500 hover:text-slate-900 underline cursor-pointer"
-                  >
-                    Reset
-                  </button>
-                </div>
+                  </div>
+                ) : (
+                  <LockedActionIndicator reason="Tier 4 Read-Only: Model adjustments locked" />
+                )}
               </div>
             </div>
           </DoubleBezelCard>
@@ -544,7 +550,10 @@ export const ForecastingView: React.FC = () => {
                 step="1"
                 value={stressFactor}
                 onChange={(e) => setStressFactor(parseInt(e.target.value, 10))}
-                className="w-full accent-slate-900 cursor-pointer bg-slate-200"
+                disabled={!canAdjustModels}
+                className={`w-full accent-slate-900 bg-slate-200 ${
+                  canAdjustModels ? 'cursor-pointer' : 'cursor-not-allowed opacity-50'
+                }`}
               />
 
               <div className="flex justify-between text-[10px] font-mono text-slate-400">
@@ -580,7 +589,7 @@ export const ForecastingView: React.FC = () => {
               <div className="p-3 rounded-xl bg-slate-50/70 border border-slate-200/80 space-y-1">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-slate-900">Cloud GPU Auto-Scaling Variance</span>
-                  <span className="text-xs font-mono font-bold text-rose-600">+$820,000 / Q3</span>
+                  <span className="text-xs font-mono font-bold text-rose-600">+₹6.81 Cr / Q3</span>
                 </div>
                 <p className="text-[11px] text-slate-500">
                   Engineering training cluster scaling without spot instance quotas. Projected breach window: 28 days.
@@ -593,7 +602,7 @@ export const ForecastingView: React.FC = () => {
               <div className="p-3 rounded-xl bg-slate-50/70 border border-slate-200/80 space-y-1">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-slate-900">Q4 Enterprise SaaS License True-Ups</span>
-                  <span className="text-xs font-mono font-bold text-amber-600">+$440,000 / Q4</span>
+                  <span className="text-xs font-mono font-bold text-amber-600">+₹3.65 Cr / Q4</span>
                 </div>
                 <p className="text-[11px] text-slate-500">
                   Workday, Snowflake, and Datadog annual seat expansion exceeds original budget allocation by 14.2%.
@@ -606,7 +615,7 @@ export const ForecastingView: React.FC = () => {
               <div className="p-3 rounded-xl bg-slate-50/70 border border-slate-200/80 space-y-1">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-slate-900">Q3 Global Summit & Travel Burn</span>
-                  <span className="text-xs font-mono font-bold text-amber-600">+$285,000 / Q3</span>
+                  <span className="text-xs font-mono font-bold text-amber-600">+₹2.37 Cr / Q3</span>
                 </div>
                 <p className="text-[11px] text-slate-500">
                   Executive summit airline bookings pacing 34% higher than historical Q2 baseline.
@@ -632,7 +641,7 @@ export const ForecastingView: React.FC = () => {
                 </h3>
               </div>
               <span className="text-[10px] font-mono text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                +$1,545,000 Recoverable
+                +₹12.82 Cr Recoverable
               </span>
             </div>
 
@@ -648,7 +657,7 @@ export const ForecastingView: React.FC = () => {
                     </span>
                   </div>
                   <span className="text-xs font-mono font-bold text-emerald-600">
-                    +$620,000 Savings
+                    +₹5.15 Cr Savings
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-500">
@@ -672,7 +681,7 @@ export const ForecastingView: React.FC = () => {
                     </span>
                   </div>
                   <span className="text-xs font-mono font-bold text-emerald-600">
-                    +$480,000 Savings
+                    +₹3.98 Cr Savings
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-500">
@@ -692,11 +701,11 @@ export const ForecastingView: React.FC = () => {
                       check_circle
                     </span>
                     <span className="text-xs font-bold text-slate-900">
-                      Tighten Discretionary T&E Cap to $1.2k/trip
+                      Tighten Discretionary T&E Cap to ₹1.0L/trip
                     </span>
                   </div>
                   <span className="text-xs font-mono font-bold text-emerald-600">
-                    +$445,000 Savings
+                    +₹3.69 Cr Savings
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-500">

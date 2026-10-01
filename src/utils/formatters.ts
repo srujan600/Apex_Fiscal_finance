@@ -2,42 +2,38 @@ import { Currency } from '../types';
 
 export const formatCurrency = (
   amount: number, 
-  currency: Currency = 'USD', 
+  currency: Currency = 'INR', 
   notation: 'compact' | 'standard' = 'standard'
 ): string => {
-  if (currency === 'INR') {
-    // Conversion factor for display: 1 USD ≈ 83 INR
-    const inrValue = amount * 83;
-    if (notation === 'compact') {
-      if (Math.abs(inrValue) >= 10000000) {
-        return `₹${(inrValue / 10000000).toFixed(2)} Cr`;
-      }
-      if (Math.abs(inrValue) >= 100000) {
-        return `₹${(inrValue / 100000).toFixed(2)} L`;
-      }
-      if (Math.abs(inrValue) >= 1000) {
-        return `₹${(inrValue / 1000).toFixed(1)}k`;
-      }
-      return `₹${inrValue.toLocaleString('en-IN')}`;
-    }
-    return `₹${Math.round(inrValue).toLocaleString('en-IN')}`;
+  if (isNaN(amount) || amount === null || amount === undefined) {
+    return '₹0';
   }
 
-  // USD Default
+  const isNegative = amount < 0;
+  const absAmount = Math.abs(amount);
+  const sign = isNegative ? '-' : '';
+
+  // All financial figures across APEX Fiscal are formatted exclusively in INR (₹)
+  // Conversion factor from base ledger unit: 1 USD ≈ 83 INR
+  const inrValue = absAmount * 83;
   if (notation === 'compact') {
-    if (Math.abs(amount) >= 1000000) {
-      return `$${(amount / 1000000).toFixed(1)}M`;
+    if (inrValue >= 10000000) {
+      return `${sign}₹${(inrValue / 10000000).toFixed(2)} Cr`;
     }
-    if (Math.abs(amount) >= 1000) {
-      return `$${(amount / 1000).toFixed(1)}k`;
+    if (inrValue >= 100000) {
+      return `${sign}₹${(inrValue / 100000).toFixed(2)} L`;
     }
-    return `$${amount.toLocaleString('en-US')}`;
+    if (inrValue >= 1000) {
+      return `${sign}₹${(inrValue / 1000).toFixed(1)}k`;
+    }
+    return `${sign}₹${Math.round(inrValue).toLocaleString('en-IN')}`;
   }
 
-  return `$${amount.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
+  return `${sign}₹${Math.round(inrValue).toLocaleString('en-IN')}`;
 };
 
 export const formatPercent = (value: number, decimals: number = 1): string => {
+  if (isNaN(value) || value === null || value === undefined) return '0%';
   return `${value.toFixed(decimals)}%`;
 };
 

@@ -20,6 +20,7 @@ import { aiRouter } from './domains/ai/ai.controller';
 import { dashboardRouter } from './domains/dashboard/dashboard.controller';
 import { reportsRouter } from './domains/reports/reports.controller';
 import { auditRouter } from './domains/audit/audit.controller';
+import { settingsRouter } from './domains/settings/settings.controller';
 import { securityHeaders, sanitizePayloadGuard } from './middleware/securityHeaders';
 import { apiRateLimiter } from './middleware/rateLimiter';
 
@@ -92,6 +93,7 @@ export function createApp(): express.Application {
   app.use('/api/dashboard', dashboardRouter);
   app.use('/api/reports', reportsRouter);
   app.use('/api/audit', auditRouter);
+  app.use('/api/settings', settingsRouter);
 
   // Centralized Error Handler
   app.use(errorHandler);

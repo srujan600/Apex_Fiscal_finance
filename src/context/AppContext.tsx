@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import {
   UserRole,
+  GovernanceTier,
   Currency,
   BudgetEnvelope,
   SpendCategory,
@@ -19,11 +20,40 @@ import {
   initialPolicyRules,
   initialAuditEvents,
 } from '../data/mockData';
+import {
+  PERSONA_CREDENTIALS,
+  ROLE_DEFAULT_TABS,
+  ROLE_ALLOWED_TABS,
+  authenticatePersona,
+  PersonaCredential,
+  getGovernanceTier,
+  TIER_DEFINITIONS,
+} from '../data/credentials';
 import { api } from '../services/api';
 
 interface AppContextType {
   role: UserRole;
   user: UserProfile;
+  governanceTier: GovernanceTier;
+  tierName: string;
+  tierBadge: string;
+  isTier1: boolean;
+  isTier2OrHigher: boolean;
+  isTier3OrHigher: boolean;
+  isReadOnlyAuditor: boolean;
+  canExecuteOverrides: boolean;
+  canApproveTransactions: boolean;
+  canAdjustRiskThresholds: boolean;
+  canModifyOperationalSettings: boolean;
+  canPerformDataEntry: boolean;
+  canAdjustModels: boolean;
+  canTriggerEmergencyFreeze: boolean;
+  currentPersona: PersonaCredential;
+  allowedTabs: string[];
+  isAuthenticated: boolean;
+  login: (identifier: string, password: string, rememberMe?: boolean) => { success: boolean; error?: string };
+  quickLoginAsRole: (role: UserRole) => void;
+  logout: () => void;
   setRole: (role: UserRole) => void;
   currency: Currency;
   setCurrency: (currency: Currency) => void;
@@ -36,27 +66,53 @@ interface AppContextType {
   policies: PolicyRule[];
   auditLogs: AuditEvent[];
   isEmergencyFreezeActive: boolean;
-  triggerEmergencyFreeze: () => void;
-  resolveEmergencyFreeze: () => void;
-  approveRequest: (id: string) => void;
-  rejectRequest: (id: string, reason?: string) => void;
-  overrideException: (id: string, justification: string) => void;
-  enforceRejectException: (id: string) => void;
-  addRequest: (newReq: Omit<SpendingRequest, 'id' | 'trackingNumber' | 'submittedAt'>) => void;
+  triggerEmergencyFreeze: () => Promise<void>;
+  resolveEmergencyFreeze: () => Promise<void>;
+  approveRequest: (id: string) => Promise<void>;
+  rejectRequest: (id: string, reason?: string) => Promise<void>;
+  overrideException: (id: string, justification: string) => Promise<void>;
+  enforceRejectException: (id: string) => Promise<void>;
+  addRequest: (newReq: Omit<SpendingRequest, 'id' | 'trackingNumber' | 'submittedAt'>) => Promise<void>;
   reallocateBudget: (sourceId: string, targetId: string, amount: number) => Promise<void>;
   createBudget: (newBudgetData: any) => Promise<void>;
   updateBudget: (id: string, updateData: { allocated: number; justification: string }) => Promise<void>;
-  togglePolicyStatus: (id: string) => void;
-  addPolicy: (newPolicy: Omit<PolicyRule, 'id' | 'latencyMs'>) => void;
+  togglePolicyStatus: (id: string) => Promise<void>;
+  addPolicy: (newPolicy: Omit<PolicyRule, 'id' | 'latencyMs'>) => Promise<void>;
   addCategory: (newCategory: { name: string; allocated: number; thresholdPercent?: number }) => Promise<void>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [role, setRoleState] = useState<UserRole>('CFO');
-  const [currency, setCurrency] = useState<Currency>('USD');
-  const [activeTab, setActiveTab] = useState<string>('dashboard');
+  // Restore persistent session from localStorage if present
+  const getInitialSession = (): { isAuthenticated: boolean; role: UserRole; activeTab: string } => {
+    try {
+      const raw = localStorage.getItem('apexfiscal_auth_session');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed.role && PERSONA_CREDENTIALS[parsed.role as UserRole]) {
+          return {
+            isAuthenticated: true,
+            role: parsed.role as UserRole,
+            activeTab: parsed.activeTab || ROLE_DEFAULT_TABS[parsed.role as UserRole] || 'dashboard',
+          };
+        }
+      }
+    } catch {
+      // fallback
+    }
+    return {
+      isAuthenticated: false,
+      role: 'CFO',
+      activeTab: 'dashboard',
+    };
+  };
+
+  const initialSession = getInitialSession();
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(initialSession.isAuthenticated);
+  const [role, setRoleState] = useState<UserRole>(initialSession.role);
+  const [currency, setCurrency] = useState<Currency>('INR');
+  const [activeTab, setActiveTab] = useState<string>(initialSession.activeTab);
   const [budgets, setBudgets] = useState<BudgetEnvelope[]>(initialBudgets);
   const [categories, setCategories] = useState<SpendCategory[]>(initialCategories);
   const [exceptions, setExceptions] = useState<ExceptionIncident[]>(initialExceptions);
@@ -65,7 +121,35 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [auditLogs, setAuditLogs] = useState<AuditEvent[]>(initialAuditEvents);
   const [isEmergencyFreezeActive, setIsEmergencyFreezeActive] = useState<boolean>(false);
 
-  const user = mockUsers[role];
+  const currentPersona = PERSONA_CREDENTIALS[role] || PERSONA_CREDENTIALS.CFO;
+  const governanceTier = getGovernanceTier(role);
+  const tierMeta = TIER_DEFINITIONS.find((t) => t.tier === governanceTier) || TIER_DEFINITIONS[0];
+  const isTier1 = governanceTier === 1;
+  const isTier2OrHigher = governanceTier <= 2;
+  const isTier3OrHigher = governanceTier <= 3;
+  const isReadOnlyAuditor = governanceTier === 4;
+
+  const canExecuteOverrides = isTier1;
+  const canTriggerEmergencyFreeze = isTier1;
+  const canApproveTransactions = isTier2OrHigher;
+  const canAdjustRiskThresholds = isTier2OrHigher;
+  const canModifyOperationalSettings = isTier2OrHigher;
+  const canPerformDataEntry = !isReadOnlyAuditor;
+  const canAdjustModels = !isReadOnlyAuditor;
+
+  const user: UserProfile = mockUsers[role] || {
+    id: `usr_${role.toLowerCase()}`,
+    name: currentPersona.name,
+    role,
+    governanceTier,
+    tierName: tierMeta.name,
+    tierBadge: tierMeta.badgeLabel,
+    title: currentPersona.title,
+    avatar: currentPersona.avatar,
+    department: currentPersona.department,
+    spendingLimit: 0,
+    permissions: currentPersona.permissions,
+  };
 
   // Fetch initial data from backend API
   useEffect(() => {
@@ -134,6 +218,23 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setRoleState(newRole);
     api.setRole(newRole);
     api.switchRole(newRole).catch(() => {});
+    
+    // Check if current tab is allowed for new role. If not, auto-switch to defaultTab
+    const allowed = ROLE_ALLOWED_TABS[newRole] || [];
+    if (!allowed.includes(activeTab)) {
+      const targetDefault = ROLE_DEFAULT_TABS[newRole] || 'dashboard';
+      setActiveTab(targetDefault);
+    }
+
+    if (isAuthenticated) {
+      try {
+        localStorage.setItem(
+          'apexfiscal_auth_session',
+          JSON.stringify({ role: newRole, activeTab: ROLE_DEFAULT_TABS[newRole] || 'dashboard' })
+        );
+      } catch {}
+    }
+
     // Add audit entry
     appendAudit(
       'PERSPECTIVE_SWITCH',
@@ -142,6 +243,92 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       `ROLE: ${role}`,
       `ROLE: ${newRole}`,
       'Evaluator toggled perspective view in command chrome'
+    );
+  };
+
+  const login = (
+    identifier: string,
+    passwordInput: string,
+    rememberMe = true
+  ): { success: boolean; error?: string } => {
+    const persona = authenticatePersona(identifier, passwordInput);
+    if (!persona) {
+      return {
+        success: false,
+        error: 'Invalid credentials. Please verify your email or authorization key.',
+      };
+    }
+
+    setRoleState(persona.role);
+    api.setRole(persona.role);
+    api.switchRole(persona.role).catch(() => {});
+    setActiveTab(persona.defaultTab);
+    setIsAuthenticated(true);
+
+    if (rememberMe) {
+      try {
+        localStorage.setItem(
+          'apexfiscal_auth_session',
+          JSON.stringify({ role: persona.role, activeTab: persona.defaultTab })
+        );
+      } catch {}
+    } else {
+      try {
+        localStorage.removeItem('apexfiscal_auth_session');
+      } catch {}
+    }
+
+    appendAudit(
+      'EXECUTIVE_AUTHENTICATION_SUCCESS',
+      'Security Perimeter',
+      persona.role,
+      'STATUS: UNVERIFIED',
+      `STATUS: AUTHENTICATED (${persona.name})`,
+      `Statutory credentials verified for ${persona.title} via TLS 1.3`
+    );
+
+    return { success: true };
+  };
+
+  const quickLoginAsRole = (targetRole: UserRole) => {
+    const persona = PERSONA_CREDENTIALS[targetRole];
+    if (!persona) return;
+
+    setRoleState(targetRole);
+    api.setRole(targetRole);
+    api.switchRole(targetRole).catch(() => {});
+    setActiveTab(persona.defaultTab);
+    setIsAuthenticated(true);
+
+    try {
+      localStorage.setItem(
+        'apexfiscal_auth_session',
+        JSON.stringify({ role: targetRole, activeTab: persona.defaultTab })
+      );
+    } catch {}
+
+    appendAudit(
+      'DEMO_QUICK_AUTHENTICATION',
+      'Security Perimeter',
+      targetRole,
+      'STATUS: EVALUATION_BYPASS',
+      `STATUS: AUTHENTICATED (${persona.name})`,
+      `Instant demo authentication granted for reviewer perspective: ${persona.title}`
+    );
+  };
+
+  const logout = () => {
+    try {
+      localStorage.removeItem('apexfiscal_auth_session');
+    } catch {}
+    setIsAuthenticated(false);
+    appendAudit(
+      'EXECUTIVE_SESSION_TERMINATED',
+      'Security Perimeter',
+      role,
+      `STATUS: ACTIVE (${user.name})`,
+      'STATUS: TERMINATED',
+      'Executive signed out and returned to authentication landing portal'
     );
   };
 
@@ -173,7 +360,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setAuditLogs((prev) => [newEvent, ...prev]);
   };
 
-  const triggerEmergencyFreeze = () => {
+  const triggerEmergencyFreeze = async () => {
+    if (!canTriggerEmergencyFreeze) {
+      console.warn('Action rejected: Triggering the Global Capital Outflow Killswitch strictly requires Tier 1 (Executive / C-Suite) Sovereign Authority.');
+      return;
+    }
+
     setIsEmergencyFreezeActive(true);
     appendAudit(
       'EMERGENCY_FREEZE_ACTIVATED',
@@ -181,11 +373,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       'APX-GLOBAL-US-01',
       'ENFORCEMENT: STANDARD_POLICY_GRAPH',
       'ENFORCEMENT: TOTAL_OUTFLOW_LOCKDOWN',
-      'CFO triggered manual emergency killswitch'
+      `${user.name} (${user.tierName}) engaged emergency capital freeze killswitch`
     );
+    try {
+      await api.triggerEmergencyFreeze();
+    } catch (_err) {
+      // optimistic state retained
+    }
   };
 
-  const resolveEmergencyFreeze = () => {
+  const resolveEmergencyFreeze = async () => {
+    if (!canTriggerEmergencyFreeze) {
+      console.warn('Action rejected: Lifting the Global Capital Outflow Killswitch strictly requires Tier 1 (Executive / C-Suite) Sovereign Authority.');
+      return;
+    }
+
     setIsEmergencyFreezeActive(false);
     appendAudit(
       'EMERGENCY_FREEZE_LIFTED',
@@ -193,11 +395,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       'APX-GLOBAL-US-01',
       'ENFORCEMENT: TOTAL_OUTFLOW_LOCKDOWN',
       'ENFORCEMENT: STANDARD_POLICY_GRAPH',
-      'Executive resolution after capital buffer audit'
+      `${user.name} (${user.tierName}) verified buffer & lifted global outflow freeze`
     );
+    try {
+      await api.resolveEmergencyFreeze();
+    } catch (_err) {
+      // optimistic state retained
+    }
   };
 
   const approveRequest = async (id: string) => {
+    if (!canApproveTransactions) {
+      console.warn('Action rejected: Final sign-off authority strictly requires Tier 2 (Finance Manager / Controller) or Tier 1.');
+      return;
+    }
+
     setRequests((prev) =>
       prev.map((r) => (r.id === id ? { ...r, status: 'APPROVED' } : r))
     );
@@ -209,7 +421,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         target.trackingNumber,
         `STATUS: ${target.status}`,
         'STATUS: APPROVED',
-        `Approved by ${user.name} (${role})`
+        `Approved by ${user.name} (${user.tierName})`
       );
     }
     try {
@@ -221,6 +433,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const rejectRequest = async (id: string, reason: string = 'Budget ceiling constraint') => {
+    if (!canApproveTransactions) {
+      console.warn('Action rejected: Transaction sign-off / rejection strictly requires Tier 2 or Tier 1 authority.');
+      return;
+    }
+
     setRequests((prev) =>
       prev.map((r) => (r.id === id ? { ...r, status: 'REJECTED', policyReason: reason } : r))
     );
@@ -244,6 +461,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const overrideException = async (id: string, justification: string) => {
+    if (!canExecuteOverrides) {
+      console.warn('Action rejected: Sovereign policy threshold overrides strictly require Tier 1 (Executive / C-Suite) clearance.');
+      return;
+    }
+
     setExceptions((prev) =>
       prev.map((ex) => (ex.id === id ? { ...ex, status: 'OVERRIDDEN' } : ex))
     );
@@ -268,6 +490,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const enforceRejectException = async (id: string) => {
+    if (!canApproveTransactions) {
+      console.warn('Action rejected: Exception enforcement requires Tier 2 or Tier 1 authorization.');
+      return;
+    }
+
     setExceptions((prev) =>
       prev.map((ex) => (ex.id === id ? { ...ex, status: 'ENFORCED_REJECTED' } : ex))
     );
@@ -279,7 +506,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         target.incidentCode,
         'STATUS: PENDING_DECISION',
         'STATUS: ENFORCED_REJECTED',
-        'CFO rejected override; mandatory spend cap enforced'
+        'Policy hard-stop enforced by authorized controller'
       );
     }
     try {
@@ -291,6 +518,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const addRequest = async (newReqData: Omit<SpendingRequest, 'id' | 'trackingNumber' | 'submittedAt'>) => {
+    if (!canPerformDataEntry) {
+      console.warn('Action rejected: Tier 4 Read-Only Auditor clearance prohibits data entry.');
+      return;
+    }
+
     try {
       const created = await api.createSpendingRequest(newReqData);
       setRequests((prev) => [created, ...prev]);
@@ -522,6 +754,26 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       value={{
         role,
         user,
+        governanceTier,
+        tierName: tierMeta.name,
+        tierBadge: tierMeta.badgeLabel,
+        isTier1,
+        isTier2OrHigher,
+        isTier3OrHigher,
+        isReadOnlyAuditor,
+        canExecuteOverrides,
+        canApproveTransactions,
+        canAdjustRiskThresholds,
+        canModifyOperationalSettings,
+        canPerformDataEntry,
+        canAdjustModels,
+        canTriggerEmergencyFreeze,
+        currentPersona: PERSONA_CREDENTIALS[role] || PERSONA_CREDENTIALS.CFO,
+        allowedTabs: ROLE_ALLOWED_TABS[role] || [],
+        isAuthenticated,
+        login,
+        quickLoginAsRole,
+        logout,
         setRole,
         currency,
         setCurrency,

@@ -114,7 +114,7 @@ export const CreateRequestModal: React.FC<CreateRequestModalProps> = ({
 
           <Input
             label="Requested Amount"
-            prefixSymbol={currency === 'INR' ? '₹' : '$'}
+            prefixSymbol="₹"
             value={amountStr}
             onChange={(e) => setAmountStr(e.target.value)}
             helperText="Live policy evaluation runs dynamically as you type"
@@ -206,7 +206,7 @@ export const CreateRequestModal: React.FC<CreateRequestModalProps> = ({
             <p className="text-slate-700 text-[11px] leading-relaxed">
               {isOverBudget
                 ? `"This request would exceed the available budget (causes a ${formatCurrency(deficit, currency)} deficit beyond the ${formatCurrency(selectedDept.allocated, currency)} quarterly cap). Automated stop active. Routing to Exception Queue for mandatory Group CFO sign-off."`
-                : `"This request is within the approved departmental envelope ($${formatCurrency(currentAvailable - numAmount, currency)} remaining buffer). Automated pre-clearance granted."`}
+                : `"This request is within the approved departmental envelope (${formatCurrency(currentAvailable - numAmount, currency)} remaining buffer). Automated pre-clearance granted."`}
             </p>
           </div>
         </div>

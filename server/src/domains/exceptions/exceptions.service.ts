@@ -1,6 +1,6 @@
 import { getDb, runTransaction } from '../../db/connection';
 import { AppError } from '../../middleware/errorHandler';
-import { UserRole } from '../../types/common';
+import { UserRole, getTierForRole } from '../../types/common';
 import { budgetsService } from '../budgets/budgets.service';
 import { auditService } from '../audit/audit.service';
 
@@ -80,9 +80,10 @@ export class ExceptionsService {
       throw new AppError('A valid executive justification memo is required for sovereign override.', 400, 'JUSTIFICATION_REQUIRED');
     }
 
-    // Role check: Only CFO or Finance Admin may perform Sovereign Overrides
-    if (actorRole !== 'CFO' && actorRole !== 'FINANCE_ADMIN') {
-      throw new AppError('Sovereign policy override requires CFO or Finance Administrator authorization.', 403, 'INSUFFICIENT_PRIVILEGES');
+    // Role check: Only Tier 1 Executive / CFO (or legacy Finance Admin) may perform Sovereign Overrides
+    const actorTier = getTierForRole(actorRole);
+    if (actorTier !== 1 && actorRole !== 'CFO' && actorRole !== 'TIER_1_EXECUTIVE' && actorRole !== 'FINANCE_ADMIN') {
+      throw new AppError('Sovereign policy override requires CFO or Executive C-Suite authorization.', 403, 'INSUFFICIENT_PRIVILEGES');
     }
 
     return runTransaction((db) => {

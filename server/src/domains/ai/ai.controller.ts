@@ -1,7 +1,8 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
+import { novaClient } from '../../ai/nova/nova.client';
 import { novaService } from '../../ai/nova/nova.service';
-import { novaAgentService } from '../../ai/nova/nova.agent';
+import { geminiService } from '../../ai/gemini/gemini.service';
 import { forecastsService } from '../forecasts/forecasts.service';
 import { getDb } from '../../db/connection';
 import { AppError } from '../../middleware/errorHandler';
@@ -47,71 +48,84 @@ const explainAnomalySchema = z.object({
   exceptionId: z.string().min(1, 'exceptionId is required'),
 });
 
-// GET /api/ai/status
+// GET /api/ai/status (Dual-Engine Decoupled Status)
 aiRouter.get('/status', async (_req: Request, res: Response) => {
   let liveAnalysis: any = null;
   try {
-    liveAnalysis = await novaService.getLiveAnalysis();
+    liveAnalysis = await novaClient.getLiveAnalysis();
   } catch (_e) {}
 
   res.json({
     success: true,
     data: {
-      available: novaService.isAvailable(),
-      provider: 'Aczen Nova API (v1)',
-      endpoint: 'https://www.aczen.in/nova-api/v1',
-      live_books_connected: Boolean(liveAnalysis),
-      live_books_summary: liveAnalysis ? {
-        total_envelopes: liveAnalysis.company_books_height.total_budget_envelopes,
-        total_expenses: liveAnalysis.company_books_height.total_historical_expenses,
-        departments_monitored: liveAnalysis.company_books_height.departments_monitored,
-        over_committed_categories: liveAnalysis.live_overruns_detected.count,
-        total_deficit: liveAnalysis.live_overruns_detected.total_deficit_amount,
-      } : null,
-      architecture: 'Live enterprise financial ledger intelligence & pre-clearance enforcement',
-      rule: 'NOVA ANALYZES BOOKS. BACKEND ENFORCES POLICY. DATABASE STORES THE TRUTH.',
+      available: novaClient.isConfigured() || geminiService.isConfigured(),
+      // 1. Data Ingestion Layer: Aczen Nova ERP Sync
+      data_ingestion: {
+        layer: 'Aczen Nova Data Ingestion Layer',
+        provider: 'Aczen Nova API (v1)',
+        endpoint: 'https://www.aczen.in/nova-api/v1',
+        configured: novaClient.isConfigured(),
+        live_books_connected: Boolean(liveAnalysis),
+        live_books_summary: liveAnalysis ? {
+          total_envelopes: liveAnalysis.company_books_height.total_budget_envelopes,
+          total_expenses: liveAnalysis.company_books_height.total_historical_expenses,
+          departments_monitored: liveAnalysis.company_books_height.departments_monitored,
+          over_committed_categories: liveAnalysis.live_overruns_detected.count,
+          total_deficit: liveAnalysis.live_overruns_detected.total_deficit_amount,
+        } : null,
+      },
+      // 2. Conversational Intelligence Layer: Google Gemini 2.0
+      conversational_intelligence: {
+        layer: 'Google Gemini Conversational Intelligence Layer',
+        provider: 'Google Gemini',
+        model: geminiService.getModelName(),
+        configured: geminiService.isConfigured(),
+        streaming_enabled: true,
+      },
+      architecture: 'Decoupled Financial Architecture: Aczen Nova Data Ingestion + Google Gemini 2.0 Reasoning Core',
+      rule: 'NOVA INGESTS BOOKS. GEMINI REASONS & ADVISES. BACKEND ENFORCES POLICY. DATABASE STORES THE TRUTH.',
     },
   });
 });
 
-// GET /api/ai/nova/live-summary
+// GET /api/ai/nova/live-summary (Routed directly to NovaClient Data Extraction)
 aiRouter.get('/nova/live-summary', async (_req: Request, res: Response, next: NextFunction) => {
   try {
-    const analysis = await novaService.getLiveAnalysis();
+    const analysis = await novaClient.getLiveAnalysis();
     res.json({ success: true, data: analysis });
   } catch (error) {
     next(error);
   }
 });
 
-// GET /api/ai/nova/budgets
+// GET /api/ai/nova/budgets (Routed directly to NovaClient Data Extraction)
 aiRouter.get('/nova/budgets', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const limit = req.query.limit ? parseInt(String(req.query.limit), 10) : 25;
     const offset = req.query.offset ? parseInt(String(req.query.offset), 10) : 0;
-    const budgets = await novaService.getLiveBudgets({ limit, offset });
+    const budgets = await novaClient.getBudgets({ limit, offset });
     res.json({ success: true, data: budgets });
   } catch (error) {
     next(error);
   }
 });
 
-// GET /api/ai/nova/expenses
+// GET /api/ai/nova/expenses (Routed directly to NovaClient Data Extraction)
 aiRouter.get('/nova/expenses', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const limit = req.query.limit ? parseInt(String(req.query.limit), 10) : 25;
     const offset = req.query.offset ? parseInt(String(req.query.offset), 10) : 0;
-    const expenses = await novaService.getLiveExpenses({ limit, offset });
+    const expenses = await novaClient.getExpenses({ limit, offset });
     res.json({ success: true, data: expenses });
   } catch (error) {
     next(error);
   }
 });
 
-// GET /api/ai/nova/health
+// GET /api/ai/nova/health (Routed directly to NovaClient Data Extraction)
 aiRouter.get('/nova/health', async (_req: Request, res: Response, next: NextFunction) => {
   try {
-    const health = await novaService.getLiveHealth();
+    const health = await novaClient.getHealth();
     res.json({ success: true, data: health });
   } catch (error) {
     next(error);
@@ -343,14 +357,14 @@ const handleManagementInsights = async (_req: Request, res: Response, next: Next
 aiRouter.get('/management-insights', handleManagementInsights);
 aiRouter.get('/insights', handleManagementInsights);
 
-// ==========================================
-// ACZEN NOVA AI AGENT / COPILOT ENDPOINTS
-// ==========================================
+// ============================================================
+// CONVERSATIONAL INTELLIGENCE: GOOGLE GEMINI COPILOT ENDPOINTS
+// ============================================================
 
 // GET /api/ai/agent/capabilities
 aiRouter.get('/agent/capabilities', async (_req: Request, res: Response, next: NextFunction) => {
   try {
-    const capabilities = await novaAgentService.getCapabilities();
+    const capabilities = await geminiService.getCapabilities();
     res.json({ success: true, data: capabilities });
   } catch (error) {
     next(error);
@@ -363,7 +377,7 @@ aiRouter.post(
   validateBody(agentChatSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const chatResponse = await novaAgentService.chat(req.body);
+      const chatResponse = await geminiService.chat(req.body);
       res.json({ success: true, data: chatResponse });
     } catch (error) {
       next(error);
@@ -383,7 +397,7 @@ aiRouter.post(
       res.setHeader('X-Accel-Buffering', 'no');
       res.flushHeaders?.();
 
-      const finalResponse = await novaAgentService.streamChat(req.body, (chunk: string) => {
+      const finalResponse = await geminiService.streamChat(req.body, (chunk: string) => {
         res.write(`data: ${JSON.stringify({ type: 'token', chunk })}\n\n`);
       });
 

@@ -105,7 +105,7 @@ export const PreClearanceSimulator: React.FC<PreClearanceSimulatorProps> = ({
             Requisition Draft Attributes
           </span>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Select
               label="Requisition Category"
               value={category}
@@ -125,7 +125,7 @@ export const PreClearanceSimulator: React.FC<PreClearanceSimulatorProps> = ({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <Select
               label="Target Department"
               value={departmentId}

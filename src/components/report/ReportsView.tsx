@@ -116,7 +116,7 @@ export const ReportsView: React.FC = () => {
               Financial Performance & Variance Reports
             </h1>
             <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-blue-50 text-blue-700 border border-blue-200">
-              GAAS / SOX COMPLIANT
+              GAAP / SOX COMPLIANT
             </span>
           </div>
           <p className="text-xs text-slate-500 mt-1 font-mono">
@@ -276,19 +276,19 @@ export const ReportsView: React.FC = () => {
           </div>
 
           {/* High-Density Table */}
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs font-mono">
+          <div className="overflow-x-auto w-full">
+            <table className="w-full min-w-[1020px] text-left text-xs font-mono">
               <thead>
                 <tr className="border-b border-slate-200/80 text-slate-500 bg-slate-50/70">
-                  <th className="py-2.5 px-3 font-semibold">Cost Center</th>
-                  <th className="py-2.5 px-3 font-semibold">Department & Lead</th>
-                  <th className="py-2.5 px-3 font-semibold text-right">Allocated</th>
-                  <th className="py-2.5 px-3 font-semibold text-right">Incurred</th>
-                  <th className="py-2.5 px-3 font-semibold text-right">Committed</th>
-                  <th className="py-2.5 px-3 font-semibold text-right">Total Liability</th>
-                  <th className="py-2.5 px-3 font-semibold text-right">Variance ($)</th>
-                  <th className="py-2.5 px-3 font-semibold text-right">Util %</th>
-                  <th className="py-2.5 px-3 font-semibold text-center">Status</th>
+                  <th className="py-2.5 px-3 font-semibold w-32 whitespace-nowrap">Cost Center</th>
+                  <th className="py-2.5 px-3 font-semibold min-w-[160px]">Department & Lead</th>
+                  <th className="py-2.5 px-3 font-semibold text-right w-28 whitespace-nowrap">Allocated</th>
+                  <th className="py-2.5 px-3 font-semibold text-right w-28 whitespace-nowrap">Incurred</th>
+                  <th className="py-2.5 px-3 font-semibold text-right w-28 whitespace-nowrap">Committed</th>
+                  <th className="py-2.5 px-3 font-semibold text-right w-32 whitespace-nowrap">Total Liability</th>
+                  <th className="py-2.5 px-3 font-semibold text-right w-28 whitespace-nowrap">Variance ($)</th>
+                  <th className="py-2.5 px-3 font-semibold text-right w-32 whitespace-nowrap">Util %</th>
+                  <th className="py-2.5 px-3 font-semibold text-center w-36 whitespace-nowrap">Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -551,7 +551,7 @@ export const ReportsView: React.FC = () => {
               This document serves as the formal quarterly spend reconciliation for the executive committee. Total capital authorized across all four primary operating centers stands at <strong>{formatCurrency(totalAllocated, currency)}</strong>. Incurred expenditures plus active legal commitments amount to <strong>{formatCurrency(totalRunRate, currency)}</strong>, representing a net utilization velocity of <strong>{totalBurnRate.toFixed(1)}%</strong>.
             </p>
             <p>
-              Pre-clearance compliance enforcement remains operational at 99.4% adherence. All pending requisitions exceeding $50,000 have completed multi-sig approval or have been frozen within the exception queue pending CFO discretionary sign-off.
+              Pre-clearance compliance enforcement remains operational at 99.4% adherence. All pending requisitions exceeding ₹41,50,000 have completed multi-sig approval or have been frozen within the exception queue pending CFO discretionary sign-off.
             </p>
           </div>
 

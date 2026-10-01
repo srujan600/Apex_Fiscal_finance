@@ -110,26 +110,26 @@ export const SpendTrajectoryChart: React.FC = () => {
 
   const currentScenario = scenarios[activeScenario];
 
-  // Clean, evenly-spaced timeline avoiding label collision between Sept and Today
+  // Clean, evenly-spaced timeline avoiding label collision
   const rawData = [
     { date: 'Jul 01', actual: 6.2, committed: 8.5, projected: null, ceiling: 48.5 },
     { date: 'Jul 20', actual: 14.8, committed: 18.2, projected: null, ceiling: 48.5 },
     { date: 'Aug 01', actual: 21.9, committed: 26.5, projected: null, ceiling: 48.5 },
     { date: 'Aug 20', actual: 27.4, committed: 32.1, projected: null, ceiling: 48.5 },
-    { date: 'Sept 01', actual: 31.2, committed: 35.8, projected: null, ceiling: 48.5 },
-    { date: 'Today (Sept 30)', actual: 36.4, committed: 38.2, projected: 36.4, ceiling: 48.5 },
+    { date: 'Sep 01', actual: 31.2, committed: 35.8, projected: null, ceiling: 48.5 },
+    { date: 'Sep 30', actual: 36.4, committed: 38.2, projected: 36.4, ceiling: 48.5, isToday: true },
     { date: 'Oct 15', actual: null, committed: null, projected: currentScenario.projectionOct, ceiling: 48.5 },
-    { date: `${currentScenario.breachDate} [BREACH]`, actual: null, committed: null, projected: currentScenario.projectionBreach, ceiling: 48.5 },
+    { date: currentScenario.breachDate, actual: null, committed: null, projected: currentScenario.projectionBreach, ceiling: 48.5, isBreach: true },
     { date: 'Dec 31', actual: null, committed: null, projected: currentScenario.projectionDec, ceiling: 48.5 },
   ];
 
   const scenarioKeys: ScenarioKey[] = ['baseline', 'inflation', 'hiring', 'vendor'];
 
   return (
-    <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-sm flex flex-col justify-between h-full">
+    <div className="bg-white border border-slate-200/80 rounded-2xl p-5 md:p-6 shadow-sm flex flex-col justify-between h-full">
       <div>
         {/* Module Header and Scenario Toggles */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 gap-3">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between pb-4 border-b border-slate-100 gap-3">
           <div>
             <div className="flex items-center gap-2">
               <span className="text-[10px] font-mono font-semibold text-blue-600 uppercase">
@@ -145,8 +145,8 @@ export const SpendTrajectoryChart: React.FC = () => {
             </h3>
           </div>
 
-          {/* Scenario Toggles */}
-          <div className="flex items-center gap-1 bg-slate-100/80 p-1 rounded-xl border border-slate-200/80 text-xs font-mono">
+          {/* Scenario Toggles (Flex wrap to never overflow) */}
+          <div className="flex flex-wrap items-center gap-1 bg-slate-100/90 p-1 rounded-xl border border-slate-200/80 text-xs font-mono">
             {scenarioKeys.map((key) => {
               const sc = scenarios[key];
               const isActive = activeScenario === key;
@@ -155,18 +155,18 @@ export const SpendTrajectoryChart: React.FC = () => {
                   key={key}
                   id={`scenario-btn-${key}`}
                   onClick={() => setActiveScenario(key)}
-                  className={`px-3 py-1 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
+                  className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
                     isActive
-                      ? 'bg-white text-slate-900 shadow-sm font-semibold border border-slate-200/60'
+                      ? 'bg-white text-slate-900 shadow-xs font-semibold border border-slate-200/80'
                       : 'text-slate-500 hover:text-slate-900 hover:bg-white/50'
                   }`}
                 >
                   <span
-                    className={`w-2 h-2 rounded-full transition-colors ${
+                    className={`w-2 h-2 rounded-full transition-colors shrink-0 ${
                       isActive ? sc.dotColor : 'bg-slate-300'
                     }`}
                   />
-                  <span>{sc.label}</span>
+                  <span className="whitespace-nowrap">{sc.label}</span>
                 </button>
               );
             })}
@@ -179,7 +179,7 @@ export const SpendTrajectoryChart: React.FC = () => {
             <ComposedChart
               key={activeScenario}
               data={rawData}
-              margin={{ top: 15, right: 10, left: -20, bottom: 0 }}
+              margin={{ top: 15, right: 32, left: -15, bottom: 5 }}
             >
               <defs>
                 <linearGradient id="actualSpendGradient" x1="0" y1="0" x2="0" y2="1">
@@ -200,6 +200,8 @@ export const SpendTrajectoryChart: React.FC = () => {
                 tick={{ fill: '#64748b', fontSize: 10, fontFamily: 'JetBrains Mono' }}
                 axisLine={{ stroke: '#e2e8f0' }}
                 tickLine={false}
+                interval={0}
+                tickFormatter={(val) => val === 'Sep 30' ? 'Sep 30 (Today)' : val}
               />
 
               <YAxis
@@ -207,7 +209,7 @@ export const SpendTrajectoryChart: React.FC = () => {
                 tick={{ fill: '#64748b', fontSize: 10, fontFamily: 'JetBrains Mono' }}
                 axisLine={{ stroke: '#e2e8f0' }}
                 tickLine={false}
-                tickFormatter={(val) => `$${val}M`}
+                tickFormatter={(val) => `₹${Math.round(val * 8.3)} Cr`}
                 domain={[0, 60]}
               />
 
@@ -216,15 +218,16 @@ export const SpendTrajectoryChart: React.FC = () => {
                   if (active && payload && payload.length) {
                     const validPayload = payload.filter((p) => p.value !== null && p.value !== undefined);
                     if (!validPayload.length) return null;
+                    const displayLabel = label === 'Sep 30' ? 'Sep 30 (Today - Fiscal Anchor)' : label;
                     return (
                       <div className="bg-white/95 backdrop-blur-md border border-slate-200 p-3 rounded-xl shadow-xl text-xs font-mono space-y-1.5">
-                        <span className="text-slate-900 font-bold block">{label}</span>
+                        <span className="text-slate-900 font-bold block">{displayLabel}</span>
                         {validPayload.map((entry, idx) => (
                           <div key={idx} className="flex justify-between gap-4 text-[11px]">
                             <span style={{ color: entry.color }} className="font-medium">
                               {entry.name}:
                             </span>
-                            <span className="text-slate-900 font-bold">${entry.value}M</span>
+                            <span className="text-slate-900 font-bold">₹{((entry.value as number) * 8.3).toFixed(1)} Cr</span>
                           </div>
                         ))}
                       </div>
@@ -241,7 +244,7 @@ export const SpendTrajectoryChart: React.FC = () => {
                 strokeDasharray="6 4"
                 strokeWidth={1.5}
                 label={{
-                  value: 'HARD CEILING ($48.5M)',
+                  value: 'HARD CEILING (₹402.55 Cr)',
                   fill: '#dc2626',
                   fontSize: 9,
                   position: 'insideTopRight',
@@ -295,12 +298,12 @@ export const SpendTrajectoryChart: React.FC = () => {
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-1.5">
             <span className="w-3 h-1 bg-blue-600 rounded" />
-            <span className="text-slate-500">Settled ($36.4M)</span>
+            <span className="text-slate-500">Settled (₹302.12 Cr)</span>
           </div>
 
           <div className="flex items-center gap-1.5">
             <span className="w-3 h-0.5 border-t-2 border-dashed border-indigo-500" />
-            <span className="text-slate-500">Committed ($38.2M)</span>
+            <span className="text-slate-500">Committed (₹317.06 Cr)</span>
           </div>
 
           <div className="flex items-center gap-1.5">
@@ -309,13 +312,13 @@ export const SpendTrajectoryChart: React.FC = () => {
               style={{ borderColor: currentScenario.color }}
             />
             <span className="text-slate-700 font-medium">
-              Trajectory (${currentScenario.projectionDec}M)
+              Trajectory (₹{(currentScenario.projectionDec * 8.3).toFixed(1)} Cr)
             </span>
           </div>
 
           <div className="flex items-center gap-1.5">
             <span className="w-3 h-0.5 bg-rose-500" />
-            <span className="text-rose-600 font-medium">Ceiling ($48.5M)</span>
+            <span className="text-rose-600 font-medium">Ceiling (₹402.55 Cr)</span>
           </div>
         </div>
 

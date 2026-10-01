@@ -3,7 +3,7 @@ import { spendingService } from './spending.service';
 import { ApiResponse } from '../../types/common';
 import { z } from 'zod';
 import { validateBody, validateQuery } from '../../middleware/validation';
-import { requirePermission } from '../../middleware/auth';
+import { requirePermission, requireTier } from '../../middleware/auth';
 
 export const spendingRouter = Router();
 
@@ -84,9 +84,10 @@ const createSpendingRequestSchema = z.object({
   idempotencyKey: z.string().optional(),
 });
 
-// POST /api/spending
+// POST /api/spending (Data Entry: Tier 1, 2, 3; Tier 4 Read-Only Auditor strictly blocked)
 spendingRouter.post(
   '/',
+  requireTier(1, 2, 3),
   requirePermission('SUBMIT_REQUISITION'),
   validateBody(createSpendingRequestSchema),
   (req: Request, res: Response, next: NextFunction) => {

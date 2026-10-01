@@ -53,9 +53,21 @@ usersRouter.get('/:id', (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
+const allowedRoles = [
+  'TIER_1_EXECUTIVE',
+  'TIER_2_CONTROLLER',
+  'TIER_3_ANALYST',
+  'TIER_4_AUDITOR',
+  'CFO',
+  'FINANCE_ADMIN',
+  'DEPT_MANAGER',
+  'EMPLOYEE',
+  'SYSTEM_ADMIN',
+] as const;
+
 const loginSchema = z.object({
   email: z.string().email().optional(),
-  role: z.enum(['CFO', 'FINANCE_ADMIN', 'DEPT_MANAGER', 'EMPLOYEE', 'SYSTEM_ADMIN']).optional(),
+  role: z.enum(allowedRoles).optional(),
 });
 
 // POST /api/auth/login
@@ -109,7 +121,7 @@ authRouter.get('/me', (req: Request, res: Response, next: NextFunction) => {
 });
 
 const switchRoleSchema = z.object({
-  role: z.enum(['CFO', 'FINANCE_ADMIN', 'DEPT_MANAGER', 'EMPLOYEE', 'SYSTEM_ADMIN']),
+  role: z.enum(allowedRoles),
 });
 
 // POST /api/auth/switch-role

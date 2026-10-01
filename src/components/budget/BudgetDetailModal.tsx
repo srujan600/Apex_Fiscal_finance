@@ -110,7 +110,7 @@ export const BudgetDetailModal: React.FC<BudgetDetailModalProps> = ({
               PROJECTED OVERRUN
             </span>
             <span className={`text-base font-mono font-bold block mt-0.5 ${budget.projectedOverrun > 0 ? 'text-rose-600' : 'text-emerald-600'}`}>
-              {budget.projectedOverrun > 0 ? `-${formatCurrency(budget.projectedOverrun, currency)}` : '$0 (Compliant)'}
+              {budget.projectedOverrun > 0 ? `-${formatCurrency(budget.projectedOverrun, currency)}` : '₹0 (Compliant)'}
             </span>
             <span className="text-[10px] font-mono text-slate-500 block">Run-rate variance</span>
           </div>

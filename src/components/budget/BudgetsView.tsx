@@ -8,9 +8,10 @@ import { TactileButton } from '../ui/TactileButton';
 import { BudgetDetailModal } from './BudgetDetailModal';
 import { CreateBudgetModal } from './CreateBudgetModal';
 import { EditBudgetModal } from './EditBudgetModal';
+import { TierBadge, TierAuthorizationBanner, LockedActionIndicator } from '../common/TierRestrictedBadge';
 
 export const BudgetsView: React.FC = () => {
-  const { budgets, currency } = useApp();
+  const { budgets, currency, canAdjustRiskThresholds, isTier2OrHigher, governanceTier } = useApp();
 
   const [selectedRiskFilter, setSelectedRiskFilter] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
@@ -46,7 +47,7 @@ export const BudgetsView: React.FC = () => {
             <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-semibold uppercase bg-blue-50 text-blue-700 border border-blue-200/80">
               Department Envelopes
             </span>
-            <span className="text-[11px] font-mono text-slate-400 font-medium">EPOCH: Q3-2025 ACTIVE</span>
+            <TierBadge tier={governanceTier} size="sm" />
           </div>
           <h1 className="text-xl md:text-2xl text-slate-900 font-bold tracking-tight mt-1">
             Enterprise Budget Allocation & Ceiling Enforcement
@@ -57,11 +58,23 @@ export const BudgetsView: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2.5">
-          <TactileButton variant="primary" icon="add" onClick={() => setCreateModalOpen(true)}>
-            Create Budget Envelope
-          </TactileButton>
+          {canAdjustRiskThresholds ? (
+            <TactileButton variant="primary" icon="add" onClick={() => setCreateModalOpen(true)}>
+              Create Budget Envelope
+            </TactileButton>
+          ) : (
+            <div className="flex items-center gap-2">
+              <LockedActionIndicator reason="Requires Tier 2+ Controller authorization" />
+              <TactileButton variant="primary" icon="lock" disabled>
+                Create Envelope
+              </TactileButton>
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Tier Governance Authorization Banner */}
+      <TierAuthorizationBanner />
 
       {/* Aggregate KPI Summary Quad */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3.5">
@@ -150,20 +163,20 @@ export const BudgetsView: React.FC = () => {
 
       {/* Primary Budget Ledger Table */}
       <div className="bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-sm">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+        <div className="overflow-x-auto w-full">
+          <table className="w-full min-w-[1100px] text-left border-collapse">
             <thead>
               <tr className="bg-slate-50 text-slate-500 text-[11px] font-mono uppercase border-b border-slate-200/80 h-10 select-none">
-                <th className="px-4 font-semibold">Envelope Code</th>
-                <th className="px-3 font-semibold">Department & Lead</th>
-                <th className="px-3 font-semibold text-right">Allocated</th>
-                <th className="px-3 font-semibold text-right">Settled Spend</th>
-                <th className="px-3 font-semibold text-right">Committed POs</th>
-                <th className="px-3 font-semibold text-right">Available Buffer</th>
-                <th className="px-4 font-semibold">Utilization Bar</th>
-                <th className="px-3 font-semibold text-right">Projected Variance</th>
-                <th className="px-3 font-semibold">Risk Posture</th>
-                <th className="px-4 font-semibold text-right">Actions</th>
+                <th className="px-4 font-semibold w-32 whitespace-nowrap">Envelope Code</th>
+                <th className="px-3 font-semibold min-w-[160px]">Department & Lead</th>
+                <th className="px-3 font-semibold text-right w-28 whitespace-nowrap">Allocated</th>
+                <th className="px-3 font-semibold text-right w-28 whitespace-nowrap">Settled Spend</th>
+                <th className="px-3 font-semibold text-right w-28 whitespace-nowrap">Committed POs</th>
+                <th className="px-3 font-semibold text-right w-28 whitespace-nowrap">Available Buffer</th>
+                <th className="px-4 font-semibold w-56 min-w-[200px]">Utilization Bar</th>
+                <th className="px-3 font-semibold text-right w-32 whitespace-nowrap">Projected Variance</th>
+                <th className="px-3 font-semibold w-36 whitespace-nowrap">Risk Posture</th>
+                <th className="px-4 font-semibold text-right w-44 whitespace-nowrap">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-xs font-sans">
@@ -174,7 +187,7 @@ export const BudgetsView: React.FC = () => {
                 return (
                   <tr key={b.id} className="hover:bg-slate-50/70 transition-colors group">
                     {/* Code */}
-                    <td className="px-4 py-3.5">
+                    <td className="px-4 py-3.5 whitespace-nowrap">
                       <span className="font-mono font-bold text-slate-900 block">{b.code}</span>
                       <span className="text-[10px] text-slate-400 font-mono">{b.fiscalPeriod}</span>
                     </td>
@@ -186,31 +199,31 @@ export const BudgetsView: React.FC = () => {
                     </td>
 
                     {/* Allocated */}
-                    <td className="px-3 py-3.5 text-right font-mono font-semibold text-slate-900">
+                    <td className="px-3 py-3.5 text-right font-mono font-semibold text-slate-900 whitespace-nowrap">
                       {formatCurrency(b.allocated, currency, 'compact')}
                     </td>
 
                     {/* Settled */}
-                    <td className="px-3 py-3.5 text-right font-mono font-semibold text-blue-600">
+                    <td className="px-3 py-3.5 text-right font-mono font-semibold text-blue-600 whitespace-nowrap">
                       {formatCurrency(b.actualSettled, currency, 'compact')}
                     </td>
 
                     {/* Committed */}
-                    <td className="px-3 py-3.5 text-right font-mono font-semibold text-indigo-600">
+                    <td className="px-3 py-3.5 text-right font-mono font-semibold text-indigo-600 whitespace-nowrap">
                       {formatCurrency(b.committed, currency, 'compact')}
                     </td>
 
                     {/* Available */}
-                    <td className="px-3 py-3.5 text-right font-mono font-bold text-emerald-600">
+                    <td className="px-3 py-3.5 text-right font-mono font-bold text-emerald-600 whitespace-nowrap">
                       {formatCurrency(b.available, currency, 'compact')}
                     </td>
 
                     {/* Utilization Bar */}
-                    <td className="px-4 py-3.5 w-48">
-                      <div className="space-y-1">
-                        <div className="flex justify-between text-[10px] font-mono">
-                          <span className="text-slate-900 font-semibold">{b.utilizationRate.toFixed(1)}%</span>
-                          <span className={b.utilizationRate >= 90 ? 'text-rose-600 font-medium' : 'text-slate-400'}>
+                    <td className="px-4 py-3.5 w-56 min-w-[200px]">
+                      <div className="space-y-1.5">
+                        <div className="flex items-center justify-between text-[11px] font-mono">
+                          <span className="text-slate-900 font-bold">{b.utilizationRate.toFixed(1)}%</span>
+                          <span className={`text-[10px] ${b.utilizationRate >= 90 ? 'text-rose-600 font-semibold' : 'text-slate-400 font-medium'}`}>
                             {b.daysToRunOut}d run-out
                           </span>
                         </div>
@@ -226,7 +239,7 @@ export const BudgetsView: React.FC = () => {
                     {/* Projected Variance */}
                     <td className="px-3 py-3.5 text-right font-mono">
                       <span className={isOverrun ? 'text-rose-600 font-bold' : 'text-emerald-600 font-medium'}>
-                        {isOverrun ? `-${formatCurrency(b.projectedOverrun, currency, 'compact')}` : '+$0 (On Track)'}
+                        {isOverrun ? `-${formatCurrency(b.projectedOverrun, currency, 'compact')}` : '+₹0 (On Track)'}
                       </span>
                     </td>
 
@@ -246,14 +259,16 @@ export const BudgetsView: React.FC = () => {
                           Dossier
                         </TactileButton>
 
-                        <TactileButton
-                          variant="ghost"
-                          size="sm"
-                          icon="edit"
-                          onClick={() => setActiveBudgetForEdit(b)}
-                        >
-                          Edit
-                        </TactileButton>
+                        {canAdjustRiskThresholds && (
+                          <TactileButton
+                            variant="ghost"
+                            size="sm"
+                            icon="edit"
+                            onClick={() => setActiveBudgetForEdit(b)}
+                          >
+                            Edit
+                          </TactileButton>
+                        )}
                       </div>
                     </td>
                   </tr>

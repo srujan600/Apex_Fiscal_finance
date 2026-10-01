@@ -3,7 +3,7 @@ import { categoriesService } from './categories.service';
 import { ApiResponse } from '../../types/common';
 import { z } from 'zod';
 import { validateBody } from '../../middleware/validation';
-import { requirePermission } from '../../middleware/auth';
+import { requirePermission, requireTier } from '../../middleware/auth';
 
 export const categoriesRouter = Router();
 
@@ -44,9 +44,10 @@ const createCategorySchema = z.object({
   thresholdPercent: z.number().min(1).max(100).optional(),
 });
 
-// POST /api/categories
+// POST /api/categories (Tier 1 & Tier 2: Category cap & threshold adjustments)
 categoriesRouter.post(
   '/',
+  requireTier(1, 2),
   requirePermission('MANAGE_CATEGORIES'),
   validateBody(createCategorySchema),
   (req: Request, res: Response, next: NextFunction) => {

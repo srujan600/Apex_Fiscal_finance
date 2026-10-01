@@ -1,4 +1,10 @@
+export type GovernanceTier = 1 | 2 | 3 | 4;
+
 export type UserRole = 
+  | 'TIER_1_EXECUTIVE'
+  | 'TIER_2_CONTROLLER'
+  | 'TIER_3_ANALYST'
+  | 'TIER_4_AUDITOR'
   | 'CFO' 
   | 'FINANCE_ADMIN' 
   | 'DEPT_MANAGER' 
@@ -27,10 +33,27 @@ export interface UserProfile {
   id: string;
   name: string;
   role: UserRole;
+  governanceTier: GovernanceTier;
+  tierName: string;
+  tierBadge: string;
   title: string;
   avatar: string;
   department: string;
   spendingLimit: number;
+  permissions?: string[];
+}
+
+export interface TierDefinition {
+  tier: GovernanceTier;
+  code: UserRole;
+  name: string;
+  shortName: string;
+  badgeLabel: string;
+  badgeClass: string;
+  authorityLimit: string;
+  description: string;
+  capabilities: string[];
+  restrictions: string[];
 }
 
 export interface BudgetEnvelope {

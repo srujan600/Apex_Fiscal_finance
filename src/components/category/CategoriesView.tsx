@@ -94,20 +94,20 @@ export const CategoriesView: React.FC = () => {
 
       {/* Category List Ledger Table */}
       <div className="bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-sm">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+        <div className="overflow-x-auto w-full">
+          <table className="w-full min-w-[1050px] text-left border-collapse">
             <thead>
               <tr className="bg-slate-50 text-slate-500 text-[11px] font-mono uppercase border-b border-slate-200/80 h-10 select-none">
-                <th className="px-4 font-semibold">Category Code</th>
-                <th className="px-3 font-semibold">Category Name</th>
-                <th className="px-3 font-semibold text-right">Allocated Sub-Cap</th>
-                <th className="px-3 font-semibold text-right">Settled</th>
-                <th className="px-3 font-semibold text-right">Committed</th>
-                <th className="px-3 font-semibold text-right">Available</th>
-                <th className="px-4 font-semibold">Utilization Meter</th>
-                <th className="px-3 font-semibold text-right">Threshold Policy</th>
-                <th className="px-3 font-semibold">Risk State</th>
-                <th className="px-4 font-semibold text-right">Actions</th>
+                <th className="px-4 font-semibold w-32 whitespace-nowrap">Category Code</th>
+                <th className="px-3 font-semibold min-w-[180px]">Category Name</th>
+                <th className="px-3 font-semibold text-right w-28 whitespace-nowrap">Allocated Sub-Cap</th>
+                <th className="px-3 font-semibold text-right w-28 whitespace-nowrap">Settled</th>
+                <th className="px-3 font-semibold text-right w-28 whitespace-nowrap">Committed</th>
+                <th className="px-3 font-semibold text-right w-28 whitespace-nowrap">Available</th>
+                <th className="px-4 font-semibold w-52 min-w-[180px]">Utilization Meter</th>
+                <th className="px-3 font-semibold text-right w-32 whitespace-nowrap">Threshold Policy</th>
+                <th className="px-3 font-semibold w-32 whitespace-nowrap">Risk State</th>
+                <th className="px-4 font-semibold text-right w-36 whitespace-nowrap">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-xs font-sans">
@@ -126,7 +126,7 @@ export const CategoriesView: React.FC = () => {
                     <td className="px-3 py-3.5">
                       <span className="font-semibold text-slate-900 block">{cat.name}</span>
                       <span className="text-[10px] text-slate-400 block font-medium">
-                        Approval Gate: Single-item &gt; $50k requires CFO signoff
+                        Approval Gate: Single-item &gt; ₹41.5L requires CFO signoff
                       </span>
                     </td>
 
@@ -209,7 +209,7 @@ export const CategoriesView: React.FC = () => {
               </span>
               <p className="text-slate-700 text-xs leading-relaxed">
                 Requisitions categorized under <strong>{selectedCategory.name}</strong> trigger automated
-                multi-sig review if single disbursement exceeds $50,000 USD or if cumulative run-rate breaches{' '}
+                multi-sig review if single disbursement exceeds ₹41,50,000 (INR) or if cumulative run-rate breaches{' '}
                 {selectedCategory.thresholdPercent}%.
               </p>
             </div>

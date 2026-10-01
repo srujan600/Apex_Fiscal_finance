@@ -8,9 +8,10 @@ import { Input } from '../ui/Input';
 import { Select } from '../ui/Select';
 import { PolicyRule } from '../../types';
 import { api } from '../../services/api';
+import { TierBadge, TierAuthorizationBanner, LockedActionIndicator } from '../common/TierRestrictedBadge';
 
 export const PolicyEngineView: React.FC = () => {
-  const { policies, currency, togglePolicyStatus, addPolicy, budgets, categories } = useApp();
+  const { policies, currency, togglePolicyStatus, addPolicy, budgets, categories, isTier1, governanceTier } = useApp();
 
   const [activeFilter, setActiveFilter] = useState<'ALL' | 'ACTIVE' | 'PAUSED'>('ALL');
   const [createModalOpen, setCreateModalOpen] = useState(false);
@@ -19,8 +20,8 @@ export const PolicyEngineView: React.FC = () => {
   const [ruleCode, setRuleCode] = useState(`POL-2026-ENF-${Math.floor(Math.random() * 899 + 100)}`);
   const [ruleName, setRuleName] = useState('');
   const [targetEntity, setTargetEntity] = useState('Department');
-  const [conditionExpression, setConditionExpression] = useState('AMOUNT > $50,000 AND UTILIZATION > 90%');
-  const [thresholdValue, setThresholdValue] = useState('50000');
+  const [conditionExpression, setConditionExpression] = useState('AMOUNT > ₹41,50,000 AND UTILIZATION > 90%');
+  const [thresholdValue, setThresholdValue] = useState('4150000');
   const [actionRequired, setActionRequired] = useState<'AUTO_BLOCK' | 'REQUIRE_CFO_OVERRIDE' | 'REQUIRE_MANAGER' | 'WARN_AUDIT'>('REQUIRE_CFO_OVERRIDE');
 
   // Policy Simulator Sandbox State
@@ -130,6 +131,7 @@ export const PolicyEngineView: React.FC = () => {
             <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">
               REAL-TIME ENFORCEMENT
             </span>
+            <TierBadge tier={governanceTier} size="sm" />
           </div>
           <p className="text-xs text-slate-500 mt-1 font-mono">
             Deterministic Decision DAG · Sub-20ms Evaluation · Immutable Statutory Policy Registry
@@ -137,15 +139,27 @@ export const PolicyEngineView: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-3">
-          <TactileButton
-            variant="primary"
-            onClick={() => setCreateModalOpen(true)}
-            icon="add_circle"
-          >
-            Deploy Policy Rule
-          </TactileButton>
+          {isTier1 ? (
+            <TactileButton
+              variant="primary"
+              onClick={() => setCreateModalOpen(true)}
+              icon="add_circle"
+            >
+              Deploy Policy Rule
+            </TactileButton>
+          ) : (
+            <div className="flex items-center gap-2">
+              <LockedActionIndicator reason="Requires Tier 1 Executive clearance (Strategy Controls)" />
+              <TactileButton variant="primary" icon="lock" disabled>
+                Deploy Rule
+              </TactileButton>
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Tier Governance Authorization Banner */}
+      <TierAuthorizationBanner />
 
       {/* Telemetry Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -170,7 +184,7 @@ export const PolicyEngineView: React.FC = () => {
               Strict Auto-Block Gates
             </span>
             <div className="mt-1 text-2xl font-bold font-mono text-rose-600 tracking-tight">
-              {autoBlockCount} Rules
+              {autoBlockCount} {autoBlockCount === 1 ? 'Rule' : 'Rules'}
             </div>
             <div className="mt-2 flex items-center gap-1.5 text-xs text-slate-500">
               <span>Zero-tolerance budget ceilings</span>
@@ -334,8 +348,8 @@ export const PolicyEngineView: React.FC = () => {
           </div>
 
           {/* Table */}
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs font-mono">
+          <div className="overflow-x-auto w-full">
+            <table className="w-full min-w-[1000px] text-left text-xs font-mono">
               <thead>
                 <tr className="border-b border-slate-200/80 text-slate-500 bg-slate-50/70">
                   <th className="py-2.5 px-3 font-semibold">Rule Code</th>
@@ -390,11 +404,15 @@ export const PolicyEngineView: React.FC = () => {
                       </td>
                       <td className="py-3 px-3 text-center">
                         <button
-                          onClick={() => togglePolicyStatus(rule.id)}
-                          className={`px-2.5 py-1 rounded-lg text-[10px] font-bold font-mono transition-all cursor-pointer border ${
-                            isActive
-                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
-                              : 'bg-slate-100 text-slate-500 border-slate-200 hover:text-slate-800 hover:bg-slate-200'
+                          onClick={() => isTier1 && togglePolicyStatus(rule.id)}
+                          disabled={!isTier1}
+                          title={!isTier1 ? 'Policy rule toggling requires Tier 1 Executive clearance' : undefined}
+                          className={`px-2.5 py-1 rounded-lg text-[10px] font-bold font-mono transition-all border ${
+                            !isTier1
+                              ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed opacity-60'
+                              : isActive
+                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100 cursor-pointer'
+                              : 'bg-slate-100 text-slate-500 border-slate-200 hover:text-slate-800 hover:bg-slate-200 cursor-pointer'
                           }`}
                         >
                           {isActive ? 'ACTIVE' : 'PAUSED'}
@@ -452,17 +470,17 @@ export const PolicyEngineView: React.FC = () => {
             label="Condition Expression (Boolean Logic)"
             value={conditionExpression}
             onChange={(e) => setConditionExpression(e.target.value)}
-            placeholder="e.g. AMOUNT > $50,000 AND RUN_RATE > 95%"
+            placeholder="e.g. AMOUNT > ₹41,50,000 AND RUN_RATE > 95%"
             required
           />
 
           <div className="grid grid-cols-2 gap-4">
             <Input
-              label="Threshold Value ($)"
+              label="Threshold Value (₹ INR)"
               type="number"
               value={thresholdValue}
               onChange={(e) => setThresholdValue(e.target.value)}
-              placeholder="50000"
+              placeholder="4150000"
               required
             />
 

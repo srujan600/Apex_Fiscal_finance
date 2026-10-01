@@ -2,6 +2,7 @@ import { Router, Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 import { approvalsService } from './approvals.service';
 import { validateBody } from '../../middleware/validation';
+import { requirePermission, requireTier } from '../../middleware/auth';
 import { UserRole } from '../../types/common';
 
 export const approvalsRouter = Router();
@@ -15,7 +16,7 @@ const escalateSchema = z.object({
   escalateTo: z.string().optional(),
 });
 
-// GET /api/approvals
+// GET /api/approvals (Allowed for all authenticated tiers)
 approvalsRouter.get('/', (_req: Request, res: Response, next: NextFunction) => {
   try {
     const list = approvalsService.getPendingApprovals();
@@ -25,23 +26,30 @@ approvalsRouter.get('/', (_req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-// POST /api/approvals/:id/approve
-approvalsRouter.post('/:id/approve', (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const id = String(req.params.id);
-    const actorName = req.user?.name || 'Victoria Sterling';
-    const actorRole = (req.user?.role || 'CFO') as UserRole;
+// POST /api/approvals/:id/approve (Tier 1 & Tier 2: Final Sign-off Authority; Tier 3 & 4 Forbidden)
+approvalsRouter.post(
+  '/:id/approve',
+  requireTier(1, 2),
+  requirePermission('APPROVE_REQUISITION'),
+  (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = String(req.params.id);
+      const actorName = req.user?.name || 'Victoria Sterling';
+      const actorRole = (req.user?.role || 'CFO') as UserRole;
 
-    const result = approvalsService.approveRequest(id, actorName, actorRole);
-    res.json({ success: true, data: result });
-  } catch (error) {
-    next(error);
+      const result = approvalsService.approveRequest(id, actorName, actorRole);
+      res.json({ success: true, data: result });
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
-// POST /api/approvals/:id/reject
+// POST /api/approvals/:id/reject (Tier 1 & Tier 2: Transaction Rejection Authority)
 approvalsRouter.post(
   '/:id/reject',
+  requireTier(1, 2),
+  requirePermission('APPROVE_REQUISITION'),
   validateBody(rejectSchema),
   (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -57,9 +65,10 @@ approvalsRouter.post(
   }
 );
 
-// POST /api/approvals/:id/escalate
+// POST /api/approvals/:id/escalate (Tier 3 Analysts can escalate to Tier 2/1; Tier 4 Forbidden)
 approvalsRouter.post(
   '/:id/escalate',
+  requireTier(1, 2, 3),
   validateBody(escalateSchema),
   (req: Request, res: Response, next: NextFunction) => {
     try {

@@ -2,6 +2,7 @@ import { Router, Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 import { policiesService } from './policies.service';
 import { validateBody } from '../../middleware/validation';
+import { requirePermission, requireTier } from '../../middleware/auth';
 import { UserRole } from '../../types/common';
 
 export const policiesRouter = Router();
@@ -47,9 +48,11 @@ policiesRouter.get('/:id', (req: Request, res: Response, next: NextFunction) => 
   }
 });
 
-// POST /api/policies
+// POST /api/policies (STRICTLY Tier 1 Executive / C-Suite Policy Authority)
 policiesRouter.post(
   '/',
+  requireTier(1),
+  requirePermission('MANAGE_POLICIES'),
   validateBody(createPolicySchema),
   (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -64,19 +67,24 @@ policiesRouter.post(
   }
 );
 
-// PATCH /api/policies/:id/toggle
-policiesRouter.patch('/:id/toggle', (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const id = String(req.params.id);
-    const actorName = req.user?.name || 'Victoria Sterling';
-    const actorRole = (req.user?.role || 'CFO') as UserRole;
+// PATCH /api/policies/:id/toggle (STRICTLY Tier 1 Executive / C-Suite Policy Authority)
+policiesRouter.patch(
+  '/:id/toggle',
+  requireTier(1),
+  requirePermission('MANAGE_POLICIES'),
+  (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = String(req.params.id);
+      const actorName = req.user?.name || 'Victoria Sterling';
+      const actorRole = (req.user?.role || 'CFO') as UserRole;
 
-    const updated = policiesService.togglePolicy(id, actorName, actorRole);
-    res.json({ success: true, data: updated });
-  } catch (error) {
-    next(error);
+      const updated = policiesService.togglePolicy(id, actorName, actorRole);
+      res.json({ success: true, data: updated });
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 // POST /api/policies/evaluate
 policiesRouter.post(

@@ -7,6 +7,7 @@ import { TactileButton } from '../ui/TactileButton';
 import { Modal } from '../ui/Modal';
 import { Select } from '../ui/Select';
 import { Input } from '../ui/Input';
+import { TierAuthorizationBanner, LockedActionIndicator, TierBadge } from '../common/TierRestrictedBadge';
 
 export const ExceptionsView: React.FC = () => {
   const {
@@ -16,6 +17,11 @@ export const ExceptionsView: React.FC = () => {
     overrideException,
     enforceRejectException,
     reallocateBudget,
+    governanceTier,
+    tierName,
+    canExecuteOverrides,
+    isTier2OrHigher,
+    isReadOnlyAuditor,
   } = useApp();
 
   const [activeSeverityFilter, setActiveSeverityFilter] = useState<string>('ALL');
@@ -88,7 +94,7 @@ export const ExceptionsView: React.FC = () => {
             <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-semibold uppercase bg-rose-50 text-rose-700 border border-rose-200">
               Sovereign Exception Triage
             </span>
-            <span className="text-[11px] font-mono text-slate-400 font-medium">POLICY CEILING BREACHES</span>
+            <TierBadge tier={governanceTier} size="sm" />
           </div>
           <h1 className="text-xl md:text-2xl text-slate-900 font-bold tracking-tight mt-1">
             Exception Management & Executive Override Command
@@ -104,6 +110,9 @@ export const ExceptionsView: React.FC = () => {
           </span>
         </div>
       </div>
+
+      {/* Tier Governance Authorization Banner */}
+      <TierAuthorizationBanner />
 
       {/* Filter Tabs */}
       <div className="flex items-center gap-1.5 border-b border-slate-200/80 pb-3 text-xs font-mono">
@@ -254,44 +263,58 @@ export const ExceptionsView: React.FC = () => {
 
                 {isPending && (
                   <div className="flex flex-wrap items-center gap-2">
-                    <TactileButton
-                      variant="ghost"
-                      size="sm"
-                      icon="contact_support"
-                      onClick={() => {
-                        setJustificationIncident(ex);
-                        setJustificationModalOpen(true);
-                      }}
-                    >
-                      Request Justification
-                    </TactileButton>
+                    {isReadOnlyAuditor ? (
+                      <LockedActionIndicator reason="Tier 4 Read-Only Auditor: Exception actions disabled" />
+                    ) : (
+                      <>
+                        <TactileButton
+                          variant="ghost"
+                          size="sm"
+                          icon="contact_support"
+                          onClick={() => {
+                            setJustificationIncident(ex);
+                            setJustificationModalOpen(true);
+                          }}
+                        >
+                          Request Justification
+                        </TactileButton>
 
-                    <TactileButton
-                      variant="surface"
-                      size="sm"
-                      icon="swap_horiz"
-                      onClick={() => handleOpenReallocate(ex)}
-                    >
-                      Reallocate Budget
-                    </TactileButton>
+                        {isTier2OrHigher && (
+                          <>
+                            <TactileButton
+                              variant="surface"
+                              size="sm"
+                              icon="swap_horiz"
+                              onClick={() => handleOpenReallocate(ex)}
+                            >
+                              Reallocate Budget
+                            </TactileButton>
 
-                    <TactileButton
-                      variant="destructive"
-                      size="sm"
-                      icon="block"
-                      onClick={() => enforceRejectException(ex.id)}
-                    >
-                      Reject & Enforce Cap
-                    </TactileButton>
+                            <TactileButton
+                              variant="destructive"
+                              size="sm"
+                              icon="block"
+                              onClick={() => enforceRejectException(ex.id)}
+                            >
+                              Reject & Enforce Cap
+                            </TactileButton>
+                          </>
+                        )}
 
-                    <TactileButton
-                      variant="primary"
-                      size="sm"
-                      icon="gavel"
-                      onClick={() => handleOpenOverride(ex)}
-                    >
-                      Approve Override
-                    </TactileButton>
+                        {canExecuteOverrides ? (
+                          <TactileButton
+                            variant="primary"
+                            size="sm"
+                            icon="gavel"
+                            onClick={() => handleOpenOverride(ex)}
+                          >
+                            Approve Override
+                          </TactileButton>
+                        ) : (
+                          <LockedActionIndicator reason="Requires Tier 1 Executive clearance (Sovereign Override)" />
+                        )}
+                      </>
+                    )}
                   </div>
                 )}
 
@@ -354,9 +377,9 @@ export const ExceptionsView: React.FC = () => {
                 value={offsetSource}
                 onChange={(e) => setOffsetSource(e.target.value)}
                 options={[
-                  { value: 'Cloud Ops Strategic Buffer', label: 'Cloud Ops Strategic Buffer ($2.6M Headroom)' },
-                  { value: 'Sales Operations Reserve', label: 'Sales Operations Reserve ($4.1M Headroom)' },
-                  { value: 'Executive Contingency Pool', label: 'Executive Contingency Pool ($5.0M Headroom)' },
+                  { value: 'Cloud Ops Strategic Buffer', label: 'Cloud Ops Strategic Buffer (₹21.58 Cr Headroom)' },
+                  { value: 'Sales Operations Reserve', label: 'Sales Operations Reserve (₹34.03 Cr Headroom)' },
+                  { value: 'Executive Contingency Pool', label: 'Executive Contingency Pool (₹41.50 Cr Headroom)' },
                 ]}
               />
 

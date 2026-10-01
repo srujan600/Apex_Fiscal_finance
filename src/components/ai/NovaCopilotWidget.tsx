@@ -46,16 +46,18 @@ export const NovaCopilotWidget: React.FC = () => {
         {
           id: 'welcome',
           role: 'assistant',
-          content: `### 🤖 APEX SpendGuard Nova AI Copilot
-Hello! I am your real-time spend intelligence and budget enforcement agent, powered by **Aczen Nova's live financial books**.
+          content: `### 🤖 APEX Fiscal Copilot (Dual-Engine Intelligence)
+Hello! I am your real-time spend intelligence and budget enforcement agent, architected with **strict decoupling**:
+* **Data Ingestion Layer:** Aczen Nova Live Enterprise Ledger (372 budget envelopes, 300 expenses, 8 cost centers).
+* **Conversational Intelligence Layer:** Google Gemini 2.0 Flash.
 
-I can evaluate pre-clearance spending proposals, audit live overruns, explain governance policies, and simulate year-end horizon stress tests.
+I can evaluate pre-clearance spending proposals, audit live overruns, explain governance policies, and simulate year-end horizon stress tests based on live SQLite data and Nova-synced books.
 
 What would you like to inspect or simulate?`,
           suggestedActions: [
             'Which department is spending most?',
             'Who are our top vendors?',
-            'Can I spend $75,000 on Cloud Servers?',
+            'Can I spend ₹50,00,000 on Cloud Servers?',
             'Show Aczen Nova live book overruns',
             'What is our Engineering budget headroom?',
           ],
@@ -177,34 +179,31 @@ What would you like to inspect or simulate?`,
 
   return (
     <>
-      {/* Floating Trigger Button */}
+      {/* Floating Trigger Button (Compact, non-obtrusive) */}
       {!isOpen && (
         <button
           onClick={() => {
             setIsOpen(true);
             setIsMinimized(false);
           }}
-          className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-full bg-slate-900 text-white shadow-xl hover:shadow-2xl hover:bg-slate-800 transition-all duration-200 border border-slate-700/60 group hover:scale-[1.02] cursor-pointer"
-          aria-label="Open Aczen Nova AI Copilot"
+          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 flex items-center gap-2 px-3 py-2 sm:px-3.5 sm:py-2.5 rounded-full bg-slate-900 text-white shadow-lg hover:shadow-xl hover:bg-slate-800 transition-all duration-200 border border-slate-700/80 group hover:scale-[1.02] cursor-pointer"
+          aria-label="Open APEX Fiscal Copilot (Dual-Engine: Nova ERP + Google Gemini)"
         >
           <div className="relative flex items-center justify-center">
-            <span className="material-symbols-outlined text-xl text-amber-400 group-hover:rotate-12 transition-transform" data-icon="auto_awesome">
+            <span className="material-symbols-outlined text-lg text-blue-400 group-hover:rotate-12 transition-transform" data-icon="auto_awesome">
               auto_awesome
             </span>
-            <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+            <span className="absolute -top-1 -right-1 flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
             </span>
           </div>
-          <div className="flex flex-col text-left">
-            <span className="text-xs font-semibold tracking-tight text-white flex items-center gap-1.5">
-              Nova AI Copilot
-              <span className="px-1.5 py-0.2 rounded text-[9px] font-mono uppercase bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30">
-                Aczen
-              </span>
+          <div className="flex items-center gap-1.5 text-left">
+            <span className="text-xs font-semibold tracking-tight text-white">
+              Copilot AI
             </span>
-            <span className="text-[10px] text-slate-300 font-normal">
-              SpendGuard & Ledger Intel
+            <span className="hidden sm:inline-block px-1.5 py-0.2 rounded text-[9px] font-mono uppercase bg-blue-500/20 text-blue-300 font-bold border border-blue-500/30">
+              Gemini 2.0
             </span>
           </div>
         </button>
@@ -222,7 +221,7 @@ What would you like to inspect or simulate?`,
           {/* Header Bar */}
           <div className="p-3.5 bg-slate-900 text-white flex items-center justify-between border-b border-slate-800 shrink-0">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-500 to-amber-300 flex items-center justify-center text-slate-950 font-bold shadow-xs">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 via-indigo-600 to-amber-400 flex items-center justify-center text-white font-bold shadow-xs">
                 <span className="material-symbols-outlined text-lg" data-icon="smart_toy">
                   smart_toy
                 </span>
@@ -230,18 +229,24 @@ What would you like to inspect or simulate?`,
               <div className="flex flex-col">
                 <div className="flex items-center gap-1.5">
                   <span className="text-xs font-bold text-white tracking-tight">
-                    APEX SpendGuard Nova AI
+                    APEX Fiscal Copilot
+                  </span>
+                  <span className="px-1.5 py-0.5 rounded text-[9px] font-mono uppercase bg-blue-500/20 text-blue-300 font-bold border border-blue-500/30">
+                    Gemini 2.0
                   </span>
                   <span className="px-1.5 py-0.5 rounded text-[9px] font-mono uppercase bg-amber-400/20 text-amber-300 font-bold border border-amber-400/30">
-                    Aczen
+                    Nova Synced
                   </span>
                 </div>
-                <div className="flex items-center gap-1.5 text-[10px] text-slate-300">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse" />
-                  <span>
-                    {capabilities?.liveNovaConnected
-                      ? 'Live Books Connected (372 Envelopes)'
-                      : 'Aczen Nova API Ready'}
+                <div className="flex items-center gap-2 text-[10px] text-slate-300">
+                  <span className="flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block animate-pulse" />
+                    <span>Data: Nova Synced</span>
+                  </span>
+                  <span>·</span>
+                  <span className="flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400 inline-block" />
+                    <span>LLM: Gemini 2.0</span>
                   </span>
                 </div>
               </div>
@@ -366,7 +371,7 @@ What would you like to inspect or simulate?`,
                     <span className="material-symbols-outlined text-amber-500 animate-spin text-base" data-icon="refresh">
                       refresh
                     </span>
-                    <span className="text-xs font-mono">Querying Aczen Nova...</span>
+                    <span className="text-xs font-mono">Reasoning with Gemini 2.0...</span>
                   </div>
                 )}
 
@@ -399,7 +404,7 @@ What would you like to inspect or simulate?`,
                     type="text"
                     value={inputMessage}
                     onChange={(e) => setInputMessage(e.target.value)}
-                    placeholder="Ask Nova (e.g. 'Can I spend $50k on GCP?')..."
+                    placeholder="Ask Copilot (e.g. 'Can I spend ₹50L on GCP?')..."
                     disabled={isLoading}
                     className="flex-1 text-xs bg-slate-50 text-slate-900 border border-slate-200 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:bg-white transition-all placeholder:text-slate-400"
                   />
@@ -416,8 +421,14 @@ What would you like to inspect or simulate?`,
                 </form>
 
                 <div className="flex items-center justify-between text-[10px] text-slate-400 px-1 font-mono">
-                  <span>Engine: Aczen Nova API</span>
-                  <span>Zero-Trust Pre-Clearance</span>
+                  <span className="flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block"></span>
+                    Data Source: Aczen Nova Synced
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400 inline-block"></span>
+                    LLM Core: Google Gemini 2.0
+                  </span>
                 </div>
               </div>
             </>

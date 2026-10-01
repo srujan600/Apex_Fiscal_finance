@@ -1,7 +1,5 @@
 import { env } from '../../config/env';
 import {
-  NovaCompletionRequest,
-  NovaCompletionResponse,
   AczenNovaBudget,
   AczenNovaExpense,
   AczenNovaDepartment,
@@ -422,37 +420,14 @@ export class NovaClient {
   }
 
   /**
-   * Legacy completion shim (kept for backwards compatibility with any legacy test harnesses)
+   * Alias for fetchAndAnalyzeBooks to fulfill standard pure data ingestion interface
    */
-  public async complete(_request: NovaCompletionRequest): Promise<NovaCompletionResponse> {
-    // Aczen Nova API is a read-only financial REST API.
-    // Synthesize structured intelligence from the live books.
-    const analysis = await this.fetchAndAnalyzeBooks();
-    const content = JSON.stringify({
-      summary: `Aczen Nova live ledger analysis active across ${analysis.company_books_height.total_budget_envelopes} envelopes. ${analysis.live_overruns_detected.count} live over-committed categories detected.`,
-      risk_assessment: `Identified ${analysis.live_overruns_detected.count} over-committed cost centers in Aczen Nova books with ₹${analysis.live_overruns_detected.total_deficit_amount.toLocaleString('en-IN')} net liability.`,
-      recommendations: [
-        'Enforce pre-clearance throttling on high-velocity expense categories',
-        'Rebalance capital from surplus cost centers in Aczen Nova ledger',
-        'Require L4 CFO override for purchase orders exceeding single-item quotas',
-      ],
-    });
-
-    return {
-      id: `aczen-nova-${Date.now()}`,
-      choices: [
-        {
-          index: 0,
-          message: {
-            role: 'assistant',
-            content,
-          },
-          finish_reason: 'stop',
-        },
-      ],
-    };
+  public async getLiveAnalysis(): Promise<AczenNovaLiveAnalysis> {
+    return this.fetchAndAnalyzeBooks();
   }
 }
+
+export const novaClient = new NovaClient();
 
 /**
  * Factory to instantiate and validate NovaClient using environment configuration

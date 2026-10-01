@@ -6,9 +6,19 @@ import { StatusBadge } from '../ui/StatusBadge';
 import { TactileButton } from '../ui/TactileButton';
 import { CreateRequestModal } from './CreateRequestModal';
 import { RequestDetailModal } from './RequestDetailModal';
+import { TierAuthorizationBanner, LockedActionIndicator, TierBadge } from '../common/TierRestrictedBadge';
 
 export const SpendingView: React.FC = () => {
-  const { requests, currency, approveRequest, rejectRequest } = useApp();
+  const {
+    requests,
+    currency,
+    approveRequest,
+    rejectRequest,
+    canPerformDataEntry,
+    canApproveTransactions,
+    isReadOnlyAuditor,
+    governanceTier,
+  } = useApp();
 
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
@@ -38,7 +48,7 @@ export const SpendingView: React.FC = () => {
             <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-semibold uppercase bg-blue-50 text-blue-700 border border-blue-200/80">
               Procurement Pre-Clearance
             </span>
-            <span className="text-[11px] font-mono text-slate-400 font-medium">REQUISITIONS PIPELINE</span>
+            <TierBadge tier={governanceTier} size="sm" />
           </div>
           <h1 className="text-xl md:text-2xl text-slate-900 font-bold tracking-tight mt-1">
             Corporate Spending Requests & Pre-Commitment Verification
@@ -49,11 +59,23 @@ export const SpendingView: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-2.5">
-          <TactileButton variant="primary" icon="add" onClick={() => setCreateModalOpen(true)}>
-            Draft Spending Requisition
-          </TactileButton>
+          {canPerformDataEntry ? (
+            <TactileButton variant="primary" icon="add" onClick={() => setCreateModalOpen(true)}>
+              Draft Spending Requisition
+            </TactileButton>
+          ) : (
+            <div className="flex items-center gap-2">
+              <LockedActionIndicator reason="Tier 4 Read-Only Auditor: Data entry prohibited" />
+              <TactileButton variant="primary" icon="lock" disabled>
+                Draft Requisition
+              </TactileButton>
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Tier Governance Authorization Banner */}
+      <TierAuthorizationBanner />
 
       {/* Requisitions Overview Quad */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
@@ -76,7 +98,7 @@ export const SpendingView: React.FC = () => {
         <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
           <span className="text-[10px] font-mono text-slate-400 uppercase block font-semibold">BLOCKED AT GUARDRAIL</span>
           <span className="text-xl font-mono font-bold text-rose-600 block mt-1">
-            {blockedRequests.length} Requests
+            {blockedRequests.length} {blockedRequests.length === 1 ? 'Request' : 'Requests'}
           </span>
           <span className="text-[10px] font-mono text-rose-600 block mt-0.5 font-medium">Budget breach prevented</span>
         </div>
@@ -130,17 +152,17 @@ export const SpendingView: React.FC = () => {
 
       {/* Requisitions Ledger Table */}
       <div className="bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-sm">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+        <div className="overflow-x-auto w-full">
+          <table className="w-full min-w-[1020px] text-left border-collapse">
             <thead>
               <tr className="bg-slate-50 text-slate-500 text-[11px] font-mono uppercase border-b border-slate-200/80 h-10 select-none">
-                <th className="px-4 font-semibold">Tracking # / Submitted</th>
-                <th className="px-3 font-semibold">Department & Requisitioner</th>
-                <th className="px-3 font-semibold">Vendor & Purpose</th>
-                <th className="px-3 font-semibold text-right">Requested Amount</th>
-                <th className="px-3 font-semibold">Policy Decision</th>
-                <th className="px-3 font-semibold text-center">Attachment</th>
-                <th className="px-4 font-semibold text-right">Actions Rail</th>
+                <th className="px-4 font-semibold w-44 whitespace-nowrap">Tracking # / Submitted</th>
+                <th className="px-3 font-semibold w-48">Department & Requisitioner</th>
+                <th className="px-3 font-semibold min-w-[200px]">Vendor & Purpose</th>
+                <th className="px-3 font-semibold text-right w-36 whitespace-nowrap">Requested Amount</th>
+                <th className="px-3 font-semibold w-36 whitespace-nowrap">Policy Decision</th>
+                <th className="px-3 font-semibold text-center w-24 whitespace-nowrap">Attachment</th>
+                <th className="px-4 font-semibold text-right w-52 whitespace-nowrap">Actions Rail</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-xs font-sans">
@@ -203,22 +225,31 @@ export const SpendingView: React.FC = () => {
                       </TactileButton>
 
                       {req.status === 'PENDING_APPROVAL' && (
-                        <>
-                          <TactileButton
-                            variant="destructive"
-                            size="sm"
-                            onClick={() => rejectRequest(req.id)}
+                        canApproveTransactions ? (
+                          <>
+                            <TactileButton
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => rejectRequest(req.id)}
+                            >
+                              Reject
+                            </TactileButton>
+                            <TactileButton
+                              variant="primary"
+                              size="sm"
+                              onClick={() => approveRequest(req.id)}
+                            >
+                              Approve
+                            </TactileButton>
+                          </>
+                        ) : (
+                          <span
+                            className="px-2 py-0.5 rounded text-[10px] font-mono text-slate-500 bg-slate-100 border border-slate-200"
+                            title="Sign-off requires Tier 2+ Controller authorization"
                           >
-                            Reject
-                          </TactileButton>
-                          <TactileButton
-                            variant="primary"
-                            size="sm"
-                            onClick={() => approveRequest(req.id)}
-                          >
-                            Approve
-                          </TactileButton>
-                        </>
+                            Awaiting Tier 2+
+                          </span>
+                        )
                       )}
                     </div>
                   </td>

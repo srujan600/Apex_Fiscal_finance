@@ -2,6 +2,7 @@ import { Router, Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 import { exceptionsService } from './exceptions.service';
 import { validateBody } from '../../middleware/validation';
+import { requirePermission, requireTier } from '../../middleware/auth';
 import { UserRole } from '../../types/common';
 
 export const exceptionsRouter = Router();
@@ -43,9 +44,11 @@ exceptionsRouter.get('/:id', (req: Request, res: Response, next: NextFunction) =
   }
 });
 
-// POST /api/exceptions/:id/override
+// POST /api/exceptions/:id/override (STRICTLY Tier 1 Executive / C-Suite Sovereign Authority)
 exceptionsRouter.post(
   '/:id/override',
+  requireTier(1),
+  requirePermission('EXECUTE_OVERRIDE'),
   validateBody(overrideSchema),
   (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -67,9 +70,10 @@ exceptionsRouter.post(
   }
 );
 
-// POST /api/exceptions/:id/enforce-reject
+// POST /api/exceptions/:id/enforce-reject (Tier 1 & Tier 2)
 exceptionsRouter.post(
   '/:id/enforce-reject',
+  requireTier(1, 2),
   validateBody(enforceRejectSchema),
   (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -90,9 +94,10 @@ exceptionsRouter.post(
   }
 );
 
-// POST /api/exceptions/:id/rebalance-resolve
+// POST /api/exceptions/:id/rebalance-resolve (Tier 1 & Tier 2)
 exceptionsRouter.post(
   '/:id/rebalance-resolve',
+  requireTier(1, 2),
   validateBody(rebalanceResolveSchema),
   (req: Request, res: Response, next: NextFunction) => {
     try {

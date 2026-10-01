@@ -148,7 +148,7 @@ export const DepartmentsView: React.FC = () => {
         <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
           <span className="text-[10px] font-mono text-slate-400 uppercase block font-semibold">AVERAGE BURN PER FTE</span>
           <span className="text-xl font-mono font-bold text-indigo-600 block mt-1">
-            {formatCurrency(142400 / totalHeadcount, currency, 'compact')}/day
+            {formatCurrency(Math.round(142400 / (totalHeadcount || 1)), currency, 'compact')}/day
           </span>
           <span className="text-[10px] font-mono text-slate-400 block mt-0.5">Blended run-rate</span>
         </div>
@@ -308,7 +308,7 @@ export const DepartmentsView: React.FC = () => {
             </div>
 
             <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80 text-xs font-mono text-slate-600">
-              <span>Cost Center Authority: Pre-clearance required on all requisitions exceeding $25,000 USD.</span>
+              <span>Cost Center Authority: Pre-clearance required on all requisitions exceeding ₹20,75,000 (INR).</span>
             </div>
           </div>
         </Modal>

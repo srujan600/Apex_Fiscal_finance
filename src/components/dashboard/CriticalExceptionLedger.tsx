@@ -67,16 +67,16 @@ export const CriticalExceptionLedger: React.FC<CriticalExceptionLedgerProps> = (
 
       {/* Tactical Exceptions Table */}
       <div className="bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-sm">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+        <div className="overflow-x-auto w-full">
+          <table className="w-full min-w-[960px] text-left border-collapse">
             <thead>
               <tr className="bg-slate-50 text-slate-500 text-[11px] font-mono uppercase border-b border-slate-200/80 h-10 select-none">
-                <th className="px-4 font-semibold">Incident / ID</th>
-                <th className="px-3 font-semibold">Department</th>
-                <th className="px-3 font-semibold">Vendor & Purpose</th>
-                <th className="px-3 font-semibold text-right">Commitment Value</th>
-                <th className="px-3 font-semibold">Breach Classification</th>
-                <th className="px-4 font-semibold text-right">Executive Decision Rail</th>
+                <th className="px-4 font-semibold w-44 whitespace-nowrap">Incident / ID</th>
+                <th className="px-3 font-semibold w-40">Department</th>
+                <th className="px-3 font-semibold min-w-[220px]">Vendor & Purpose</th>
+                <th className="px-3 font-semibold text-right w-36 whitespace-nowrap">Commitment Value</th>
+                <th className="px-3 font-semibold w-44 whitespace-nowrap">Breach Classification</th>
+                <th className="px-4 font-semibold text-right w-72 whitespace-nowrap">Executive Decision Rail</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-xs font-sans">

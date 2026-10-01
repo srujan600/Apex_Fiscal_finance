@@ -1,6 +1,8 @@
 import React from 'react';
 import { AppProvider, useApp } from './context/AppContext';
 import { AppShell } from './components/layout/AppShell';
+import { LandingLoginPage } from './components/auth/LandingLoginPage';
+import { AccessRestrictedView } from './components/common/AccessRestrictedView';
 import { DashboardView } from './components/dashboard/DashboardView';
 import { BudgetsView } from './components/budget/BudgetsView';
 import { DepartmentsView } from './components/department/DepartmentsView';
@@ -15,7 +17,12 @@ import { AuditLogsView } from './components/audit/AuditLogsView';
 import { SettingsView } from './components/settings/SettingsView';
 
 const WorkspaceRouter: React.FC = () => {
-  const { activeTab } = useApp();
+  const { activeTab, allowedTabs } = useApp();
+
+  // If the active tab is not in the allowed tabs for this persona, show the authorization boundary view
+  if (!allowedTabs.includes(activeTab)) {
+    return <AccessRestrictedView attemptedTab={activeTab} />;
+  }
 
   switch (activeTab) {
     case 'dashboard':
@@ -47,12 +54,24 @@ const WorkspaceRouter: React.FC = () => {
   }
 };
 
+const MainContent: React.FC = () => {
+  const { isAuthenticated } = useApp();
+
+  if (!isAuthenticated) {
+    return <LandingLoginPage />;
+  }
+
+  return (
+    <AppShell>
+      <WorkspaceRouter />
+    </AppShell>
+  );
+};
+
 export const App: React.FC = () => {
   return (
     <AppProvider>
-      <AppShell>
-        <WorkspaceRouter />
-      </AppShell>
+      <MainContent />
     </AppProvider>
   );
 };

@@ -5,9 +5,20 @@ import { StatusBadge } from '../ui/StatusBadge';
 import { TactileButton } from '../ui/TactileButton';
 import { Modal } from '../ui/Modal';
 import { SpendingRequest } from '../../types';
+import { TierAuthorizationBanner, LockedActionIndicator, TierBadge } from '../common/TierRestrictedBadge';
 
 export const ApprovalsView: React.FC = () => {
-  const { requests, currency, approveRequest, rejectRequest, role } = useApp();
+  const {
+    requests,
+    currency,
+    approveRequest,
+    rejectRequest,
+    role,
+    governanceTier,
+    tierName,
+    canApproveTransactions,
+    isReadOnlyAuditor,
+  } = useApp();
 
   const [activeFilter, setActiveFilter] = useState<'ALL' | 'PENDING' | 'ACTIONED'>('PENDING');
   const [selectedReqForDetail, setSelectedReqForDetail] = useState<SpendingRequest | null>(null);
@@ -54,7 +65,7 @@ export const ApprovalsView: React.FC = () => {
             <span className="px-2 py-0.5 rounded-md text-[10px] font-mono font-semibold uppercase bg-indigo-50 text-indigo-700 border border-indigo-200">
               Multi-Level Sign-Off Queue
             </span>
-            <span className="text-[11px] font-mono text-slate-400 font-medium">ACTIVE ROLE: {role}</span>
+            <TierBadge tier={governanceTier} size="sm" />
           </div>
           <h1 className="text-xl md:text-2xl text-slate-900 font-bold tracking-tight mt-1">
             Approval Command Center
@@ -70,6 +81,9 @@ export const ApprovalsView: React.FC = () => {
           </span>
         </div>
       </div>
+
+      {/* Tier Governance Authorization Banner */}
+      <TierAuthorizationBanner />
 
       {/* Filter Tabs */}
       <div className="flex items-center gap-1.5 border-b border-slate-200/80 pb-3 text-xs font-mono">
@@ -199,41 +213,69 @@ export const ApprovalsView: React.FC = () => {
 
                   {isPending && (
                     <div className="flex flex-wrap items-center gap-2">
-                      <TactileButton
-                        variant="ghost"
-                        size="sm"
-                        icon="chat"
-                        onClick={() => handleRequestJustification(req)}
-                      >
-                        Request Justification
-                      </TactileButton>
+                      {isReadOnlyAuditor ? (
+                        <LockedActionIndicator reason="Tier 4 Read-Only Auditor: Decision actions disabled" />
+                      ) : !canApproveTransactions ? (
+                        <>
+                          <TactileButton
+                            variant="ghost"
+                            size="sm"
+                            icon="chat"
+                            onClick={() => handleRequestJustification(req)}
+                          >
+                            Request Justification
+                          </TactileButton>
 
-                      <TactileButton
-                        variant="surface"
-                        size="sm"
-                        icon="arrow_upward"
-                        onClick={() => handleEscalate(req)}
-                      >
-                        Escalate
-                      </TactileButton>
+                          <TactileButton
+                            variant="surface"
+                            size="sm"
+                            icon="arrow_upward"
+                            onClick={() => handleEscalate(req)}
+                          >
+                            Escalate
+                          </TactileButton>
 
-                      <TactileButton
-                        variant="destructive"
-                        size="sm"
-                        icon="close"
-                        onClick={() => rejectRequest(req.id)}
-                      >
-                        Reject
-                      </TactileButton>
+                          <LockedActionIndicator reason="Tier 3 Analyst: No sign-off authority (Tier 2+ required)" />
+                        </>
+                      ) : (
+                        <>
+                          <TactileButton
+                            variant="ghost"
+                            size="sm"
+                            icon="chat"
+                            onClick={() => handleRequestJustification(req)}
+                          >
+                            Request Justification
+                          </TactileButton>
 
-                      <TactileButton
-                        variant="primary"
-                        size="sm"
-                        icon="check"
-                        onClick={() => approveRequest(req.id)}
-                      >
-                        Approve
-                      </TactileButton>
+                          <TactileButton
+                            variant="surface"
+                            size="sm"
+                            icon="arrow_upward"
+                            onClick={() => handleEscalate(req)}
+                          >
+                            Escalate
+                          </TactileButton>
+
+                          <TactileButton
+                            variant="destructive"
+                            size="sm"
+                            icon="close"
+                            onClick={() => rejectRequest(req.id)}
+                          >
+                            Reject
+                          </TactileButton>
+
+                          <TactileButton
+                            variant="primary"
+                            size="sm"
+                            icon="check"
+                            onClick={() => approveRequest(req.id)}
+                          >
+                            Approve
+                          </TactileButton>
+                        </>
+                      )}
                     </div>
                   )}
                 </div>
